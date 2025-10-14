@@ -11,6 +11,16 @@ import SwiftUI
 struct AI_Photo_GenerationApp: App {
     @StateObject private var themeManager = ThemeManager()
     
+    init() {
+        // Print all loaded font families and names
+        for family in UIFont.familyNames.sorted() {
+            print("Family: \(family)")
+            for name in UIFont.fontNames(forFamilyName: family) {
+                print("    Font: \(name)")
+            }
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -19,3 +29,4 @@ struct AI_Photo_GenerationApp: App {
         }
     }
 }
+

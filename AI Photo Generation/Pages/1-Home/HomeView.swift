@@ -53,16 +53,16 @@ struct HomeView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                     
-                    RowView(title: "AI Videos 📹", items: videoItems, isVideo: true)
+                    RowView(title: "📹 AI Videos", items: videoItems, isVideo: true)
 //                    RowView(title: "Trending", items: trendingItems, isVideo: false, diffAnimation: .scanHorizontal)
-                    RowView(title: "Action Figures 🦸‍♂️", items: actionfigureItems, isVideo: false, diffAnimation: .scanHorizontalVarying)
-                    RowView(title: "Random 🎲", items: randomItems, isVideo: false, diffAnimation: .flipCard)
-                    RowView(title: "Video Games 🎮", items: videogamesItems, isVideo: false, diffAnimation: .scanVerticalVarying)
-                    RowView(title: "Photography 📸", items: photographyItems, isVideo: false, diffAnimation: .crossfade)
+                    RowView(title: "🦸‍♂️ Action Figures", items: actionfigureItems, isVideo: false, diffAnimation: .scanHorizontalVarying)
+                    RowView(title: "🎲 Random", items: randomItems, isVideo: false, diffAnimation: .flipCard)
+                    RowView(title: "🎮 Video Games", items: videogamesItems, isVideo: false, diffAnimation: .scanVerticalVarying)
+                    RowView(title: "📸 Photography", items: photographyItems, isVideo: false, diffAnimation: .crossfade)
                     
-                    RowView(title: "Relationships ❤️", items: relationshipItems, isVideo: false, diffAnimation: .flipCard)
-                    RowView(title: "Pranks 😂", items: prankItems, isVideo: false, diffAnimation: .cubeTurn)
-                    RowView(title: "Family 🧑‍🧑‍🧒", items: familyItems, isVideo: false, diffAnimation: .crossfade)
+                    RowView(title: "❤️ Relationships", items: relationshipItems, isVideo: false, diffAnimation: .flipCard)
+                    RowView(title: "😂 Pranks", items: prankItems, isVideo: false, diffAnimation: .cubeTurn)
+                    RowView(title: "🧑‍🧑‍🧒 Family", items: familyItems, isVideo: false, diffAnimation: .crossfade)
 
                     // Recent Creations stays unique
                     VStack(alignment: .leading, spacing: 16) {

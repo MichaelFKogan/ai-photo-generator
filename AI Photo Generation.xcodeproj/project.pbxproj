@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		27D5093D2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D5093C2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		27E2BC852E981FEB00269FE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		27D5093C2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		27E2BC742E981FE700269FE9 /* AI Photo Generation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI Photo Generation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27E2BC842E981FEB00269FE9 /* AI Photo GenerationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AI Photo GenerationTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27E2BC8E2E981FEB00269FE9 /* AI Photo GenerationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AI Photo GenerationUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +84,7 @@
 				27E2BC872E981FEB00269FE9 /* AI Photo GenerationTests */,
 				27E2BC912E981FEB00269FE9 /* AI Photo GenerationUITests */,
 				27E2BC752E981FE700269FE9 /* Products */,
+				27D5093C2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27D5093D2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +406,7 @@
 				DEVELOPMENT_TEAM = 3226HD5BV7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AI-Photo-Generation-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to take photos for AI generation";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to select images for AI generation";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -430,6 +438,7 @@
 				DEVELOPMENT_TEAM = 3226HD5BV7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AI-Photo-Generation-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to take photos for AI generation";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to select images for AI generation";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -22,9 +22,7 @@ struct TrendingDetailView: View {
             // Main content with cards
             VStack(spacing: 20) {
                 
-                Text(item.title)
-                    .font(.title)
-                    .fontWeight(.bold)
+                AnimatedTitle(text: item.title)
                 
                 // Hero Images Section - Two overlapping diagonal images
                 DiagonalOverlappingImages(
@@ -48,12 +46,62 @@ struct TrendingDetailView: View {
 //                        .font(.caption)
 //                        .foregroundColor(.secondary)
                     
-                    AddPhotoButton(
-                        selectedImage: $selectedImage,
-                        selectedPhotoItem: $selectedPhotoItem,
-                        showCamera: $showCamera,
-                        showPhotoPicker: $showPhotoPicker
-                    )
+                        // Vertical layout: Add photo button on top, Create button below, both centered
+                        // Compute a ~75% width based on the page padding (24 + 24 on each side)
+                        let pageInnerWidth = UIScreen.main.bounds.width - 48
+                        let buttonWidth = pageInnerWidth * 0.75
+
+                        VStack(alignment: .center, spacing: 16) {
+                            AddPhotoButton(
+                                selectedImage: $selectedImage,
+                                selectedPhotoItem: $selectedPhotoItem,
+                                showCamera: $showCamera,
+                                showPhotoPicker: $showPhotoPicker
+                            )
+                            .frame(width: buttonWidth, height: 220)
+
+                            // Create button centered under the Add Photo box
+                            Button(action: {
+                                // Simulate transform action
+                                isGenerating = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    isGenerating = false
+                                }
+                            }) {
+                                HStack(spacing: 10) {
+                                    Text(isGenerating ? "✨ Creating..." : "🪄 Create ")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+
+                                    // Trailing arrow icon
+                                    Image(systemName: "arrow.right")
+                                        .font(.system(size: 16, weight: .semibold))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(.white)
+                            }
+                            .frame(width: buttonWidth, height: 64)
+                            .background(
+                                Group {
+                                    if isGenerating || selectedImage == nil {
+                                        Color.gray.opacity(0.5)
+                                    } else {
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.85)]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    }
+                                }
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .shadow(color: (isGenerating || selectedImage == nil) ? Color.clear : Color.blue.opacity(0.25), radius: 8, x: 0, y: 4)
+                            .disabled(isGenerating || selectedImage == nil)
+                            .animation(.easeInOut(duration: 0.2), value: isGenerating)
+                        }
+                    .padding(16)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
                 }
                 
 //                    // Card 2: Prompt Section
@@ -111,7 +159,7 @@ struct TrendingDetailView: View {
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 32)
-            .padding(.bottom, 300)
+            .padding(.bottom, 150)
         }
 //        .ignoresSafeArea(edges: .top)
         .navigationTitle("")
@@ -140,6 +188,8 @@ struct AddPhotoButton: View {
     @Binding var showCamera: Bool
     @Binding var showPhotoPicker: Bool
     
+    @State private var wiggle: Bool = false
+    
     var body: some View {
         if let selectedImage = selectedImage {
             // Show selected image with remove button
@@ -147,7 +197,7 @@ struct AddPhotoButton: View {
                 Image(uiImage: selectedImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 150, height: 200)
+                    .frame(maxWidth: .infinity, maxHeight: 220)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
@@ -184,8 +234,8 @@ struct AddPhotoButton: View {
                             .foregroundColor(.gray.opacity(0.7))
                     }
                 }
-                .frame(height: 200)
-                .frame(maxWidth: 150, maxHeight: 200)
+                .frame(height: 220)
+                .frame(maxWidth: .infinity, maxHeight: 220)
                 .background(Color.gray.opacity(0.03))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(
@@ -194,6 +244,9 @@ struct AddPhotoButton: View {
                         .foregroundColor(.gray.opacity(0.4))
                 )
             }
+            .rotationEffect(.degrees(wiggle ? 2.2 : -2.2))
+            .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: wiggle)
+            .onAppear { wiggle = true }
             .photosPicker(
                 isPresented: $showPhotoPicker,
                 selection: $selectedPhotoItem,
@@ -458,6 +511,61 @@ struct GenerateButton: View {
     }
 }
 
+// MARK: - Animated Title
+struct AnimatedTitle: View {
+    let text: String
+    @State private var shimmer: Bool = false
+    @State private var sparklePulse: Bool = false
+    
+    var body: some View {
+        ZStack {
+            Text(text)
+//                .font(.title)
+                .font(.custom("Nunito-Black", size: 30))
+                .foregroundColor(.primary)
+                .overlay(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.white.opacity(0.0),
+                            Color.white.opacity(0.9),
+                            Color.white.opacity(0.0)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .rotationEffect(.degrees(20))
+                    .offset(x: shimmer ? 300 : -300)
+                    .mask(
+                        Text(text)
+                            .font(.title)
+                            .fontWeight(.bold)
+                    )
+                )
+                .onAppear {
+                    withAnimation(.linear(duration: 2.2).repeatForever(autoreverses: false)) {
+                        shimmer.toggle()
+                    }
+                }
+            
+            // Subtle sparkles around the title
+            Image(systemName: "sparkles")
+                .foregroundColor(.yellow.opacity(0.9))
+                .offset(x: -70, y: -18)
+                .scaleEffect(sparklePulse ? 1.15 : 0.85)
+                .opacity(sparklePulse ? 1.0 : 0.7)
+                .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: sparklePulse)
+            
+            Image(systemName: "star.fill")
+                .foregroundColor(.yellow)
+                .offset(x: 72, y: -6)
+                .scaleEffect(sparklePulse ? 0.9 : 0.6)
+                .opacity(sparklePulse ? 0.95 : 0.6)
+                .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true).delay(0.3), value: sparklePulse)
+        }
+        .onAppear { sparklePulse = true }
+    }
+}
+
 // MARK: - Example Images Section
 struct ExampleImagesSection: View {
     let images: [String]
@@ -646,6 +754,8 @@ struct DiagonalOverlappingImages: View {
     let leftImageName: String
     let rightImageName: String
     
+    @State private var arrowWiggle: Bool = false
+
     var body: some View {
         GeometryReader { geometry in
             let imageWidth = geometry.size.width * 0.50
@@ -676,17 +786,17 @@ struct DiagonalOverlappingImages: View {
                 // Arrow image overlapping both images
                 ZStack {
                     // White circle background for visibility
-//                    Circle()
-//                        .fill(Color.white)
-//                        .frame(width: 50, height: 50)
-//                        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 2)
-                    
-                    // Arrow icon
+                    // ...existing code...
+
+                    // Arrow icon (static)
                     Image("arrow")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 62, height: 62)
+                        .rotationEffect(.degrees(arrowWiggle ? 4 : -4))
+                        .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: arrowWiggle)
                 }
+                .onAppear { arrowWiggle = true }
                 .offset(x: 0, y: arrowYOffset)
             }
             .frame(width: geometry.size.width, height: imageHeight + 20)

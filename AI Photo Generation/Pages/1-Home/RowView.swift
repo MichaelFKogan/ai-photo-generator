@@ -23,8 +23,9 @@ struct RowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title)
-                .font(.title3)
-                .fontWeight(.semibold)
+//                .font(.title3)
+//                .fontWeight(.semibold)
+                .font(.custom("Nunito-Bold", size: 20))
                 .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -40,6 +41,16 @@ struct RowView: View {
                                             RoundedRectangle(cornerRadius: 12)
                                                 .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                         )
+                                        .overlay(alignment: .bottom) {
+                                            Text("Try This")
+                                                .font(.custom("Nunito-Bold", size: 9))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 6)
+                                                .background(Color.black.opacity(0.6))
+                                                .clipShape(Capsule())
+                                                .padding(.bottom, 8)
+                                        }
                                 } else {
                                     // Show diff between original and transformed when available
                                     if let originalImage = item.imageNameOriginal {
@@ -56,6 +67,16 @@ struct RowView: View {
                                                 RoundedRectangle(cornerRadius: 20)
                                                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                             )
+                                            .overlay(alignment: .bottom) {
+                                                Text("Try This")
+                                                    .font(.custom("Nunito-Bold", size: 9))
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 8)
+                                                    .padding(.vertical, 5)
+                                                    .background(Color.black.opacity(0.6))
+                                                    .clipShape(Capsule())
+                                                    .padding(.bottom, 6)
+                                            }
                                         } else {
                                             ScanningImageView(
                                                 originalImageName: originalImage,
@@ -68,6 +89,16 @@ struct RowView: View {
                                                 RoundedRectangle(cornerRadius: 20)
                                                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                             )
+                                            .overlay(alignment: .bottom) {
+                                                Text("Try This")
+                                                    .font(.custom("Nunito-Bold", size: 9))
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 8)
+                                                    .padding(.vertical, 5)
+                                                    .background(Color.black.opacity(0.6))
+                                                    .clipShape(Capsule())
+                                                    .padding(.bottom, 6)
+                                            }
                                         }
                                     } else {
                                         Image(item.imageName)
@@ -80,12 +111,21 @@ struct RowView: View {
                                                 RoundedRectangle(cornerRadius: 12)
                                                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                             )
+                                            .overlay(alignment: .bottom) {
+                                                Text("Try This")
+                                                    .font(.custom("Nunito-Bold", size: 9))
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 8)
+                                                    .padding(.vertical, 5)
+                                                    .background(Color.black.opacity(0.6))
+                                                    .clipShape(Capsule())
+                                                    .padding(.bottom, 6)
+                                            }
                                     }
                                 }
 
                                 Text(item.title)
-                                    .font(.caption)
-                                    .fontWeight(.medium)
+                                    .font(.custom("Nunito-Bold", size: 11))
                                     .lineLimit(2)
                                     .multilineTextAlignment(.center)
 //                                    .frame(width: 140)
