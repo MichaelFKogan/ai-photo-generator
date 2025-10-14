@@ -26,7 +26,7 @@ struct CreateView: View {
                                     .font(.title2)
                                     .foregroundColor(.blue)
                                 VStack(alignment: .leading) {
-                                    Text("Generate Image from Prompt")
+                                    Text("Text To Image")
                                         .font(.headline)
                                     Text("Create images from text descriptions")
                                         .font(.caption)
@@ -49,7 +49,7 @@ struct CreateView: View {
                                     .font(.title2)
                                     .foregroundColor(.green)
                                 VStack(alignment: .leading) {
-                                    Text("Transform Image")
+                                    Text("Image To Image")
                                         .font(.headline)
                                     Text("Transform your existing photos with AI")
                                         .font(.caption)

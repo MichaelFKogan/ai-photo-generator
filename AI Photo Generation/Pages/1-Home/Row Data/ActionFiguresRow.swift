@@ -43,7 +43,7 @@ let actionfigureItems = [
     TrendingItem(
         imageName: "trending2",
         imageNameOriginal: "trending5",
-        title: "Blister Pack Figure",
+        title: "Starter Pack",
         description: "",
         prompt: "Action figure in blister pack packaging, toy photography, retail display, vibrant colors, collectible style",
         modelName: "Seedream 4.0",

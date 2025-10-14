@@ -11,6 +11,14 @@ struct RowView: View {
     let title: String
     let items: [TrendingItem]
     let isVideo: Bool
+    var diffAnimation: ImageDiffAnimation? = nil
+    
+    init(title: String, items: [TrendingItem], isVideo: Bool, diffAnimation: ImageDiffAnimation? = nil) {
+        self.title = title
+        self.items = items
+        self.isVideo = isVideo
+        self.diffAnimation = diffAnimation
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -33,19 +41,34 @@ struct RowView: View {
                                                 .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                         )
                                 } else {
-                                    // Check if this item has scanning animation support
+                                    // Show diff between original and transformed when available
                                     if let originalImage = item.imageNameOriginal {
-                                        ScanningImageView(
-                                            originalImageName: originalImage,
-                                            transformedImageName: item.imageName,
-                                            width: 110,
-                                            height: 166
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 18))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                                        )
+                                        if let diffAnimation = diffAnimation {
+                                            ImageDiffView(
+                                                originalImageName: originalImage,
+                                                transformedImageName: item.imageName,
+                                                width: 110,
+                                                height: 166,
+                                                animation: diffAnimation
+                                            )
+                                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 20)
+                                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                            )
+                                        } else {
+                                            ScanningImageView(
+                                                originalImageName: originalImage,
+                                                transformedImageName: item.imageName,
+                                                width: 110,
+                                                height: 166
+                                            )
+                                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 20)
+                                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                            )
+                                        }
                                     } else {
                                         Image(item.imageName)
                                             .resizable()
@@ -53,7 +76,6 @@ struct RowView: View {
                                             .frame(width: 140, height: 196)
                                             .clipped()
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
-                                        
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 12)
                                                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
@@ -61,13 +83,13 @@ struct RowView: View {
                                     }
                                 }
 
-//                                Text(item.title)
-//                                    .font(.caption)
-//                                    .fontWeight(.medium)
-//                                    .lineLimit(2)
-//                                    .multilineTextAlignment(.center)
+                                Text(item.title)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .lineLimit(2)
+                                    .multilineTextAlignment(.center)
 //                                    .frame(width: 140)
-//                                    .foregroundColor(.primary)
+                                    .foregroundColor(.primary)
                             }
                         }
                     }

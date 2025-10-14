@@ -781,6 +781,20 @@ struct PillButton: View {
     }
 }
 
+struct CapabilityPill: View {
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .font(.caption)
+            .fontWeight(.medium)
+            .padding(.trailing, 4)
+            .foregroundColor(.blue)
+//            .background(Color.blue)
+//            .clipShape(Capsule())
+    }
+}
+
 struct ModelPickerView: View {
     @Binding var selectedVideoModelId: String
     @Binding var selectedImageModelId: String
@@ -819,6 +833,26 @@ struct ModelPickerView: View {
         selectedTab == 0 ? "Price per 8s video" : "Price per image"
     }
 
+    // Dummy capability logic for previewing UI pills
+    private func videoCapabilities(for model: Model) -> [String] {
+        let sum = model.modelId.unicodeScalars.map { Int($0.value) }.reduce(0, +)
+        var caps: [String] = []
+        if sum % 2 == 0 { caps.append("Text to Video") }
+        if sum % 3 == 0 { caps.append("Image to Video") }
+        if sum % 5 == 0 { caps.append("Audio") }
+        if caps.isEmpty { caps = ["Text to Video"] }
+        return caps
+    }
+
+    private func imageCapabilities(for model: Model) -> [String] {
+        let sum = model.modelId.unicodeScalars.map { Int($0.value) }.reduce(0, +)
+        var caps: [String] = []
+        if sum % 2 == 0 { caps.append("Text to Image") }
+        if sum % 3 == 0 { caps.append("Image to Image") }
+        if caps.isEmpty { caps = ["Text to Image"] }
+        return caps
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Top Tab Switcher (Video | Image)
@@ -851,7 +885,7 @@ struct ModelPickerView: View {
                     PillButton(title: "Image to Video", isSelected: videoFilterIndex == 2) {
                         withAnimation { videoFilterIndex = 2 }
                     }
-                    PillButton(title: "Includes Audio", isSelected: videoFilterIndex == 3) {
+                    PillButton(title: "Audio", isSelected: videoFilterIndex == 3) {
                         withAnimation { videoFilterIndex = 3 }
                     }
                 }
@@ -931,6 +965,12 @@ struct ModelPickerView: View {
                                             .lineLimit(3)
                                             .fixedSize(horizontal: false, vertical: true)
                                             .multilineTextAlignment(.leading)
+
+                                        HStack(spacing: 6) {
+                                            ForEach(videoCapabilities(for: model), id: \.self) { cap in
+                                                CapabilityPill(title: cap)
+                                            }
+                                        }
                                     }
                                 }
                                 .padding(12)
@@ -1014,6 +1054,12 @@ struct ModelPickerView: View {
                                             .lineLimit(3)
                                             .fixedSize(horizontal: false, vertical: true)
                                             .multilineTextAlignment(.leading)
+
+                                        HStack(spacing: 6) {
+                                            ForEach(imageCapabilities(for: model), id: \.self) { cap in
+                                                CapabilityPill(title: cap)
+                                            }
+                                        }
                                     }
                                 }
                                 .padding(12)

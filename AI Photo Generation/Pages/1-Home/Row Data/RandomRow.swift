@@ -20,7 +20,7 @@ let randomItems = [
     TrendingItem(
         imageName: "glassball1",
         imageNameOriginal: "glassball",
-        title: "Snow Globe Character",
+        title: "Snow Globe",
         description: "Glass-Ball is an image effect model that transforms photos into stylized images as if viewed through a crystal-clear glass sphere, creating a captivating lens distortion and reflective effect.",
         prompt: "",
         modelName: "",
