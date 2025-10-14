@@ -1,0 +1,567 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		27E2BC852E981FEB00269FE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27E2BC6C2E981FE700269FE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E2BC732E981FE700269FE9;
+			remoteInfo = "AI Photo Generation";
+		};
+		27E2BC8F2E981FEB00269FE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27E2BC6C2E981FE700269FE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E2BC732E981FE700269FE9;
+			remoteInfo = "AI Photo Generation";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		27E2BC742E981FE700269FE9 /* AI Photo Generation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI Photo Generation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27E2BC842E981FEB00269FE9 /* AI Photo GenerationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AI Photo GenerationTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27E2BC8E2E981FEB00269FE9 /* AI Photo GenerationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AI Photo GenerationUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		27E2BC762E981FE700269FE9 /* AI Photo Generation */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AI Photo Generation";
+			sourceTree = "<group>";
+		};
+		27E2BC872E981FEB00269FE9 /* AI Photo GenerationTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AI Photo GenerationTests";
+			sourceTree = "<group>";
+		};
+		27E2BC912E981FEB00269FE9 /* AI Photo GenerationUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AI Photo GenerationUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27E2BC712E981FE700269FE9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E2BC812E981FEB00269FE9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E2BC8B2E981FEB00269FE9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27E2BC6B2E981FE700269FE9 = {
+			isa = PBXGroup;
+			children = (
+				27E2BC762E981FE700269FE9 /* AI Photo Generation */,
+				27E2BC872E981FEB00269FE9 /* AI Photo GenerationTests */,
+				27E2BC912E981FEB00269FE9 /* AI Photo GenerationUITests */,
+				27E2BC752E981FE700269FE9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27E2BC752E981FE700269FE9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27E2BC742E981FE700269FE9 /* AI Photo Generation.app */,
+				27E2BC842E981FEB00269FE9 /* AI Photo GenerationTests.xctest */,
+				27E2BC8E2E981FEB00269FE9 /* AI Photo GenerationUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		27E2BC732E981FE700269FE9 /* AI Photo Generation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E2BC982E981FEB00269FE9 /* Build configuration list for PBXNativeTarget "AI Photo Generation" */;
+			buildPhases = (
+				27E2BC702E981FE700269FE9 /* Sources */,
+				27E2BC712E981FE700269FE9 /* Frameworks */,
+				27E2BC722E981FE700269FE9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				27E2BC762E981FE700269FE9 /* AI Photo Generation */,
+			);
+			name = "AI Photo Generation";
+			packageProductDependencies = (
+			);
+			productName = "AI Photo Generation";
+			productReference = 27E2BC742E981FE700269FE9 /* AI Photo Generation.app */;
+			productType = "com.apple.product-type.application";
+		};
+		27E2BC832E981FEB00269FE9 /* AI Photo GenerationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E2BC9B2E981FEB00269FE9 /* Build configuration list for PBXNativeTarget "AI Photo GenerationTests" */;
+			buildPhases = (
+				27E2BC802E981FEB00269FE9 /* Sources */,
+				27E2BC812E981FEB00269FE9 /* Frameworks */,
+				27E2BC822E981FEB00269FE9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27E2BC862E981FEB00269FE9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				27E2BC872E981FEB00269FE9 /* AI Photo GenerationTests */,
+			);
+			name = "AI Photo GenerationTests";
+			packageProductDependencies = (
+			);
+			productName = "AI Photo GenerationTests";
+			productReference = 27E2BC842E981FEB00269FE9 /* AI Photo GenerationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		27E2BC8D2E981FEB00269FE9 /* AI Photo GenerationUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E2BC9E2E981FEB00269FE9 /* Build configuration list for PBXNativeTarget "AI Photo GenerationUITests" */;
+			buildPhases = (
+				27E2BC8A2E981FEB00269FE9 /* Sources */,
+				27E2BC8B2E981FEB00269FE9 /* Frameworks */,
+				27E2BC8C2E981FEB00269FE9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27E2BC902E981FEB00269FE9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				27E2BC912E981FEB00269FE9 /* AI Photo GenerationUITests */,
+			);
+			name = "AI Photo GenerationUITests";
+			packageProductDependencies = (
+			);
+			productName = "AI Photo GenerationUITests";
+			productReference = 27E2BC8E2E981FEB00269FE9 /* AI Photo GenerationUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27E2BC6C2E981FE700269FE9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					27E2BC732E981FE700269FE9 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					27E2BC832E981FEB00269FE9 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 27E2BC732E981FE700269FE9;
+					};
+					27E2BC8D2E981FEB00269FE9 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 27E2BC732E981FE700269FE9;
+					};
+				};
+			};
+			buildConfigurationList = 27E2BC6F2E981FE700269FE9 /* Build configuration list for PBXProject "AI Photo Generation" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 27E2BC6B2E981FE700269FE9;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 27E2BC752E981FE700269FE9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				27E2BC732E981FE700269FE9 /* AI Photo Generation */,
+				27E2BC832E981FEB00269FE9 /* AI Photo GenerationTests */,
+				27E2BC8D2E981FEB00269FE9 /* AI Photo GenerationUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		27E2BC722E981FE700269FE9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E2BC822E981FEB00269FE9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E2BC8C2E981FEB00269FE9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		27E2BC702E981FE700269FE9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E2BC802E981FEB00269FE9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E2BC8A2E981FEB00269FE9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27E2BC862E981FEB00269FE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27E2BC732E981FE700269FE9 /* AI Photo Generation */;
+			targetProxy = 27E2BC852E981FEB00269FE9 /* PBXContainerItemProxy */;
+		};
+		27E2BC902E981FEB00269FE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27E2BC732E981FE700269FE9 /* AI Photo Generation */;
+			targetProxy = 27E2BC8F2E981FEB00269FE9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		27E2BC962E981FEB00269FE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		27E2BC972E981FEB00269FE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		27E2BC992E981FEB00269FE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AI Photo Generation/Preview Content\"";
+				DEVELOPMENT_TEAM = 3226HD5BV7;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to take photos for AI generation";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to select images for AI generation";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelkogan.AI-Photo-Generation";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		27E2BC9A2E981FEB00269FE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AI Photo Generation/Preview Content\"";
+				DEVELOPMENT_TEAM = 3226HD5BV7;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to take photos for AI generation";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to select images for AI generation";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelkogan.AI-Photo-Generation";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		27E2BC9C2E981FEB00269FE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3226HD5BV7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelkogan.AI-Photo-GenerationTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AI Photo Generation.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AI Photo Generation";
+			};
+			name = Debug;
+		};
+		27E2BC9D2E981FEB00269FE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3226HD5BV7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelkogan.AI-Photo-GenerationTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AI Photo Generation.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AI Photo Generation";
+			};
+			name = Release;
+		};
+		27E2BC9F2E981FEB00269FE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3226HD5BV7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelkogan.AI-Photo-GenerationUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "AI Photo Generation";
+			};
+			name = Debug;
+		};
+		27E2BCA02E981FEB00269FE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3226HD5BV7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelkogan.AI-Photo-GenerationUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "AI Photo Generation";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27E2BC6F2E981FE700269FE9 /* Build configuration list for PBXProject "AI Photo Generation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E2BC962E981FEB00269FE9 /* Debug */,
+				27E2BC972E981FEB00269FE9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27E2BC982E981FEB00269FE9 /* Build configuration list for PBXNativeTarget "AI Photo Generation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E2BC992E981FEB00269FE9 /* Debug */,
+				27E2BC9A2E981FEB00269FE9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27E2BC9B2E981FEB00269FE9 /* Build configuration list for PBXNativeTarget "AI Photo GenerationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E2BC9C2E981FEB00269FE9 /* Debug */,
+				27E2BC9D2E981FEB00269FE9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27E2BC9E2E981FEB00269FE9 /* Build configuration list for PBXNativeTarget "AI Photo GenerationUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E2BC9F2E981FEB00269FE9 /* Debug */,
+				27E2BCA02E981FEB00269FE9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 27E2BC6C2E981FE700269FE9 /* Project object */;
+}

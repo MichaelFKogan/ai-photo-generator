@@ -1,0 +1,107 @@
+import SwiftUI
+
+struct ContentView: View {
+    @State private var selectedTab = 0
+    @State private var previousTab = 0
+    @State private var currentTransitionEdge: Edge = .trailing
+
+    var body: some View {
+        ZStack {
+            Group {
+                switch selectedTab {
+                case 0:
+                    HomeView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: .leading)),
+                            removal: .opacity.combined(with: .move(edge: .leading))
+                        ))
+                case 1:
+                    ExploreView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                        ))
+                case 2:
+                    CreateView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                        ))
+                case 3:
+//                    ModelsView()
+                    PlaygroundView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                        ))
+                case 4:
+                    ProfileView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                        ))
+                // case 4:
+                //     SettingsView()
+                //         .transition(.asymmetric(
+                //             insertion: .opacity.combined(with: .move(edge: .trailing)),
+                //             removal: .opacity.combined(with: .move(edge: .trailing))
+                //         ))
+                default:
+                    EmptyView()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            // Tab Bar
+            VStack {
+                Spacer()
+                HStack(spacing: 0) {
+                    tabButton(icon: "house.fill", title: "Home", index: 0)
+                    tabButton(icon: "magnifyingglass", title: "Explore", index: 1)
+                    tabButton(icon: "plus.circle.fill", title: "Create", index: 2)
+                    tabButton(icon: "wrench.and.screwdriver", title: "Playground", index: 3)
+                    // tabButton(icon: "cpu", title: "AI Models", index: 3)
+                    tabButton(icon: "person.fill", title: "Profile", index: 4)
+                    // tabButton(icon: "gearshape.fill", title: "Settings", index: 4)
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 20)
+                .background(.ultraThinMaterial)
+            }
+        }
+        .ignoresSafeArea(.keyboard)
+    }
+
+    // Tab button helper
+    private func tabButton(icon: String, title: String, index: Int) -> some View {
+        TabBarButton(icon: icon, title: title, isSelected: selectedTab == index) {
+            let edge: Edge = index < selectedTab ? .leading : .trailing
+            currentTransitionEdge = edge
+            previousTab = selectedTab
+            withAnimation(.easeInOut(duration: 0.3)) {
+                selectedTab = index
+            }
+        }
+    }
+}
+
+struct TabBarButton: View {
+    let icon: String
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 24))
+                Text(title)
+                    .font(.caption)
+            }
+            .foregroundColor(isSelected ? .blue : .gray)
+            .frame(maxWidth: .infinity)
+        }
+    }
+}
