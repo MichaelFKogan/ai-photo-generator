@@ -38,7 +38,7 @@ let actionfigureItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "geminiflashimage25",
-        exampleImages: ["example1_1", "example1_2", "example1_3", "example1_4", "example1_5", "example1_6"]
+        exampleImages: []
     ),
     TrendingItem(
         imageName: "trending2",
@@ -49,6 +49,6 @@ let actionfigureItems = [
         modelName: "Seedream 4.0",
         modelDescription: "",
         modelImageName: "seedream40",
-        exampleImages: ["example2_1", "example2_2", "example2_3", "example2_4", "example2_5", "example2_6"]
+        exampleImages: []
     ),
 ]

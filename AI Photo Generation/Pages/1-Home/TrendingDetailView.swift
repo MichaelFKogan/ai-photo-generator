@@ -16,6 +16,7 @@ struct TrendingDetailView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var showCamera: Bool = false
     @State private var showPhotoPicker: Bool = false // <-- new state
+    @State private var createArrowMove: Bool = false
 
     var body: some View {
         ScrollView {
@@ -32,7 +33,7 @@ struct TrendingDetailView: View {
                 .padding(.top, 10)
                 
                 // Card 1: Photo Upload Section
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading) {
 //                    HStack {
 //                        Image(systemName: "photo.badge.plus")
 //                            .foregroundColor(.blue)
@@ -46,21 +47,23 @@ struct TrendingDetailView: View {
 //                        .font(.caption)
 //                        .foregroundColor(.secondary)
                     
-                        // Vertical layout: Add photo button on top, Create button below, both centered
-                        // Compute a ~75% width based on the page padding (24 + 24 on each side)
+                        // Horizontal layout: Add photo box on the left, Create button on the right
+                        // Compute inner width based on page padding (24 + 24)
                         let pageInnerWidth = UIScreen.main.bounds.width - 48
-                        let buttonWidth = pageInnerWidth * 0.75
+                        let addPhotoWidth = pageInnerWidth * 0.48
+                        let createButtonWidth = pageInnerWidth - addPhotoWidth - 16 // account for spacing
+                        let controlHeight: CGFloat = 250
 
-                        VStack(alignment: .center, spacing: 16) {
+                        HStack(alignment: .center, spacing: 16) {
                             AddPhotoButton(
                                 selectedImage: $selectedImage,
                                 selectedPhotoItem: $selectedPhotoItem,
                                 showCamera: $showCamera,
                                 showPhotoPicker: $showPhotoPicker
                             )
-                            .frame(width: buttonWidth, height: 220)
+                            .frame(width: addPhotoWidth, height: controlHeight)
 
-                            // Create button centered under the Add Photo box
+                            // Create button placed to the right and sized to match the photo box height
                             Button(action: {
                                 // Simulate transform action
                                 isGenerating = true
@@ -68,19 +71,27 @@ struct TrendingDetailView: View {
                                     isGenerating = false
                                 }
                             }) {
-                                HStack(spacing: 10) {
-                                    Text(isGenerating ? "✨ Creating..." : "🪄 Create ")
-                                        .font(.headline)
-                                        .fontWeight(.semibold)
+                                VStack {
+                                    Spacer()
+                                    HStack(spacing: 10) {
+                                        Text(isGenerating ? "✨ Creating..." : "🪄 Create")
+                                            .font(.custom("Nunito-Bold", size: 18))
+//                                            .font(.headline)
+//                                            .fontWeight(.semibold)
+                                            .multilineTextAlignment(.center)
 
-                                    // Trailing arrow icon
-                                    Image(systemName: "arrow.right")
-                                        .font(.system(size: 16, weight: .semibold))
+                                        Image(systemName: "arrow.right")
+                                            .font(.system(size: 18, weight: .semibold))
+                                            // subtle left-right motion
+                                            .offset(x: createArrowMove ? 6 : -6)
+                                            .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: createArrowMove)
+                                    }
+                                    Spacer()
                                 }
                                 .frame(maxWidth: .infinity)
                                 .foregroundColor(.white)
                             }
-                            .frame(width: buttonWidth, height: 64)
+                            .frame(width: createButtonWidth, height: controlHeight)
                             .background(
                                 Group {
                                     if isGenerating || selectedImage == nil {
@@ -88,8 +99,8 @@ struct TrendingDetailView: View {
                                     } else {
                                         LinearGradient(
                                             gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.85)]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
+                                            startPoint: .top,
+                                            endPoint: .bottom
                                         )
                                     }
                                 }
@@ -99,10 +110,42 @@ struct TrendingDetailView: View {
                             .disabled(isGenerating || selectedImage == nil)
                             .animation(.easeInOut(duration: 0.2), value: isGenerating)
                         }
-                    .padding(16)
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+                        .padding(.horizontal, 16)
+                        .cornerRadius(16)
+    //                    .background(
+    //                        // 👇 Add your background color here
+    //                        RoundedRectangle(cornerRadius: 16)
+    //                            .fill(Color(.systemGray6)) // You can change this to any color
+    //                    )
+                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+                    
+                    // Price pill: subtle, non-bright tint with tag icon
+                    HStack{
+                        Spacer()
+                        Image(systemName: "tag.fill")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(Color(UIColor.systemGray))
+
+                        Text("Cost: $0.04")
+                            .font(.custom("Nunito-SemiBold", size: 14))
+                            .foregroundColor(.primary)
+                    }
+                    .padding(.trailing, 16)
+                    .padding(.top, 2)
+    //                                    .background(
+    //                                        RoundedRectangle(cornerRadius: 12)
+    //                                            .fill(Color(UIColor.systemGray5))
+    //                                    )
+    //                                    .overlay(
+    //                                        RoundedRectangle(cornerRadius: 12)
+    //                                            .stroke(Color(UIColor.systemGray4), lineWidth: 0.5)
+    //                                    )
                 }
+                
+                
+                
+                
+                
                 
 //                    // Card 2: Prompt Section
 //                    VStack(alignment: .leading, spacing: 12) {
@@ -154,8 +197,10 @@ struct TrendingDetailView: View {
 //                }
                 
                 // Example Images Section
-                ExampleImagesSection(images: item.exampleImages)
-                    .padding(.top, 8)
+                if !item.exampleImages.isEmpty {
+                    ExampleImagesSection(images: item.exampleImages)
+//                        .padding(.top, 8)
+                }
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 32)
@@ -164,6 +209,34 @@ struct TrendingDetailView: View {
 //        .ignoresSafeArea(edges: .top)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // Top-right credits left + price indicator (muted styling)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                HStack(spacing: 10) {
+                    // Credits left: bolt icon + amount + small caption
+                    HStack(spacing: 8) {
+                        Image(systemName: "bolt.fill")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.yellow)
+
+
+                            Text("$5.00")
+                            .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.primary)
+                            Text("credits left")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color(UIColor.secondarySystemBackground))
+                    )
+                }
+            }
+        }
         .sheet(isPresented: $showCamera) {
             ImagePicker(sourceType: .camera, selectedImage: $selectedImage)
         }
@@ -177,6 +250,8 @@ struct TrendingDetailView: View {
         }
         .onAppear {
             prompt = item.prompt
+            // kick off the subtle arrow motion next to the Create text
+            createArrowMove = true
         }
     }
 }
@@ -197,7 +272,7 @@ struct AddPhotoButton: View {
                 Image(uiImage: selectedImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: 220)
+                    .frame(maxWidth: .infinity, maxHeight: 250)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
@@ -234,8 +309,8 @@ struct AddPhotoButton: View {
                             .foregroundColor(.gray.opacity(0.7))
                     }
                 }
-                .frame(height: 220)
-                .frame(maxWidth: .infinity, maxHeight: 220)
+                .frame(height: 250)
+                .frame(maxWidth: .infinity, maxHeight: 250)
                 .background(Color.gray.opacity(0.03))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(
@@ -578,8 +653,9 @@ struct ExampleImagesSection: View {
                 Image(systemName: "photo.on.rectangle.angled")
                     .foregroundColor(.blue)
                 Text("Example Gallery")
-                    .font(.title3)
-                    .fontWeight(.semibold)
+                    .font(.custom("Nunito-Bold", size: 22))
+//                    .font(.title3)
+//                    .fontWeight(.semibold)
                 Spacer()
             }
             
@@ -758,8 +834,8 @@ struct DiagonalOverlappingImages: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let imageWidth = geometry.size.width * 0.50
-            let imageHeight = imageWidth * 1.35
+            let imageWidth = geometry.size.width * 0.48
+            let imageHeight = imageWidth * 1.33
             let arrowYOffset = -imageHeight * 0.15 // About 1/3 from top
             
             ZStack(alignment: .center) {
@@ -801,7 +877,7 @@ struct DiagonalOverlappingImages: View {
             }
             .frame(width: geometry.size.width, height: imageHeight + 20)
         }
-        .frame(height: 240)
+        .frame(height: 260)
         .padding(.horizontal, 20)
     }
 }

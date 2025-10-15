@@ -253,7 +253,7 @@ struct ImageDiffView: View {
             scanPosition = 0
             withAnimation(
                 Animation
-                    .easeInOut(duration: 2.0)
+                    .easeInOut(duration: 1.25)
                     .repeatForever(autoreverses: true)
             ) {
                 scanPosition = width
@@ -264,13 +264,13 @@ struct ImageDiffView: View {
             scanPositionVertical = 0
             withAnimation(
                 Animation
-                    .easeInOut(duration: 2.0)
+                    .easeInOut(duration: 1.25)
                     .repeatForever(autoreverses: true)
             ) {
                 scanPositionVertical = height
             }
         case .scanHorizontalVarying:
-            scanHorizontalDuration = Double.random(in: 2.0...4.0)
+            scanHorizontalDuration = Double.random(in: 1.0...2.0)
             scanPosition = 0
             withAnimation(
                 Animation
@@ -280,7 +280,7 @@ struct ImageDiffView: View {
                 scanPosition = width
             }
         case .scanVerticalVarying:
-            scanVerticalDuration = Double.random(in: 2.0...4.0)
+            scanVerticalDuration = Double.random(in: 1.0...2.0)
             scanPositionVertical = 0
             withAnimation(
                 Animation

@@ -15,7 +15,7 @@ let prankItems = [
         modelName: "Stable Diffusion XL",
         modelDescription: "",
         modelImageName: "stablediffusion",
-        exampleImages: ["example3_1", "example3_2", "example3_3", "example3_4", "example3_5", "example3_6"]
+        exampleImages: []
     ),
     TrendingItem(
         imageName: "trending4",
@@ -25,7 +25,7 @@ let prankItems = [
         modelName: "DALL-E 3",
         modelDescription: "",
         modelImageName: "dalle3",
-        exampleImages: ["example4_1", "example4_2", "example4_3", "example4_4", "example4_5", "example4_6"]
+        exampleImages: []
     ),
     TrendingItem(
         imageName: "prank1",

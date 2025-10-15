@@ -55,13 +55,15 @@ struct HomeView: View {
                     
                     RowView(title: "📹 AI Videos", items: videoItems, isVideo: true)
 //                    RowView(title: "Trending", items: trendingItems, isVideo: false, diffAnimation: .scanHorizontal)
-                    RowView(title: "🦸‍♂️ Action Figures", items: actionfigureItems, isVideo: false, diffAnimation: .scanHorizontalVarying)
-                    RowView(title: "🎲 Random", items: randomItems, isVideo: false, diffAnimation: .flipCard)
-                    RowView(title: "🎮 Video Games", items: videogamesItems, isVideo: false, diffAnimation: .scanVerticalVarying)
+                    
+                    RowView(title: "Anime", items: animeItems, isVideo: false, diffAnimation: .scanHorizontal)
+                    RowView(title: "🦸‍♂️ Action Figures", items: actionfigureItems, isVideo: false, diffAnimation: .scanHorizontal)
+                    RowView(title: "🎲 Random", items: randomItems, isVideo: false)
+                    RowView(title: "🎮 Video Games", items: videogamesItems, isVideo: false, diffAnimation: .scanHorizontal)
                     RowView(title: "📸 Photography", items: photographyItems, isVideo: false, diffAnimation: .crossfade)
+                    RowView(title: "😂 Pranks", items: prankItems, isVideo: false, diffAnimation: .slider)
                     
                     RowView(title: "❤️ Relationships", items: relationshipItems, isVideo: false, diffAnimation: .flipCard)
-                    RowView(title: "😂 Pranks", items: prankItems, isVideo: false, diffAnimation: .cubeTurn)
                     RowView(title: "🧑‍🧑‍🧒 Family", items: familyItems, isVideo: false, diffAnimation: .crossfade)
 
                     // Recent Creations stays unique
