@@ -60,6 +60,8 @@ struct HomeView: View {
                     RowView(title: "🦸‍♂️ Action Figures", items: actionfigureItems, isVideo: false, diffAnimation: .scanHorizontal)
                     RowView(title: "🎲 Random", items: randomItems, isVideo: false)
                     RowView(title: "🎮 Video Games", items: videogamesItems, isVideo: false, diffAnimation: .scanHorizontal)
+                    RowView(title: "💫 Futuristic", items: futuristicItems, isVideo: false, diffAnimation: .scanHorizontal)
+                    
                     RowView(title: "📸 Photography", items: photographyItems, isVideo: false, diffAnimation: .crossfade)
                     RowView(title: "😂 Pranks", items: prankItems, isVideo: false, diffAnimation: .slider)
                     
