@@ -8,7 +8,7 @@
 // AI Videos category items
 let videoItems = [
     TrendingItem(
-        imageName: "video1",
+        imageName: "yetivideo",
         title: "Yeti Vlog",
         description: "",
         prompt: "Smooth AI-generated animation, fluid motion, cinematic quality, professional video production",
@@ -18,7 +18,7 @@ let videoItems = [
         exampleImages: ["video1_1", "video1_2", "video1_3", "video1_4", "video1_5", "video1_6"]
     ),
     TrendingItem(
-        imageName: "video2",
+        imageName: "animevideo",
         title: "Anime Vlogger",
         description: "",
         prompt: "Dynamic motion graphics, animated transitions, modern style, vibrant colors, professional editing",

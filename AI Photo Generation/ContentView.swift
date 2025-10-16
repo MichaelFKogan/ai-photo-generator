@@ -105,3 +105,9 @@ struct TabBarButton: View {
         }
     }
 }
+
+
+// MARK: - Preview
+#Preview {
+    ContentView()
+}

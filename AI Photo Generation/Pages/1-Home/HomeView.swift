@@ -41,7 +41,7 @@ struct HomeView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    Text("Welcome to AI Photo Generation")
+                    Text("Welcome to The AI Photo Generator")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
@@ -54,12 +54,23 @@ struct HomeView: View {
                         .padding(.horizontal)
                     
                     RowView(title: "📹 AI Videos", items: videoItems, isVideo: true)
+                    RowView(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems, isVideo: true)
+                    RowView(title: "🎮 Video Game Videos", items: videogamesVideosItems, isVideo: true)
+                    
+                    
 //                    RowView(title: "Trending", items: trendingItems, isVideo: false, diffAnimation: .scanHorizontal)
                     
                     RowView(title: "Anime", items: animeItems, isVideo: false, diffAnimation: .scanHorizontal)
                     RowView(title: "🦸‍♂️ Action Figures", items: actionfigureItems, isVideo: false, diffAnimation: .scanHorizontal)
                     RowView(title: "🎲 Random", items: randomItems, isVideo: false)
-                    RowView(title: "🎮 Video Games", items: videogamesItems, isVideo: false, diffAnimation: .scanHorizontal)
+                    
+                    RowView(title: "🎮 Video Game Photos", items: videogamesItems, isVideo: false, diffAnimation: .scanHorizontal)
+                    
+                    
+                    RowView(title: "❤️ Relationships", items: relationshipVideosItems, isVideo: true)
+                    
+                    RowView(title: "❤️ Relationships", items: relationshipItems, isVideo: false, diffAnimation: .flipCard)
+                    
                     RowView(title: "💫 Futuristic", items: futuristicItems, isVideo: false, diffAnimation: .scanHorizontal)
                     
                     RowView(title: "📸 Photography", items: photographyItems, isVideo: false, diffAnimation: .crossfade)
@@ -89,27 +100,6 @@ struct HomeView: View {
                     }
                     .padding(.horizontal)
 
-                    
-                    // Placeholder for recent creations
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Recent Creations")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                        
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 16) {
-                            ForEach(0..<6, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.gray.opacity(0.2))
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .overlay(
-                                        Image(systemName: "photo")
-                                            .font(.system(size: 40))
-                                            .foregroundColor(.gray)
-                                    )
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
                 }
             }
 //            .navigationTitle("Home")
@@ -124,45 +114,5 @@ struct HomeView: View {
                 }
             }
         }
-    }
-}
-
-struct VideoThumbnailView: View {
-    let videoName: String
-    @State private var player: AVPlayer?
-
-    var body: some View {
-        ZStack {
-            if let player = player {
-                VideoPlayer(player: player)
-                    .aspectRatio(contentMode: .fill)
-                    .onAppear {
-                        player.seek(to: .zero)
-                        player.play()
-                        player.isMuted = true
-                        NotificationCenter.default.addObserver(
-                            forName: .AVPlayerItemDidPlayToEndTime,
-                            object: player.currentItem,
-                            queue: .main
-                        ) { _ in
-                            player.seek(to: .zero)
-                            player.play()
-                        }
-                    }
-            } else {
-                Color.black.opacity(0.3)
-            }
-        }
-        .onAppear {
-            if let url = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
-                player = AVPlayer(url: url)
-            } else {
-                print("⚠️ Could not find \(videoName).mp4 in bundle")
-            }
-        }
-        .onDisappear {
-            player?.pause()
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }

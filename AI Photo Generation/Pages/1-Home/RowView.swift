@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct RowView: View {
     let title: String
@@ -21,12 +22,25 @@ struct RowView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(title)
-//                .font(.title3)
-//                .fontWeight(.semibold)
-                .font(.custom("Nunito-Bold", size: 20))
-                .padding(.horizontal)
+        VStack(alignment: .leading, spacing: 8) {
+            
+            HStack{
+                Text(title)
+                    .font(.custom("Nunito-Black", size: 20))
+                    .padding(.horizontal)
+                
+                Spacer()
+                
+                Text("See All")
+                    .font(.custom("Nunito-Bold", size: 12))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.gray.opacity(0.5), lineWidth: 2)
+                    )
+                    .padding(.trailing, 2)
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -43,7 +57,7 @@ struct RowView: View {
                                         )
                                         .overlay(alignment: .bottom) {
                                             Text("Try This")
-                                                .font(.custom("Nunito-Bold", size: 9))
+                                                .font(.custom("Nunito-ExtraBold", size: 9))
                                                 .foregroundColor(.white)
                                                 .padding(.horizontal, 10)
                                                 .padding(.vertical, 6)
@@ -69,7 +83,7 @@ struct RowView: View {
                                             )
                                             .overlay(alignment: .bottom) {
                                                 Text("Try This")
-                                                    .font(.custom("Nunito-Bold", size: 9))
+                                                    .font(.custom("Nunito-ExtraBold", size: 9))
                                                     .foregroundColor(.white)
                                                     .padding(.horizontal, 8)
                                                     .padding(.vertical, 5)
@@ -90,7 +104,7 @@ struct RowView: View {
                                                 )
                                                 .overlay(alignment: .bottom) {
                                                     Text("Try This")
-                                                        .font(.custom("Nunito-Bold", size: 9))
+                                                        .font(.custom("Nunito-ExtraBold", size: 9))
                                                         .foregroundColor(.white)
                                                         .padding(.horizontal, 8)
                                                         .padding(.vertical, 5)
@@ -112,7 +126,7 @@ struct RowView: View {
                                             )
                                             .overlay(alignment: .bottom) {
                                                 Text("Try This")
-                                                    .font(.custom("Nunito-Bold", size: 9))
+                                                    .font(.custom("Nunito-ExtraBold", size: 9))
                                                     .foregroundColor(.white)
                                                     .padding(.horizontal, 8)
                                                     .padding(.vertical, 5)
@@ -124,7 +138,7 @@ struct RowView: View {
                                 }
 
                                 Text(item.title)
-                                    .font(.custom("Nunito-Bold", size: 11))
+                                    .font(.custom("Nunito-ExtraBold", size: 11))
                                     .lineLimit(2)
                                     .multilineTextAlignment(.center)
 //                                    .frame(width: 140)
@@ -135,6 +149,62 @@ struct RowView: View {
                 }
                 .padding(.horizontal)
             }
+        }
+    }
+}
+
+
+struct VideoThumbnailView: View {
+    let videoName: String
+    @State private var player: AVPlayer?
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        ZStack {
+            if let player = player {
+                VideoPlayer(player: player)
+                    .aspectRatio(contentMode: .fill)
+                    .onAppear {
+                        setupLoop(for: player)
+                        player.play()
+                        player.isMuted = true
+                    }
+            } else {
+                Color.black.opacity(0.3)
+            }
+        }
+        .onAppear {
+            if let url = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
+                player = AVPlayer(url: url)
+            } else {
+                print("⚠️ Could not find \(videoName).mp4 in bundle")
+            }
+        }
+        .onDisappear {
+            player?.pause()
+        }
+        .onChange(of: scenePhase) { newPhase in
+            guard let player = player else { return }
+            switch newPhase {
+            case .active:
+                player.play() // Resume playback
+            case .inactive, .background:
+                player.pause() // Stop playback when app minimized
+            @unknown default:
+                break
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func setupLoop(for player: AVPlayer) {
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player.currentItem,
+            queue: .main
+        ) { _ in
+            player.seek(to: .zero)
+            player.play()
         }
     }
 }
