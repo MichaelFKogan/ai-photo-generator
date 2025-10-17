@@ -10,7 +10,7 @@ struct ContentView: View {
             Group {
                 switch selectedTab {
                 case 0:
-                    HomeView()
+                    Home()
                         .transition(.asymmetric(
                             insertion: .opacity.combined(with: .move(edge: .leading)),
                             removal: .opacity.combined(with: .move(edge: .leading))
