@@ -54,70 +54,106 @@ struct TrendingDetailView: View {
                         let createButtonWidth = pageInnerWidth - addPhotoWidth - 16 // account for spacing
                         let controlHeight: CGFloat = 250
 
-                        HStack(alignment: .center, spacing: 16) {
-                            AddPhotoButton(
-                                selectedImage: $selectedImage,
-                                selectedPhotoItem: $selectedPhotoItem,
-                                showCamera: $showCamera,
-                                showPhotoPicker: $showPhotoPicker
-                            )
-                            .frame(width: addPhotoWidth, height: controlHeight)
-
-                            // Create button placed to the right and sized to match the photo box height
-                            Button(action: {
-                                // Simulate transform action
-                                isGenerating = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    isGenerating = false
-                                }
-                            }) {
-                                VStack {
-                                    Spacer()
-                                    HStack(spacing: 10) {
-                                        Text(isGenerating ? "✨ Creating..." : "🪄 Create")
-                                            .font(.custom("Nunito-Bold", size: 18))
-//                                            .font(.headline)
-//                                            .fontWeight(.semibold)
-                                            .multilineTextAlignment(.center)
-
-                                        Image(systemName: "arrow.right")
-                                            .font(.system(size: 18, weight: .semibold))
-                                            // subtle left-right motion
-                                            .offset(x: createArrowMove ? 6 : -6)
-                                            .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: createArrowMove)
-                                    }
-                                    Spacer()
-                                }
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.white)
+                    HStack(alignment: .center, spacing: 16) {
+                        
+                        Button(action: {
+                            // Action goes here
+                        }) {
+                            HStack{
+                                Image(systemName: "plus")
+                                    .font(.custom("Nunito-ExtraBold", size: 22))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.black).opacity(0)
+                                    .padding(.leading, 10)
+                                Spacer()
+                                Text("Pick A Photo")
+                                    .font(.custom("Nunito-ExtraBold", size: 20))
+                                    .foregroundColor(.black)
+                                Spacer()
+                                Image(systemName: "plus") // Replace with your desired icon
+                                    .font(.custom("Nunito-ExtraBold", size: 22))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.black)
+                                    .padding(.trailing, 10)
+                                
                             }
-                            .frame(width: createButtonWidth, height: controlHeight)
-                            .background(
-                                Group {
-                                    if isGenerating || selectedImage == nil {
-                                        Color.gray.opacity(0.5)
-                                    } else {
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.85)]),
-                                            startPoint: .top,
-                                            endPoint: .bottom
-                                        )
-                                    }
-                                }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.white)
+                            .foregroundColor(.black)
+                            .cornerRadius(22)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 22)
+                                    .stroke(Color.gray, lineWidth: 1)
                             )
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .shadow(color: (isGenerating || selectedImage == nil) ? Color.clear : Color.blue.opacity(0.25), radius: 8, x: 0, y: 4)
-                            .disabled(isGenerating || selectedImage == nil)
-                            .animation(.easeInOut(duration: 0.2), value: isGenerating)
+                            
                         }
-                        .padding(.horizontal, 16)
-                        .cornerRadius(16)
-    //                    .background(
-    //                        // 👇 Add your background color here
-    //                        RoundedRectangle(cornerRadius: 16)
-    //                            .fill(Color(.systemGray6)) // You can change this to any color
-    //                    )
-                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+                        
+//                        AddPhotoButton(
+//                            selectedImage: $selectedImage,
+//                            selectedPhotoItem: $selectedPhotoItem,
+//                            showCamera: $showCamera,
+//                            showPhotoPicker: $showPhotoPicker
+//                        )
+//                        .frame(width: addPhotoWidth, height: controlHeight)
+                        
+//                        // Create button placed to the right and sized to match the photo box height
+//                        Button(action: {
+//                            // Simulate transform action
+//                            isGenerating = true
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                                isGenerating = false
+//                            }
+//                        }) {
+//                            VStack {
+//                                Spacer()
+//                                HStack(spacing: 10) {
+//                                    Text(isGenerating ? "✨ Creating..." : "🪄 Create")
+//                                        .font(.custom("Nunito-Bold", size: 18))
+//                                    //                                            .font(.headline)
+//                                    //                                            .fontWeight(.semibold)
+//                                        .multilineTextAlignment(.center)
+//                                    
+//                                    Image(systemName: "arrow.right")
+//                                        .font(.system(size: 18, weight: .semibold))
+//                                    // subtle left-right motion
+//                                        .offset(x: createArrowMove ? 6 : -6)
+//                                        .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: createArrowMove)
+//                                }
+//                                Spacer()
+//                            }
+//                            .frame(maxWidth: .infinity)
+//                            .foregroundColor(.white)
+//                        }
+//                        .frame(width: createButtonWidth, height: controlHeight)
+//                        .background(
+//                            Group {
+//                                if isGenerating || selectedImage == nil {
+//                                    Color.gray.opacity(0.5)
+//                                } else {
+//                                    LinearGradient(
+//                                        gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.85)]),
+//                                        startPoint: .top,
+//                                        endPoint: .bottom
+//                                    )
+//                                }
+//                            }
+//                        )
+//                        .clipShape(RoundedRectangle(cornerRadius: 10))
+//                        .shadow(color: (isGenerating || selectedImage == nil) ? Color.clear : Color.blue.opacity(0.25), radius: 8, x: 0, y: 4)
+//                        .disabled(isGenerating || selectedImage == nil)
+//                        .animation(.easeInOut(duration: 0.2), value: isGenerating)
+                        
+                        
+                    }
+                    .padding(.horizontal, 16)
+                    .cornerRadius(16)
+//                    .background(
+//                        // 👇 Add your background color here
+//                        RoundedRectangle(cornerRadius: 16)
+//                            .fill(Color(.systemGray6)) // You can change this to any color
+//                    )
+                    .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
                     
                     // Price pill: subtle, non-bright tint with tag icon
                     HStack{
@@ -127,19 +163,19 @@ struct TrendingDetailView: View {
                             .foregroundColor(Color(UIColor.systemGray))
 
                         Text("Cost: $0.04")
-                            .font(.custom("Nunito-SemiBold", size: 14))
+                            .font(.custom("Nunito-ExtraBold", size: 16))
                             .foregroundColor(.primary)
                     }
                     .padding(.trailing, 16)
                     .padding(.top, 2)
-    //                                    .background(
-    //                                        RoundedRectangle(cornerRadius: 12)
-    //                                            .fill(Color(UIColor.systemGray5))
-    //                                    )
-    //                                    .overlay(
-    //                                        RoundedRectangle(cornerRadius: 12)
-    //                                            .stroke(Color(UIColor.systemGray4), lineWidth: 0.5)
-    //                                    )
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .fill(Color(UIColor.systemGray5))
+//                    )
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .stroke(Color(UIColor.systemGray4), lineWidth: 0.5)
+//                    )
                 }
                 
                 
