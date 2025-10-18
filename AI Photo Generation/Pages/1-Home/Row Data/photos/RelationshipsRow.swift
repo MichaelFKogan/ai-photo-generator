@@ -10,6 +10,7 @@ let relationshipItems = [
     TrendingItem(
         imageName: "relationship1",
         title: "Couple Portrait",
+        cost: "0.04",
         description: "",
         prompt: "Romantic couple portrait, soft lighting, intimate moment, professional photography, warm tones, emotional connection",
         modelName: "DALL-E 3",
@@ -20,6 +21,7 @@ let relationshipItems = [
     TrendingItem(
         imageName: "relationship2",
         title: "Wedding Day",
+        cost: "0.04",
         description: "",
         prompt: "Beautiful wedding photography, bride and groom, romantic atmosphere, elegant composition, golden hour lighting",
         modelName: "Midjourney V6",
@@ -30,6 +32,7 @@ let relationshipItems = [
     TrendingItem(
         imageName: "relationship3",
         title: "Best Friends",
+        cost: "0.04",
         description: "",
         prompt: "Friends laughing together, candid moment, joyful expressions, natural lighting, authentic connection",
         modelName: "Stable Diffusion XL",
@@ -40,6 +43,7 @@ let relationshipItems = [
     TrendingItem(
         imageName: "relationship4",
         title: "Date Night",
+        cost: "0.04",
         description: "",
         prompt: "Romantic dinner setting, couple enjoying meal, restaurant ambiance, warm candlelight, intimate atmosphere",
         modelName: "DALL-E 3",
@@ -50,6 +54,7 @@ let relationshipItems = [
     TrendingItem(
         imageName: "relationship5",
         title: "Proposal Moment",
+        cost: "0.04",
         description: "",
         prompt: "Marriage proposal scene, emotional moment, beautiful setting, romantic lighting, surprise expression",
         modelName: "Midjourney V6",

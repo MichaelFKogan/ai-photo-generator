@@ -8,58 +8,70 @@
 import SwiftUI
 import AVKit
 
-struct VideoRow: View {
+struct HomeRowVideo: View {
     let title: String
     let items: [TrendingItem]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(title)
-                    .font(.custom("Nunito-Black", size: 20))
-                    .padding(.horizontal)
-                Spacer()
-                Text("See All")
-                    .font(.custom("Nunito-Bold", size: 12))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.gray.opacity(0.5), lineWidth: 2)
-                    )
-                    .padding(.trailing, 2)
+            RowTitle(title: title) {
+                print("Tapped See All for \(title)")
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
-                        NavigationLink(destination: TrendingDetailView(item: item)) {
+                        NavigationLink(destination: VideoDetailView(item: item)) {
                             VStack(spacing: 8) {
                                 if let url = Bundle.main.url(forResource: item.imageName, withExtension: "mp4") {
                                     VideoThumbnail(url: url)
-                                        .frame(width: 160, height: 236)
+                                        .frame(width: 140, height: 216)
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 12)
                                                 .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                         )
-                                        .overlay(alignment: .bottom) {
-                                            Text("Try This")
-                                                .font(.custom("Nunito-Black", size: 12))
+//                                        .overlay(alignment: .topTrailing) {
+//                                            TopRightBadgeOverlay(text: item.cost)
+//                                        }
+                                        .overlay(alignment: .bottomLeading) {
+                                            Text(item.title)
+                                                .font(.custom("Nunito-Bold", size: 11))
+                                                .lineLimit(2)
+                                                .multilineTextAlignment(.leading)
                                                 .foregroundColor(.white)
-                                                .padding(.horizontal, 10)
-                                                .padding(.vertical, 6)
-                                                .background(Color.black.opacity(0.8))
-                                                .clipShape(Capsule())
-                                                .padding(.bottom, 8)
+                                                .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .padding(6)
+                                                .background(
+                                                    LinearGradient(
+                                                        gradient: Gradient(colors: [
+                                                            Color.black.opacity(0.6),
+                                                            Color.black.opacity(0)
+                                                        ]),
+                                                        startPoint: .bottom,
+                                                        endPoint: .top
+                                                    )
+                                                )
+                                        }
+                                        .overlay(alignment: .bottomTrailing) {
+                                            Text("$\(item.cost)")
+                                                .font(.custom("Nunito-Bold", size: 11))
+                                                .foregroundColor(.white)
+                                                .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
+//                                                .padding(.horizontal, 6)
+//                                                .padding(.vertical, 4)
+//                                                .background(Color.black.opacity(0.7))
+//                                                .clipShape(Capsule())
+                                                .padding(6)
                                         }
                                 }
                                 
-                                Text(item.title)
-                                    .font(.custom("Nunito-ExtraBold", size: 11))
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.primary)
+//                                Text(item.title)
+//                                    .font(.custom("Nunito-ExtraBold", size: 11))
+//                                    .lineLimit(2)
+//                                    .multilineTextAlignment(.center)
+//                                    .foregroundColor(.primary)
                             }
                         }
                     }

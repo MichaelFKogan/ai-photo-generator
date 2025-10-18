@@ -9,7 +9,8 @@ let videogamesVideosItems = [
     TrendingItem(
         imageName: "minecraft",
         imageNameOriginal: "",
-        title: "",
+        title: "Minecraft",
+        cost: "0.20",
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -20,7 +21,8 @@ let videogamesVideosItems = [
     TrendingItem(
         imageName: "hulkexplode",
         imageNameOriginal: "",
-        title: "",
+        title: "Hulk Explode",
+        cost: "0.30",
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -32,6 +34,7 @@ let videogamesVideosItems = [
         imageName: "captainamerica",
         imageNameOriginal: "captainamerica",
         title: "Captain America",
+        cost: "0.30",
         description: "MTransform your photos into epic costume transformation videos.",
         prompt: "",
         modelName: "",
@@ -42,7 +45,8 @@ let videogamesVideosItems = [
     TrendingItem(
         imageName: "hulkride",
         imageNameOriginal: "",
-        title: "",
+        title: "Hulk Ride",
+        cost: "0.30",
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
         prompt: "",
         modelName: "",

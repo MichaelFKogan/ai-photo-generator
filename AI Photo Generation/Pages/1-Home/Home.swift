@@ -13,6 +13,7 @@ struct TrendingItem: Identifiable {
     let imageName: String
     let imageNameOriginal: String?
     let title: String
+    let cost: String
     let description: String
     
     let prompt: String
@@ -21,10 +22,11 @@ struct TrendingItem: Identifiable {
     let modelImageName: String
     let exampleImages: [String]
     
-    init(imageName: String, imageNameOriginal: String? = nil, title: String, description: String, prompt: String, modelName: String, modelDescription: String, modelImageName: String, exampleImages: [String]) {
+    init(imageName: String, imageNameOriginal: String? = nil, title: String, cost: String, description: String, prompt: String, modelName: String, modelDescription: String, modelImageName: String, exampleImages: [String]) {
         self.imageName = imageName
         self.imageNameOriginal = imageNameOriginal
         self.title = title
+        self.cost = cost
         self.description = description
         self.prompt = prompt
         self.modelName = modelName
@@ -40,54 +42,135 @@ struct Home: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 20) {
-                    Text("Welcome to The AI Photo Generator")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding(.top)
+                
+                VStack{
+                    // Title
+                    VStack{
+                            
+                        Text("Unleash Your")
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .tracking(0.3)
+                        
+                        Text("Creativity with AI")
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .tracking(0.3)
+                    }
+                    .multilineTextAlignment(.center)
+                        
+                        // Subtitle
+                        Text("Transform your images and create amazing content with AI")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                            .lineSpacing(4)
+                }
+                
+                VStack(spacing: 10) {
                     
-                    Text("Transform your images and create amazing content with AI")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+                    HomeRowVideo(title: "📹 AI Videos", items: videoItems)
+                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
-                    VideoRow(title: "📹 AI Videos", items: videoItems)
-                    VideoRow(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
-                    
-                    VideoRow(title: "🎮 Video Game Videos", items: videogamesVideosItems)
-//                  VideoRow(title: "Trending", items: trendingItem, diffAnimation: .scanHorizontal)
+                    HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
+                    HomeRowSplit(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)
+//                  HomeRowVideo(title: "Trending", items: trendingItem, diffAnimation: .scanHorizontal)
                     
                     
-                    SplitImageRow(title: "Anime", items: animeItems, diffAnimation: .scanHorizontal)
-                    SplitImageRow(title: "🦸‍♂️ Action Figures", items: actionfigureItems, diffAnimation: .scanHorizontal)
+                    HomeRowSplit(title: "Anime", items: animeItems, diffAnimation: .scanHorizontal)
+                    HomeRowSplit(title: "🦸‍♂️ Action Figures", items: actionfigureItems, diffAnimation: .scanHorizontal)
                     
-                    ImageRow(title: "🎲 Random", items: randomItems)
-                    SplitImageRow(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)
+                    HomeRowSingle(title: "🎲 Random", items: randomItems)
                     
-                    SplitImageRow(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+//                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
                     
-                    SplitImageRow(title: "💫 Futuristic", items: futuristicItems, diffAnimation: .scanHorizontal)
-                    SplitImageRow(title: "📸 Photography", items: photographyItems, diffAnimation: .crossfade)
+                    HomeRowSplit(title: "💫 Futuristic", items: futuristicItems, diffAnimation: .scanHorizontal)
+                    HomeRowSplit(title: "📸 Photography", items: photographyItems, diffAnimation: .crossfade)
                     
-                    SplitImageRow(title: "😂 Pranks", items: prankItems, diffAnimation: .slider)
-                    SplitImageRow(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
-                    SplitImageRow(title: "🧑‍🧑‍🧒 Family", items: familyItems, diffAnimation: .crossfade)
+                    HomeRowSplit(title: "😂 Pranks", items: prankItems, diffAnimation: .slider)
+//                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+//                    HomeRowSplit(title: "🧑‍🧑‍🧒 Family", items: familyItems, diffAnimation: .crossfade)
 
                 }
             }
 //            .navigationTitle("Home")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("AI Creator Studio")
+                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        themeManager.toggleTheme()
-                    }) {
-                        Image(systemName: themeManager.isDarkMode ? "sun.max.fill" : "moon.fill")
-                            .foregroundColor(.primary)
+                    HStack(spacing: 12) {
+                        // Credits Display
+                        HStack(spacing: 6) {
+                            Image(systemName: "diamond.fill")
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.blue, .purple],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .font(.system(size: 9))
+                            
+//                            Text("\(userCredits)")
+                            Text("$5.00")
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .foregroundColor(.primary)
+                            Text("credits left")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.secondary.opacity(0.1))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+//                                .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
+                                .strokeBorder(
+                                    LinearGradient(
+                                        colors: [.blue, .purple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                        )
                     }
                 }
             }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    Button(action: {
+//                        themeManager.toggleTheme()
+//                    }) {
+//                        Image(systemName: themeManager.isDarkMode ? "sun.max.fill" : "moon.fill")
+//                            .foregroundColor(.primary)
+//                    }
+//                }
+//            }
         }
     }
 }

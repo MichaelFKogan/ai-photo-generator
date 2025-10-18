@@ -10,6 +10,7 @@ let trendingItems = [
     TrendingItem(
         imageName: "trending5",
         title: "Nature Vista",
+        cost: "0.04",
         description: "",
         prompt: "Breathtaking landscape, mountain vista, golden hour lighting, dramatic clouds, professional nature photography",
         modelName: "Midjourney V6",
@@ -20,6 +21,7 @@ let trendingItems = [
     TrendingItem(
         imageName: "trending6",
         title: "Abstract Art",
+        cost: "0.04",
         description: "",
         prompt: "Abstract modern art, fluid shapes, bold colors, contemporary style, digital art, high contrast",
         modelName: "Stable Diffusion XL",
@@ -30,6 +32,7 @@ let trendingItems = [
     TrendingItem(
         imageName: "trending7",
         title: "Retro Vibes",
+        cost: "0.04",
         description: "",
         prompt: "80s retro aesthetic, vaporwave style, nostalgic colors, vintage photography, synthwave vibes",
         modelName: "DALL-E 3",
@@ -40,6 +43,7 @@ let trendingItems = [
     TrendingItem(
         imageName: "trending8",
         title: "Digital Painting",
+        cost: "0.04",
         description: "",
         prompt: "Digital painting, fantasy art style, detailed illustration, vibrant colors, concept art, professional quality",
         modelName: "Midjourney V6",

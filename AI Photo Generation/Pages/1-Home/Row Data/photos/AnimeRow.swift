@@ -10,6 +10,7 @@ let animeItems = [
         imageName: "anime1",
         imageNameOriginal: "anime",
         title: "Anime",
+        cost: "0.04",
         description: "",
         prompt: "",
         modelName: "",

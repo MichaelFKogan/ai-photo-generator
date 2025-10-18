@@ -10,6 +10,7 @@ let prankItems = [
     TrendingItem(
         imageName: "trending3",
         title: "Homeless Man Prank",
+        cost: "0.04",
         description: "",
         prompt: "Cyberpunk neon lights, futuristic cityscape, vibrant purple and blue colors, night scene, cinematic lighting",
         modelName: "Stable Diffusion XL",
@@ -20,6 +21,7 @@ let prankItems = [
     TrendingItem(
         imageName: "trending4",
         title: "Shirtless Plumber Prank",
+        cost: "0.04",
         description: "",
         prompt: "Astronaut in space, cosmic background, stars and galaxies, cinematic composition, ultra detailed, 8k quality",
         modelName: "DALL-E 3",
@@ -30,6 +32,7 @@ let prankItems = [
     TrendingItem(
         imageName: "prank1",
         title: "Surprise Reaction",
+        cost: "0.04",
         description: "",
         prompt: "Funny surprise prank, shocked expression, candid moment, humorous situation, natural reaction",
         modelName: "DALL-E 3",
@@ -40,6 +43,7 @@ let prankItems = [
     TrendingItem(
         imageName: "prank2",
         title: "Jump Scare",
+        cost: "0.04",
         description: "",
         prompt: "Jump scare prank moment, startled reaction, comedic timing, action photography, funny expression",
         modelName: "Midjourney V6",
@@ -50,6 +54,7 @@ let prankItems = [
     TrendingItem(
         imageName: "prank3",
         title: "Hidden Camera",
+        cost: "0.04",
         description: "",
         prompt: "Hidden camera prank setup, unsuspecting target, funny moment, candid capture, humorous scene",
         modelName: "Stable Diffusion XL",
@@ -60,6 +65,7 @@ let prankItems = [
     TrendingItem(
         imageName: "prank4",
         title: "Fake Spider",
+        cost: "0.04",
         description: "",
         prompt: "Spider prank reaction, terrified expression, comedic moment, action shot, funny situation",
         modelName: "DALL-E 3",
@@ -70,6 +76,7 @@ let prankItems = [
     TrendingItem(
         imageName: "prank5",
         title: "Water Balloon",
+        cost: "0.04",
         description: "",
         prompt: "Water balloon prank, mid-splash action, surprised reaction, outdoor scene, summer fun",
         modelName: "Midjourney V6",

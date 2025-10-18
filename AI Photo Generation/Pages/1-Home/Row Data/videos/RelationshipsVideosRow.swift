@@ -9,6 +9,7 @@ let relationshipVideosItems = [
     TrendingItem(
         imageName: "relationship1",
         title: "Couple Portrait",
+        cost: "0.04",
         description: "",
         prompt: "Romantic couple portrait, soft lighting, intimate moment, professional photography, warm tones, emotional connection",
         modelName: "DALL-E 3",

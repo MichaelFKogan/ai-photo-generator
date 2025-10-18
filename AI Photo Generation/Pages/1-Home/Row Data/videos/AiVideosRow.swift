@@ -10,6 +10,7 @@ let videoItems = [
     TrendingItem(
         imageName: "yetivlog",
         title: "Yeti Vlog",
+        cost: "0.80",
         description: "",
         prompt: "Smooth AI-generated animation, fluid motion, cinematic quality, professional video production",
         modelName: "Veo 3",
@@ -20,6 +21,18 @@ let videoItems = [
     TrendingItem(
         imageName: "animevlog",
         title: "Anime Vlogger",
+        cost: "0.80",
+        description: "",
+        prompt: "Dynamic motion graphics, animated transitions, modern style, vibrant colors, professional editing",
+        modelName: "Sora 2",
+        modelDescription: "",
+        modelImageName: "sora2",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    TrendingItem(
+        imageName: "squeeze",
+        title: "Squeeze",
+        cost: "0.30",
         description: "",
         prompt: "Dynamic motion graphics, animated transitions, modern style, vibrant colors, professional editing",
         modelName: "Sora 2",
@@ -30,6 +43,7 @@ let videoItems = [
 //    TrendingItem(
 //        imageName: "video3",
 //        title: "Dark Fantasy",
+//        cost: "0.04",
 //        description: "",
 //        prompt: "AI-enhanced time lapse, accelerated motion, cinematic flow, dynamic camera movement",
 //        modelName: "Runway Gen-2",
@@ -40,6 +54,7 @@ let videoItems = [
 //    TrendingItem(
 //        imageName: "video4",
 //        title: "Character Animation",
+//        cost: "0.04",
 //        description: "",
 //        prompt: "Animated character with personality, expressive movements, 3D animation style, smooth transitions",
 //        modelName: "Pika Labs",
@@ -50,6 +65,7 @@ let videoItems = [
 //    TrendingItem(
 //        imageName: "video5",
 //        title: "Scene Transition",
+//        cost: "0.04",
 //        description: "",
 //        prompt: "Cinematic scene transition, smooth morphing, creative effects, professional video editing",
 //        modelName: "Runway Gen-2",
@@ -60,6 +76,7 @@ let videoItems = [
 //    TrendingItem(
 //        imageName: "video6",
 //        title: "Nature Animation",
+//        cost: "0.04",
 //        description: "",
 //        prompt: "Animated nature scene, flowing water, moving clouds, realistic motion, peaceful atmosphere",
 //        modelName: "Pika Labs",

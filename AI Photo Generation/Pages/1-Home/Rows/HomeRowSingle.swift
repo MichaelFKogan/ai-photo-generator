@@ -1,31 +1,19 @@
 import SwiftUI
 
-struct ImageRow: View {
+struct HomeRowSingle: View {
     let title: String
     let items: [TrendingItem]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(title)
-                    .font(.custom("Nunito-Black", size: 20))
-                    .padding(.horizontal)
-                Spacer()
-                Text("See All")
-                    .font(.custom("Nunito-Bold", size: 12))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.gray.opacity(0.5), lineWidth: 2)
-                    )
-                    .padding(.trailing, 2)
+            RowTitle(title: title) {
+                print("Tapped See All for \(title)")
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
-                        NavigationLink(destination: TrendingDetailView(item: item)) {
+                        NavigationLink(destination: ImageDetailView(item: item)) {
                             VStack(spacing: 8) {
                                 Image(item.imageName)
                                     .resizable()
@@ -43,9 +31,23 @@ struct ImageRow: View {
                                             .foregroundColor(.white)
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 5)
-                                            .background(Color.black.opacity(0.6))
+                                            .background(Color.black.opacity(0.8))
                                             .clipShape(Capsule())
                                             .padding(.bottom, 6)
+                                    }
+                                    // ✅ Top-right overlay (Price)
+                                    .overlay(alignment: .topTrailing) {
+    //                                        if let price = item.price {
+    //                                            Text("$\(price, specifier: "%.2f")")
+                                        Text(item.cost)
+                                                .font(.custom("Nunito-Bold", size: 11))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 6)
+                                                .padding(.vertical, 3)
+                                                .background(Color.black.opacity(0.8))
+                                                .clipShape(Capsule())
+                                                .padding(6)
+    //                                        }
                                     }
 
                                 Text(item.title)

@@ -10,6 +10,7 @@ let familyItems = [
     TrendingItem(
         imageName: "family1",
         title: "Family Portrait",
+        cost: "0.04",
         description: "",
         prompt: "Happy family portrait, multigenerational, warm atmosphere, professional photography, natural smiles",
         modelName: "DALL-E 3",
@@ -20,6 +21,7 @@ let familyItems = [
     TrendingItem(
         imageName: "family2",
         title: "Parent & Child",
+        cost: "0.04",
         description: "",
         prompt: "Tender parent and child moment, loving connection, soft lighting, emotional bond, heartwarming scene",
         modelName: "Midjourney V6",
@@ -30,6 +32,7 @@ let familyItems = [
     TrendingItem(
         imageName: "family3",
         title: "Siblings Playing",
+        cost: "0.04",
         description: "",
         prompt: "Siblings playing together, joyful moment, childhood fun, candid photography, natural interaction",
         modelName: "Stable Diffusion XL",
@@ -40,6 +43,7 @@ let familyItems = [
     TrendingItem(
         imageName: "family4",
         title: "Family Vacation",
+        cost: "0.04",
         description: "",
         prompt: "Family vacation photo, beach setting, happy memories, sunset background, relaxed atmosphere",
         modelName: "DALL-E 3",
@@ -50,6 +54,7 @@ let familyItems = [
     TrendingItem(
         imageName: "family5",
         title: "Grandparents",
+        cost: "0.04",
         description: "",
         prompt: "Grandparents with grandchildren, multigenerational love, warm moment, family bond, heartwarming scene",
         modelName: "Midjourney V6",
