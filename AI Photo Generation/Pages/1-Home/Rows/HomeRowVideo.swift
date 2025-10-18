@@ -19,64 +19,146 @@ struct HomeRowVideo: View {
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(items) { item in
-                        NavigationLink(destination: VideoDetailView(item: item)) {
-                            VStack(spacing: 8) {
-                                if let url = Bundle.main.url(forResource: item.imageName, withExtension: "mp4") {
-                                    VideoThumbnail(url: url)
-                                        .frame(width: 140, height: 216)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                                        )
-//                                        .overlay(alignment: .topTrailing) {
-//                                            TopRightBadgeOverlay(text: item.cost)
-//                                        }
-                                        .overlay(alignment: .bottomLeading) {
-                                            Text(item.title)
-                                                .font(.custom("Nunito-Bold", size: 11))
-                                                .lineLimit(2)
-                                                .multilineTextAlignment(.leading)
-                                                .foregroundColor(.white)
-                                                .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .padding(6)
-                                                .background(
-                                                    LinearGradient(
-                                                        gradient: Gradient(colors: [
-                                                            Color.black.opacity(0.6),
-                                                            Color.black.opacity(0)
-                                                        ]),
-                                                        startPoint: .bottom,
-                                                        endPoint: .top
-                                                    )
-                                                )
-                                        }
-                                        .overlay(alignment: .bottomTrailing) {
-                                            Text("$\(item.cost)")
-                                                .font(.custom("Nunito-Bold", size: 11))
-                                                .foregroundColor(.white)
-                                                .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
-//                                                .padding(.horizontal, 6)
-//                                                .padding(.vertical, 4)
-//                                                .background(Color.black.opacity(0.7))
-//                                                .clipShape(Capsule())
-                                                .padding(6)
-                                        }
-                                }
-                                
-//                                Text(item.title)
-//                                    .font(.custom("Nunito-ExtraBold", size: 11))
-//                                    .lineLimit(2)
-//                                    .multilineTextAlignment(.center)
-//                                    .foregroundColor(.primary)
+                // Tile sizing tuned to match existing portrait aspect
+                let tileWidth: CGFloat = 220
+                let tileHeight: CGFloat = 300 // slightly shorter row height
+                let hSpacing: CGFloat = 12
+                let gridSpacing: CGFloat = 8
+
+                HStack(spacing: hSpacing) {
+                    ForEach(Array(mosaicBlocks(from: items).enumerated()), id: \.offset) { _, block in
+                        switch block {
+                        case .large(let item):
+                            NavigationLink(destination: VideoDetailView(item: item)) {
+                                VideoTile(item: item, width: tileWidth, height: tileHeight)
                             }
+
+                        case .grid(let group):
+                            let cellWidth = (tileWidth - gridSpacing) / 2
+                            let cellHeight = (tileHeight - gridSpacing) / 2
+
+                            VStack(spacing: gridSpacing) {
+                                HStack(spacing: gridSpacing) {
+                                    ForEach(0..<2) { col in
+                                        let index = col
+                                        if index < group.count {
+                                            let subItem = group[index]
+                                            NavigationLink(destination: VideoDetailView(item: subItem)) {
+                                                VideoTile(item: subItem, width: cellWidth, height: cellHeight)
+                                            }
+                                        } else {
+                                            Color.clear.frame(width: cellWidth, height: cellHeight)
+                                        }
+                                    }
+                                }
+                                HStack(spacing: gridSpacing) {
+                                    ForEach(0..<2) { col in
+                                        let index = col + 2
+                                        if index < group.count {
+                                            let subItem = group[index]
+                                            NavigationLink(destination: VideoDetailView(item: subItem)) {
+                                                VideoTile(item: subItem, width: cellWidth, height: cellHeight)
+                                            }
+                                        } else {
+                                            Color.clear.frame(width: cellWidth, height: cellHeight)
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(width: tileWidth, height: tileHeight)
                         }
                     }
                 }
                 .padding(.horizontal)
+            }
+        }
+    }
+}
+
+// MARK: - Mosaic building
+extension HomeRowVideo {
+    private enum MosaicBlock {
+        case large(TrendingItem)
+        case grid([TrendingItem])
+    }
+
+    private func mosaicBlocks(from items: [TrendingItem]) -> [MosaicBlock] {
+        var result: [MosaicBlock] = []
+        var index = 0
+        while index < items.count {
+            // Large
+            let largeItem = items[index]
+            result.append(.large(largeItem))
+            index += 1
+
+            // Grid of up to 4
+            if index < items.count {
+                let end = min(index + 4, items.count)
+                let gridItems = Array(items[index..<end])
+                result.append(.grid(gridItems))
+                index = end
+            }
+        }
+        return result
+    }
+}
+
+// MARK: - Reusable video tile
+struct VideoTile: View {
+    let item: TrendingItem
+    let width: CGFloat
+    let height: CGFloat
+
+    var body: some View {
+        ZStack {
+            if let url = Bundle.main.url(forResource: item.imageName, withExtension: "mp4") {
+                VideoThumbnail(url: url)
+                    .frame(width: width, height: height)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+                    .overlay(alignment: .bottomLeading) {
+                        Text(item.title)
+                            .font(.custom("Nunito-Bold", size: 11))
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(.white)
+//                            .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
+                            .shadow(color: .black, radius: 2, x: 1, y: 1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(6)
+//                            .background(
+//                                LinearGradient(
+//                                    gradient: Gradient(colors: [
+//                                        Color.black.opacity(0.6),
+//                                        Color.black.opacity(0)
+//                                    ]),
+//                                    startPoint: .bottom,
+//                                    endPoint: .top
+//                                )
+//                            )
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        Text("$\(item.cost)")
+                            .font(.custom("Nunito-Bold", size: 11))
+                            .foregroundColor(.white)
+                            .shadow(color: .black, radius: 2, x: 1, y: 1)
+//                            .padding(.horizontal, 4)
+//                            .padding(.vertical, 2)
+//                            .background(Color.black.opacity(0.3))
+//                            .clipShape(Capsule())
+                            .padding(6)
+                    }
+            } else {
+                VideoPlaceholder()
+                    .frame(width: width, height: height)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
             }
         }
     }
@@ -225,7 +307,6 @@ struct VideoPlaceholder: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
-        .frame(width: 160, height: 236)
         .onAppear { animate = true }
     }
 }

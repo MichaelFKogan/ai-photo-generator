@@ -66,8 +66,31 @@ struct ContentView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
-                .padding(.bottom, 20)
-                .background(.ultraThinMaterial)
+                .padding(.bottom, 0)
+//                .background(.ultraThinMaterial)
+                .background(
+                    ZStack {
+                        // Built-in blur effect
+                        Color.clear.background(.ultraThinMaterial)
+                        
+                        // Add a gentle dark gradient for contrast
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color.black,
+                                Color.black
+                                
+//                                Color.blue,
+//                                Color.purple
+                                
+//                                Color.black.opacity(0.8),
+//                                Color.black.opacity(0.4)
+                            ]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    }
+                    .ignoresSafeArea(edges: .bottom)
+                )
             }
         }
         .ignoresSafeArea(.keyboard)

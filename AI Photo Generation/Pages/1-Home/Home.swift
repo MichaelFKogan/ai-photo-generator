@@ -43,47 +43,57 @@ struct Home: View {
         NavigationView {
             ScrollView {
                 
-                VStack{
-                    // Title
-                    VStack{
-                            
-                        Text("Unleash Your")
-                            .font(.system(size: 34, weight: .bold, design: .rounded))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .purple],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .tracking(0.3)
-                        
-                        Text("Creativity with AI")
-                            .font(.system(size: 34, weight: .bold, design: .rounded))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .purple],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .tracking(0.3)
-                    }
-                    .multilineTextAlignment(.center)
-                        
-                        // Subtitle
-                        Text("Transform your images and create amazing content with AI")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                            .lineSpacing(4)
-                }
+//                VStack{
+//                    // Title
+//                    VStack{
+//                            
+//                        Text("Unleash Your")
+//                            .font(.system(size: 34, weight: .bold, design: .rounded))
+//                            .foregroundStyle(
+//                                LinearGradient(
+//                                    colors: [.blue, .purple],
+//                                    startPoint: .leading,
+//                                    endPoint: .trailing
+//                                )
+//                            )
+//                            .tracking(0.3)
+//                        
+//                        Text("Creativity with AI")
+//                            .font(.system(size: 34, weight: .bold, design: .rounded))
+//                            .foregroundStyle(
+//                                LinearGradient(
+//                                    colors: [.blue, .purple],
+//                                    startPoint: .leading,
+//                                    endPoint: .trailing
+//                                )
+//                            )
+//                            .tracking(0.3)
+//                    }
+//                    .multilineTextAlignment(.center)
+//                        
+//                        // Subtitle
+//                        Text("Transform your images and create amazing content with AI")
+//                            .font(.body)
+//                            .foregroundColor(.secondary)
+//                            .multilineTextAlignment(.center)
+//                            .padding(.horizontal)
+//                            .lineSpacing(4)
+//                }
                 
                 VStack(spacing: 10) {
                     
-                    HomeRowVideo(title: "📹 AI Videos", items: videoItems)
-                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
+                    HomeRowVideo(title: "Transform Your Photos", items: transformyourphotosItems)
+                    HomeRowVideo(title: "Fun", items: funItems)
+                    
+                    HomeRowVideo(title: "For The Girls", items: forthegirlsItems)
+//                    HomeRowVideo(title: "For The Guys", items: fortheguysItems)
+                    
+//                    HomeRowVideo(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+//                    HomeRowVideo(title: "Family", items: fortheguysItems)
+                    
+                    HomeRowVideo(title: "Text To Video", items: texttovideoItems)
+                    
+//                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
                     HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
                     HomeRowSplit(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)

@@ -40,16 +40,21 @@ struct RowButton: View {
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.custom("Nunito-Bold", size: 12))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .overlay(
-                    Capsule()
-                        .stroke(Color.gray.opacity(0.5), lineWidth: 2)
-                )
+            HStack(spacing: 6) {
+                Text(title)
+                    .font(.custom("Nunito-Black", size: 14))
+                Image(systemName: "chevron.right") // carrot icon
+                    .font(.system(size: 14, weight: .bold))
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+//            .overlay(
+//                Capsule()
+//                    .stroke(Color.gray.opacity(0.5), lineWidth: 2)
+//            )
         }
-        .buttonStyle(.plain) // Removes default blue tap tint
+        .buttonStyle(.plain)
         .padding(.trailing, 2)
     }
 }
+

@@ -1,45 +1,46 @@
 //
-//  AiVideosRow.swift
+//  TransformYourPhotos.swift
 //  AI Photo Generation
 //
-//  Created by Mike K on 10/9/25.
+//  Created by Mike K on 10/18/25.
 //
 
 // AI Videos category items
-let videoItems = [
-    TrendingItem(
-        imageName: "yetivlog",
-        title: "Yeti Vlog",
-        cost: "0.80",
-        description: "",
-        prompt: "Smooth AI-generated animation, fluid motion, cinematic quality, professional video production",
-        modelName: "Veo 3",
-        modelDescription: "",
-        modelImageName: "veo3fast",
-        exampleImages: ["video1_1", "video1_2", "video1_3", "video1_4", "video1_5", "video1_6"]
-    ),
-    TrendingItem(
-        imageName: "animevlog",
-        title: "Anime Vlogger",
-        cost: "0.80",
-        description: "",
-        prompt: "Dynamic motion graphics, animated transitions, modern style, vibrant colors, professional editing",
-        modelName: "Sora 2",
-        modelDescription: "",
-        modelImageName: "sora2",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
-    ),
+let transformyourphotosItems = [
     TrendingItem(
         imageName: "squeeze",
         title: "Squeeze",
         cost: "0.30",
         description: "",
-        prompt: "Dynamic motion graphics, animated transitions, modern style, vibrant colors, professional editing",
-        modelName: "Sora 2",
+        prompt: "",
+        modelName: "",
         modelDescription: "",
-        modelImageName: "sora2",
+        modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
+    TrendingItem(
+        imageName: "kissing",
+        title: "Kissing",
+        cost: "0.20",
+        description: "",
+        prompt: "",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    TrendingItem(
+        imageName: "labubu",
+        title: "Labubu",
+        cost: "0.20",
+        description: "",
+        prompt: "",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    
 //    TrendingItem(
 //        imageName: "video3",
 //        title: "Dark Fantasy",
