@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27CBAF262EA485D100AA51FD /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 27CBAF252EA485D100AA51FD /* Auth */; };
+		27CBAF282EA485D100AA51FD /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 27CBAF272EA485D100AA51FD /* PostgREST */; };
+		27CBAF2A2EA485D100AA51FD /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 27CBAF292EA485D100AA51FD /* Storage */; };
+		27CBAF2D2EA4861000AA51FD /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 27CBAF2C2EA4861000AA51FD /* Supabase */; };
 		27D5093D2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D5093C2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +61,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27CBAF2D2EA4861000AA51FD /* Supabase in Frameworks */,
+				27CBAF2A2EA485D100AA51FD /* Storage in Frameworks */,
+				27CBAF282EA485D100AA51FD /* PostgREST in Frameworks */,
+				27CBAF262EA485D100AA51FD /* Auth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +85,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27CBAF2B2EA4861000AA51FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		27E2BC6B2E981FE700269FE9 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +100,7 @@
 				27E2BC912E981FEB00269FE9 /* AI Photo GenerationUITests */,
 				27E2BC752E981FE700269FE9 /* Products */,
 				27D5093C2E9EF27C00E5AF94 /* Nunito-VariableFont_wght.ttf */,
+				27CBAF2B2EA4861000AA51FD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +134,10 @@
 			);
 			name = "AI Photo Generation";
 			packageProductDependencies = (
+				27CBAF252EA485D100AA51FD /* Auth */,
+				27CBAF272EA485D100AA51FD /* PostgREST */,
+				27CBAF292EA485D100AA51FD /* Storage */,
+				27CBAF2C2EA4861000AA51FD /* Supabase */,
 			);
 			productName = "AI Photo Generation";
 			productReference = 27E2BC742E981FE700269FE9 /* AI Photo Generation.app */;
@@ -201,6 +221,9 @@
 			);
 			mainGroup = 27E2BC6B2E981FE700269FE9;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				27CBAF242EA485D100AA51FD /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 27E2BC752E981FE700269FE9 /* Products */;
 			projectDirPath = "";
@@ -328,7 +351,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -385,7 +408,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -571,6 +594,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		27CBAF242EA485D100AA51FD /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		27CBAF252EA485D100AA51FD /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27CBAF242EA485D100AA51FD /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		27CBAF272EA485D100AA51FD /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27CBAF242EA485D100AA51FD /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		27CBAF292EA485D100AA51FD /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27CBAF242EA485D100AA51FD /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		27CBAF2C2EA4861000AA51FD /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27CBAF242EA485D100AA51FD /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27E2BC6C2E981FE700269FE9 /* Project object */;
 }

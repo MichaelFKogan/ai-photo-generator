@@ -82,8 +82,10 @@ struct Home: View {
                 
                 VStack(spacing: 10) {
                     
-                    HomeRowVideo(title: "Transform Your Photos", items: transformyourphotosItems)
-                    HomeRowVideo(title: "Fun", items: funItems)
+                    HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
+                    HomeRowVideo(title: "💯 Popular", items: funItems)
+//                    HomeRowVideo(title: "🎃 Halloween", items: halloweenItems)
+                    HomeRowVideo(title: "🎃 Halloween", items: texttovideoItems)
                     
                     HomeRowVideo(title: "For The Girls", items: forthegirlsItems)
 //                    HomeRowVideo(title: "For The Guys", items: fortheguysItems)
@@ -91,7 +93,6 @@ struct Home: View {
 //                    HomeRowVideo(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
 //                    HomeRowVideo(title: "Family", items: fortheguysItems)
                     
-                    HomeRowVideo(title: "Text To Video", items: texttovideoItems)
                     
 //                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
@@ -119,58 +120,38 @@ struct Home: View {
 //            .navigationTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("AI Creator Studio")
+                    Text("Creator AI Studio")
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                         .foregroundStyle(
-                            LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
+                            LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
                         )
                 }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 12) {
-                        // Credits Display
-                        HStack(spacing: 6) {
-                            Image(systemName: "diamond.fill")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .font(.system(size: 9))
-                            
-//                            Text("\(userCredits)")
-                            Text("$5.00")
-                                .font(.system(size: 16, weight: .semibold, design: .rounded))
-                                .foregroundColor(.primary)
-                            Text("credits left")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.secondary.opacity(0.1))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-//                                .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                        )
+                    HStack(spacing: 6) {
+                        Image(systemName: "diamond.fill")
+                            .foregroundStyle(
+                                LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            )
+                            .font(.system(size: 8))
+                        Text("$5.00")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.primary)
+                        Text("credits left")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
                     }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(RoundedRectangle(cornerRadius: 20).fill(Color.secondary.opacity(0.1)))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .strokeBorder(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
+                    )
                 }
             }
+
+
 //            .toolbar {
 //                ToolbarItem(placement: .navigationBarTrailing) {
 //                    Button(action: {

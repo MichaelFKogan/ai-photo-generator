@@ -28,7 +28,6 @@ struct RowTitle: View {
 
             if showButton, let action = action {
                 RowButton(title: "See All", action: action)
-                    .padding(.trailing, 2)
             }
         }
     }
@@ -54,7 +53,6 @@ struct RowButton: View {
 //            )
         }
         .buttonStyle(.plain)
-        .padding(.trailing, 2)
     }
 }
 

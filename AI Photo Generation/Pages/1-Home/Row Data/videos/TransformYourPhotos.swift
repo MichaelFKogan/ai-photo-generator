@@ -40,6 +40,28 @@ let transformyourphotosItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
+    TrendingItem(
+        imageName: "helicopterpilot",
+        title: "Helicopter Pilot",
+        cost: "0.30",
+        description: "",
+        prompt: "",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
+    ),
+    TrendingItem(
+        imageName: "photostolife",
+        title: "Photos To Life",
+        cost: "0.30",
+        description: "",
+        prompt: "",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
+    ),
     
 //    TrendingItem(
 //        imageName: "video3",

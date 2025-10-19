@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var selectedTab = 0
     @State private var previousTab = 0
     @State private var currentTransitionEdge: Edge = .trailing
@@ -36,6 +37,7 @@ struct ContentView: View {
                         ))
                 case 4:
                     ProfileView()
+                        .environmentObject(authViewModel)
                         .transition(.asymmetric(
                             insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
                             removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))

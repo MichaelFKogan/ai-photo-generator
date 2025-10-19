@@ -9,12 +9,45 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var showCopiedAlert = false
     
     var body: some View {
         NavigationView {
             List {
                 // Account section
                 Section("Account") {
+                    // User ID with copy button
+                    HStack {
+                        Image(systemName: "person.text.rectangle")
+                            .foregroundColor(.blue)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("User ID")
+                                .font(.body)
+                            if let userId = authViewModel.user?.id.uuidString {
+                                Text(userId)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
+                            }
+                        }
+                        Spacer()
+                        Button(action: {
+                            if let userId = authViewModel.user?.id.uuidString {
+                                UIPasteboard.general.string = userId
+                                showCopiedAlert = true
+                                
+                                // Haptic feedback
+                                let generator = UINotificationFeedbackGenerator()
+                                generator.notificationOccurred(.success)
+                            }
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    
                     HStack {
                         Image(systemName: "person.circle")
                             .foregroundColor(.blue)
@@ -75,29 +108,6 @@ struct SettingsView: View {
                         Text("Auto-save to Gallery")
                         Spacer()
                         Toggle("", isOn: .constant(true))
-                    }
-                }
-                
-                // Storage & Data
-                Section("Storage & Data") {
-                    HStack {
-                        Image(systemName: "externaldrive")
-                            .foregroundColor(.gray)
-                        Text("Storage Usage")
-                        Spacer()
-                        Text("2.4 GB")
-                            .foregroundColor(.secondary)
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "trash")
-                            .foregroundColor(.red)
-                        Text("Clear Cache")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
                     }
                 }
                 
@@ -163,7 +173,11 @@ struct SettingsView: View {
                 
                 // Sign out
                 Section {
-                    Button(action: {}) {
+                    Button(action: {
+                        Task {
+                            await authViewModel.signOut()
+                        }
+                    }) {
                         HStack {
                             Image(systemName: "rectangle.portrait.and.arrow.right")
                                 .foregroundColor(.red)
@@ -172,12 +186,20 @@ struct SettingsView: View {
                         }
                     }
                 }
+                
+                // Add spacing at the bottom
+                Section {
+                    Color.clear
+                        .frame(height: 60)
+                        .listRowBackground(Color.clear)
+                }
             }
             .navigationTitle("Settings")
+            .alert("Copied!", isPresented: $showCopiedAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("User ID copied to clipboard")
+            }
         }
     }
-}
-
-#Preview {
-    SettingsView()
 }

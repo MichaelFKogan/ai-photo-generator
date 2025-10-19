@@ -284,11 +284,11 @@ struct CreateView: View {
                                         endPoint: .bottomTrailing
                                     )
                                 )
-                                .font(.system(size: 9))
+                                .font(.system(size: 8))
                             
 //                            Text("\(userCredits)")
                             Text("$5.00")
-                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
                                 .foregroundColor(.primary)
                             Text("credits left")
                                 .font(.caption2)

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -103,6 +105,15 @@ struct ProfileView: View {
                 }
             }
             .navigationTitle("Profile")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: SettingsView().environmentObject(authViewModel)) {
+                        Image(systemName: "gearshape.fill")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
         }
     }
 }
