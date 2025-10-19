@@ -25,10 +25,10 @@ class AuthViewModel: ObservableObject {
     }
 
     func checkSession() async {
-        print("🔍 Checking session...")
+//        print("🔍 Checking session...")
         do {
             let session = try await client.auth.session
-            print("✅ Session found: \(session.user.id)")
+//            print("✅ Session found: \(session.user.id)")
             self.user = session.user
             self.isSignedIn = true
         } catch {
@@ -36,7 +36,7 @@ class AuthViewModel: ObservableObject {
             self.isSignedIn = false
         }
         self.isCheckingSession = false
-        print("Session check complete. isSignedIn: \(self.isSignedIn)")
+//        print("Session check complete. isSignedIn: \(self.isSignedIn)")
     }
 
     // MARK: - Email Sign In / Sign Up

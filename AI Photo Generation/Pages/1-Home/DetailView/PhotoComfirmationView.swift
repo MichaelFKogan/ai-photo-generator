@@ -8,6 +8,9 @@ struct PhotoConfirmationView: View {
     @State private var sparklePulse: Bool = false
     @State private var generatePulse: Bool = false
     
+    @State private var generatedImage: UIImage? = nil
+    @State private var isLoading = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -73,26 +76,71 @@ struct PhotoConfirmationView: View {
                     .scaleEffect(generatePulse ? 1.02 : 1.0)
                     .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: generatePulse)
                 
-                // MARK: - Generate Button
-                Button(action: {
-                    print("Generate pressed")
-                }) {
-                    Text("Generate")
-                        .font(.custom("Nunito-ExtraBold", size: 22))
-                        .foregroundColor(.black)
-                        .padding(.vertical, 16)
-                        .frame(maxWidth: .infinity)
-                        .background(.white)
-//                        .background(
-//                            LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
-//                        )
-                        .cornerRadius(12)
-                        .shadow(color: Color.purple.opacity(0.3), radius: 8, x: 0, y: 4)
-                        .scaleEffect(generatePulse ? 1.05 : 1.0)
-                        .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: generatePulse)
+                if let generated = generatedImage {
+                    VStack {
+                        Text("Generated Image")
+                            .font(.headline)
+                        Image(uiImage: generated)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: 300)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .shadow(radius: 8)
+                    }
                 }
-                .padding(.horizontal, 24)
-                .onAppear { generatePulse = true }
+
+                
+//                // MARK: - Generate Button
+//                Button(action: {
+//                    print("Generate pressed")
+//                }) {
+//                    Text("Generate")
+//                        .font(.custom("Nunito-ExtraBold", size: 22))
+//                        .foregroundColor(.black)
+//                        .padding(.vertical, 16)
+//                        .frame(maxWidth: .infinity)
+//                        .background(.white)
+////                        .background(
+////                            LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
+////                        )
+//                        .cornerRadius(12)
+//                        .shadow(color: Color.purple.opacity(0.3), radius: 8, x: 0, y: 4)
+//                        .scaleEffect(generatePulse ? 1.05 : 1.0)
+//                        .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: generatePulse)
+//                }
+//                .padding(.horizontal, 24)
+//                .onAppear { generatePulse = true }
+                
+                Button(action: {
+                    Task {
+                        isLoading = true
+                        do {
+                            let response = try await sendImageToWaveSpeed(image: image, prompt: "Your desired prompt here")
+                            if let urlString = response.data.outputs?.first, let url = URL(string: urlString) {
+                                let imageData = try Data(contentsOf: url)
+                                generatedImage = UIImage(data: imageData)
+                            }
+                        } catch {
+                            print("WaveSpeed error: \(error.localizedDescription)")
+                        }
+                        isLoading = false
+                    }
+                }) {
+                    HStack {
+                        if isLoading {
+                            ProgressView()
+                        }
+                        Text("Generate")
+                            .font(.custom("Nunito-ExtraBold", size: 22))
+                            .foregroundColor(.black)
+                    }
+                    .padding(.vertical, 16)
+                    .frame(maxWidth: .infinity)
+                    .background(.white)
+                    .cornerRadius(12)
+                    .shadow(color: Color.purple.opacity(0.3), radius: 8, x: 0, y: 4)
+                }
+
                 
                 // MARK: - Cost Display
                 HStack {

@@ -43,16 +43,16 @@ let actionfigureItems = [
         modelImageName: "geminiflashimage25",
         exampleImages: []
     ),
-    TrendingItem(
-        imageName: "trending2",
-        imageNameOriginal: "trending5",
-        title: "Starter Pack",
-        cost: 0.04,
-        description: "",
-        prompt: "Action figure in blister pack packaging, toy photography, retail display, vibrant colors, collectible style",
-        modelName: "Seedream 4.0",
-        modelDescription: "",
-        modelImageName: "seedream40",
-        exampleImages: []
-    ),
+//    TrendingItem(
+//        imageName: "trending2",
+//        imageNameOriginal: "trending5",
+//        title: "Starter Pack",
+//        cost: 0.04,
+//        description: "",
+//        prompt: "Action figure in blister pack packaging, toy photography, retail display, vibrant colors, collectible style",
+//        modelName: "Seedream 4.0",
+//        modelDescription: "",
+//        modelImageName: "seedream40",
+//        exampleImages: []
+//    ),
 ]

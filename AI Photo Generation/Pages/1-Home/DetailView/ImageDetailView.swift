@@ -80,7 +80,7 @@ struct ImageDetailView: View {
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
                             
-                            Text("$\(item.cost, specifier: "%.2f")")
+                            Text("Cost: $\(item.cost, specifier: "%.2f")")
                                 .font(.custom("Nunito-Bold", size: 16))
                                 .foregroundColor(.primary)
                         }
@@ -331,19 +331,24 @@ struct SpinningPlusButton: View {
         }
         .onAppear {
             isAnimating = true
-            // Spin every 6 seconds (subtle and less constant)
+            // Kick off the first rotation immediately
+            withAnimation(.easeInOut(duration: 1.0)) {
+                rotation += 360
+            }
+            // Then continue spinning every 4 seconds
             Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
                 withAnimation(.easeInOut(duration: 1.0)) {
                     rotation += 360
                 }
             }
-            // Smooth gradient sweep
+            // Gradient shine animation
             withAnimation(.linear(duration: 3.5).repeatForever(autoreverses: false)) {
                 shine.toggle()
             }
         }
     }
 }
+
 
 
 

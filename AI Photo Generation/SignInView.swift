@@ -7,139 +7,255 @@
 
 import SwiftUI
 import AuthenticationServices // For Apple Sign-In
-//import GoogleSignIn
 
 struct SignInView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var showEmailSheet = false
     @State private var isSignUp = false
+    @State private var navigateToEmail = false
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                // 🔹 Black background
+                Color.black
+                    .ignoresSafeArea()
+
+                VStack(spacing: 24) {
+                    Text("Welcome")
+                        .font(.largeTitle)
+                        .bold()
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 8)
+
+                    Spacer()
+
+                    VStack(spacing: 16) {
+                        SignInButton(
+                            title: "Continue with Apple",
+                            icon: "applelogo",
+                            background: Color.white
+                        ) {
+                            handleAppleSignIn()
+                        }
+
+                        SignInButton(
+                            title: "Continue with Google",
+                            icon: "globe",
+                            background: Color.white
+                        ) {
+                            authViewModel.isSignedIn = true
+                        }
+
+                        NavigationLink(
+                            destination: EmailSignInView(
+                                isSignUp: $isSignUp,
+                                navigateBack: $navigateToEmail
+                            )
+                                .environmentObject(authViewModel),
+                            isActive: $navigateToEmail
+                        ) {
+                            SignInButton(
+                                title: "Continue with Email",
+                                icon: "envelope.fill",
+                                background: Color.white
+                            ) {
+                                navigateToEmail = true
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+
+                    VStack(spacing: 4) {
+                        Text("By continuing you agree to our")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+
+                        HStack(spacing: 4) {
+                            Link("Terms of Service", destination: URL(string: "https://yourapp.com/terms")!)
+                                .font(.footnote)
+                                .underline()
+                            Text("and")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                            Link("Privacy Policy", destination: URL(string: "https://yourapp.com/privacy")!)
+                                .font(.footnote)
+                                .underline()
+                        }
+                    }
+                    .padding(.bottom, 40)
+                }
+                .padding()
+            }
+        }
+    }
+
+    // MARK: - Apple Sign In
+    func handleAppleSignIn() {
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.email, .fullName]
+
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = AppleSignInCoordinator(authViewModel: authViewModel)
+        controller.performRequests()
+    }
+}
+
+
+// MARK: - Email Sign In Page
+struct EmailSignInView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @Binding var isSignUp: Bool
+    @Binding var navigateBack: Bool
     @State private var email = ""
     @State private var password = ""
-
+    @State private var message: String? = nil
+    @State private var messageColor: Color = .red
 
     var body: some View {
         ZStack {
-            // Adaptive system background (dark/light)
-            Color(.systemBackground)
-                .ignoresSafeArea()
+            Color.black.ignoresSafeArea()
 
-            VStack(spacing: 24) {
-
-                Text("Welcome")
-                    .font(.largeTitle)
-                    .bold()
-                    .foregroundColor(.primary) // Adapts automatically
-                    .padding(.bottom, 8)
-                
-                Spacer()
-
-                VStack(spacing: 16) {
-                    SignInButton(
-                        title: "Continue with Apple",
-                        icon: "applelogo",
-                        background: Color.white
-                    ) {
-                        handleAppleSignIn()
-                    }
-
-                    SignInButton(
-                        title: "Continue with Google",
-                        icon: "globe",
-                        background: Color.white
-                    ) {
-                        authViewModel.isSignedIn = true
-                    }
-
-                    SignInButton(
-                        title: "Continue with Email",
-                        icon: "envelope.fill",
-                        background: Color.white
-                    ) {
-                        showEmailSheet = true
-                    }
-                    .sheet(isPresented: $showEmailSheet) {
-                        VStack(spacing: 16) {
-                            // Gray drag indicator
-                            Capsule()
-                                .frame(width: 40, height: 5)
-                                .foregroundColor(Color.gray.opacity(0.5))
-                                .padding(.top, 8)
-                                .padding(.bottom, 16)
-                            
-                            Text(isSignUp ? "Create Account" : "Sign In")
-                                .font(.headline)
-                            
-                            TextField("Email", text: $email)
-                                .padding()
-                                .background(Color.black)  // Change to black
-                                .cornerRadius(8)
-                                .autocapitalization(.none)
-                                .keyboardType(.emailAddress)
-
-                            SecureField("Password", text: $password)
-                                .padding()
-                                .background(Color.black)  // Change to black
-                                .cornerRadius(8)
-                            
-                            Button(isSignUp ? "Sign Up" : "Sign In") {
-                                Task {
-                                    if isSignUp {
-                                        await authViewModel.signUpWithEmail(email: email, password: password)
-                                    } else {
-                                        await authViewModel.signInWithEmail(email: email, password: password)
-                                    }
-                                    // Dismiss sheet after sign in attempt
-                                    if authViewModel.isSignedIn {
-                                        showEmailSheet = false
-                                    }
-                                }
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(.large)  // Add this
-                            .frame(maxWidth: .infinity)
-                            .padding(.top)
-                            
-                            Button(isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up") {
-                                isSignUp.toggle()
-                            }
-                            .font(.footnote)
-                            .padding(.top, 4)
-                            
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                    }
-
-
+            VStack(spacing: 16) {
+                // Removed top text since we'll use toolbar title
+                // 🔹 Email Field
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Email")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                    TextField("Email", text: $email)
+                        .padding()
+                        .background(Color(.darkGray).opacity(0.4))
+                        .cornerRadius(8)
+                        .autocapitalization(.none)
+                        .keyboardType(.emailAddress)
+                        .foregroundColor(.white)
                 }
-                .padding(.horizontal)
 
+                // 🔹 Password Field
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Password")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                    SecureField("Password", text: $password)
+                        .padding()
+                        .background(Color(.darkGray).opacity(0.4))
+                        .cornerRadius(8)
+                        .foregroundColor(.white)
+                }
 
-                VStack(spacing: 4) {
-                    Text("By continuing you agree to our")
+                // ✅ Message Area
+                if let message = message {
+                    Text(message)
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(messageColor)
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity.combined(with: .scale))
+                        .animation(.easeInOut, value: message)
+                        .padding(.horizontal)
+                }
 
-                    HStack(spacing: 4) {
-                        Link("Terms of Service", destination: URL(string: "https://yourapp.com/terms")!)
-                            .font(.footnote)
-                            .underline()
-                        Text("and")
+                // 🔹 Sign In / Sign Up button
+                Button(isSignUp ? "Sign Up" : "Sign In") {
+                    Task {
+                        guard !email.isEmpty, !password.isEmpty else {
+                            showMessage("Please enter both email and password.", color: .red)
+                            return
+                        }
+
+                        if isSignUp {
+                            await authViewModel.signUpWithEmail(email: email, password: password)
+                        } else {
+                            await authViewModel.signInWithEmail(email: email, password: password)
+                        }
+
+                        if authViewModel.isSignedIn {
+                            showMessage("Signed in successfully ✅", color: .green)
+                        } else {
+                            showMessage("Incorrect email or password.", color: .red)
+                        }
+                    }
+                }
+                .fontWeight(.semibold)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .frame(maxWidth: .infinity)
+                .padding(.top)
+                
+                // 🔹 Toggle Sign Up / Sign In
+                 Button(isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up") {
+                     withAnimation {
+                         isSignUp.toggle()
+                         message = nil
+                     }
+                 }
+                 .font(.footnote)
+                 .padding(.top, 4)
+                 .foregroundColor(.blue)
+
+                // 🔹 Terms & Privacy
+                if isSignUp {
+                    VStack(spacing: 4) {
+                        Text("By signing up you agree to our")
                             .font(.footnote)
                             .foregroundColor(.secondary)
-                        Link("Privacy Policy", destination: URL(string: "https://yourapp.com/privacy")!)
-                            .font(.footnote)
-                            .underline()
+
+                        HStack(spacing: 4) {
+                            Link("Terms of Service", destination: URL(string: "https://yourapp.com/terms")!)
+                                .font(.footnote)
+                                .underline()
+                            Text("and")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                            Link("Privacy Policy", destination: URL(string: "https://yourapp.com/privacy")!)
+                                .font(.footnote)
+                                .underline()
+                        }
+                    }
+                    .padding(.bottom, 40)
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.top, 20)
+        }
+        .navigationTitle(isSignUp ? "Create Account" : "Sign In")
+        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarBackButtonHidden(true)
+        .toolbar {
+//            ToolbarItem(placement: .navigationBarLeading) {
+//                Button {
+//                    navigateBack = false
+//                } label: {
+//                    Image(systemName: "chevron.left")
+//                        .foregroundColor(.blue)
+//                        .fontWeight(.bold)
+//                }
+//            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(isSignUp ? "Sign In" : "Sign Up") {
+                    withAnimation {
+                        isSignUp.toggle()
+                        message = nil
                     }
                 }
-                .padding(.bottom, 40)
+                .fontWeight(.bold)
             }
-            .padding()
+        }
+    }
+
+    private func showMessage(_ text: String, color: Color) {
+        withAnimation {
+            message = text
+            messageColor = color
         }
     }
 }
 
 
+// MARK: - Sign In Button
 struct SignInButton: View {
     let title: String
     let icon: String
@@ -165,37 +281,25 @@ struct SignInButton: View {
     }
 }
 
-import AuthenticationServices
-
-extension SignInView {
-    func handleAppleSignIn() {
-        let request = ASAuthorizationAppleIDProvider().createRequest()
-        request.requestedScopes = [.email, .fullName]
-        
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = AppleSignInCoordinator(authViewModel: authViewModel)
-        controller.performRequests()
-    }
-}
-
+// MARK: - Apple Sign In Coordinator
 class AppleSignInCoordinator: NSObject, ASAuthorizationControllerDelegate {
     let authViewModel: AuthViewModel
-    
+
     init(authViewModel: AuthViewModel) {
         self.authViewModel = authViewModel
     }
-    
+
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
            let identityToken = appleIDCredential.identityToken,
            let idTokenString = String(data: identityToken, encoding: .utf8) {
-            
+
             Task {
                 await authViewModel.signInWithApple(idToken: idTokenString)
             }
         }
     }
-    
+
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print("Apple sign in failed: \(error)")
     }

@@ -428,13 +428,11 @@ struct VideoPlaygroundTab: View {
                         HStack{
                             Image(systemName: "video.fill")
                                 .font(.title2)
-                                .foregroundColor(.primary).opacity(0.8)
                             Text("Create Video")
                                 .font(.title2)
-                                .foregroundColor(.primary).opacity(0.8)
                                 .fontWeight(.bold)
-                            Spacer()
                         }
+                        .foregroundColor(.secondary)
                         .padding(.bottom, 6)
 
                         HStack {
@@ -620,10 +618,10 @@ struct ImagePlaygroundTab: View {
                             Image(systemName: "photo.on.rectangle")
                                 .font(.title2)
                             Text("Create Image")
-                                .font(.title)
+                                .font(.title2)
                                 .fontWeight(.bold)
-                            Spacer()
                         }
+                        .foregroundColor(.secondary)
                         .padding(.bottom, 6)
                         
                         HStack {
