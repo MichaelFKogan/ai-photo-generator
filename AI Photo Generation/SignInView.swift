@@ -59,16 +59,27 @@ struct SignInView: View {
                     }
                     .sheet(isPresented: $showEmailSheet) {
                         VStack(spacing: 16) {
+                            // Gray drag indicator
+                            Capsule()
+                                .frame(width: 40, height: 5)
+                                .foregroundColor(Color.gray.opacity(0.5))
+                                .padding(.top, 8)
+                                .padding(.bottom, 16)
+                            
                             Text(isSignUp ? "Create Account" : "Sign In")
                                 .font(.headline)
                             
                             TextField("Email", text: $email)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding()
+                                .background(Color.black)  // Change to black
+                                .cornerRadius(8)
                                 .autocapitalization(.none)
                                 .keyboardType(.emailAddress)
-                            
+
                             SecureField("Password", text: $password)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding()
+                                .background(Color.black)  // Change to black
+                                .cornerRadius(8)
                             
                             Button(isSignUp ? "Sign Up" : "Sign In") {
                                 Task {
@@ -84,6 +95,8 @@ struct SignInView: View {
                                 }
                             }
                             .buttonStyle(.borderedProminent)
+                            .controlSize(.large)  // Add this
+                            .frame(maxWidth: .infinity)
                             .padding(.top)
                             
                             Button(isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up") {
@@ -94,8 +107,9 @@ struct SignInView: View {
                             
                             Spacer()
                         }
-                        .padding()
+                        .padding(.horizontal)
                     }
+
 
                 }
                 .padding(.horizontal)

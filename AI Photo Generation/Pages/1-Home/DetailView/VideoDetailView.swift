@@ -77,11 +77,11 @@ struct VideoDetailView: View {
                     Spacer()
                     HStack{
                         Image(systemName: "tag.fill")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
                         
                         Text("Cost: $\(item.cost)")
-                            .font(.custom("Nunito-Bold", size: 14))
+                            .font(.custom("Nunito-Bold", size: 16))
                             .foregroundColor(.primary)
                     }
                     .padding(.horizontal, 12)

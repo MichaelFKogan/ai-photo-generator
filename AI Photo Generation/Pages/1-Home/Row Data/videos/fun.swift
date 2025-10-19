@@ -2,7 +2,7 @@ let funItems = [
     TrendingItem(
         imageName: "dogballoonflyaway",
         title: "Balloon Fly Away",
-        cost: "0.30",
+        cost: 0.30,
         description: "",
         prompt: "",
         modelName: "",
@@ -13,7 +13,7 @@ let funItems = [
     TrendingItem(
         imageName: "pubgwinnerhit",
         title: "PubG Dance",
-        cost: "0.20",
+        cost: 0.20,
         description: "",
         prompt: "",
         modelName: "",
@@ -24,7 +24,7 @@ let funItems = [
     TrendingItem(
         imageName: "flying",
         title: "Flying",
-        cost: "0.20",
+        cost: 0.20,
         description: "",
         prompt: "",
         modelName: "",
@@ -35,7 +35,7 @@ let funItems = [
     TrendingItem(
         imageName: "melting",
         title: "Melting",
-        cost: "0.20",
+        cost: 0.20,
         description: "",
         prompt: "",
         modelName: "",
@@ -46,7 +46,7 @@ let funItems = [
     TrendingItem(
         imageName: "papercutout",
         title: "Paper Cut Out",
-        cost: "0.20",
+        cost: 0.20,
         description: "",
         prompt: "",
         modelName: "",

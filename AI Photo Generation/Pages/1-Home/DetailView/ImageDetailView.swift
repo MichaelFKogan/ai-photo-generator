@@ -18,6 +18,7 @@ struct ImageDetailView: View {
     @State private var showCamera: Bool = false
     @State private var showPhotoPicker: Bool = false // <-- new state
     @State private var createArrowMove: Bool = false
+    @State private var navigateToConfirmation: Bool = false
 
     var body: some View {
         ScrollView {
@@ -55,38 +56,17 @@ struct ImageDetailView: View {
                     
                     HStack(alignment: .center, spacing: 16) {
                         
-                        Button(action: {
-                            showPhotoPicker = true
-                        }) {
-                            HStack{
-                                Image(systemName: "plus")
-                                    .font(.custom("Nunito-ExtraBold", size: 22))
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.black).opacity(0)
-                                    .padding(.leading, 10)
-                                Spacer()
-                                Text("Pick A Photo")
-                                    .font(.custom("Nunito-ExtraBold", size: 20))
-                                    .foregroundColor(.black)
-                                Spacer()
-                                Image(systemName: "plus") // Replace with your desired icon
-                                    .font(.custom("Nunito-ExtraBold", size: 22))
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.black)
-                                    .padding(.trailing, 10)
-                                
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.white)
-                            .foregroundColor(.black)
-                            .cornerRadius(16)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.gray, lineWidth: 1)
+                        SpinningPlusButton(showPhotoPicker: $showPhotoPicker)
+                            .photosPicker(
+                                isPresented: $showPhotoPicker,
+                                selection: $selectedPhotoItem,
+                                matching: .images
                             )
-                            
-                        }
+                        .photosPicker(
+                            isPresented: $showPhotoPicker,
+                            selection: $selectedPhotoItem,
+                            matching: .images
+                        )
                     }
                     .padding(.horizontal, 16)
                     .cornerRadius(16)
@@ -97,11 +77,11 @@ struct ImageDetailView: View {
                         Spacer()
                         HStack{
                             Image(systemName: "tag.fill")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
                             
-                            Text("Cost: $\(item.cost)")
-                                .font(.custom("Nunito-Bold", size: 14))
+                            Text("$\(item.cost, specifier: "%.2f")")
+                                .font(.custom("Nunito-Bold", size: 16))
                                 .foregroundColor(.primary)
                         }
                         .padding(.horizontal, 12)
@@ -119,6 +99,18 @@ struct ImageDetailView: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 32)
             .padding(.bottom, 150)
+            
+            NavigationLink(
+                destination: Group {
+                    if let image = selectedImage {
+                        PhotoConfirmationView(image: image, cost: String(format: "%.2f", item.cost))
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: $navigateToConfirmation,
+                label: { EmptyView() }
+            )
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
@@ -173,6 +165,7 @@ struct ImageDetailView: View {
                 if let data = try? await newItem?.loadTransferable(type: Data.self),
                    let uiImage = UIImage(data: data) {
                     selectedImage = uiImage
+                    navigateToConfirmation = true
                 }
             }
         }
@@ -181,336 +174,6 @@ struct ImageDetailView: View {
             // kick off the subtle arrow motion next to the Create text
             createArrowMove = true
         }
-    }
-}
-
-// MARK: - Add Photo Button
-struct AddPhotoButton: View {
-    @Binding var selectedImage: UIImage?
-    @Binding var selectedPhotoItem: PhotosPickerItem?
-    @Binding var showCamera: Bool
-    @Binding var showPhotoPicker: Bool
-    
-    @State private var wiggle: Bool = false
-    
-    var body: some View {
-        if let selectedImage = selectedImage {
-            // Show selected image with remove button
-            ZStack(alignment: .topTrailing) {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: 250)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
-                
-                Button(action: { self.selectedImage = nil }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title3)
-                        .foregroundColor(.white)
-                        .background(Circle().fill(Color.red))
-                }
-                .padding(6)
-            }
-        } else {
-            // Show "Add A Photo" button - directly opens photo picker
-            Button(action: { showPhotoPicker = true }) {
-                VStack(spacing: 16) {
-                    // Icon with plus badge
-                    ZStack(alignment: .bottomTrailing) {
-                        Image(systemName: "photo.badge.plus")
-                            .font(.system(size: 50))
-                            .foregroundColor(.gray.opacity(0.4))
-                    }
-                    
-                    VStack(spacing: 4) {
-                        Text("Add A Photo")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.gray)
-                        
-                        Text("Tap to upload or take")
-                            .font(.caption2)
-                            .foregroundColor(.gray.opacity(0.7))
-                    }
-                }
-                .frame(height: 250)
-                .frame(maxWidth: .infinity, maxHeight: 250)
-                .background(Color.gray.opacity(0.03))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(style: StrokeStyle(lineWidth: 3.5, dash: [6, 4]))
-                        .foregroundColor(.gray.opacity(0.4))
-                )
-            }
-            .rotationEffect(.degrees(wiggle ? 2.2 : -2.2))
-            .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: wiggle)
-            .onAppear { wiggle = true }
-            .photosPicker(
-                isPresented: $showPhotoPicker,
-                selection: $selectedPhotoItem,
-                matching: .images
-            )
-            .onChange(of: selectedPhotoItem) { newItem in
-                Task {
-                    if let data = try? await newItem?.loadTransferable(type: Data.self),
-                       let uiImage = UIImage(data: data) {
-                        selectedImage = uiImage
-                    }
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Photo Upload Section
-struct PhotoUploadSection: View {
-    @Binding var selectedImage: UIImage?
-    @Binding var showCamera: Bool
-    @Binding var showPhotoPicker: Bool
-
-    @State private var selectedPhotoItem: PhotosPickerItem?
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Upload or Take Photo")
-                .font(.headline)
-                .foregroundColor(.secondary)
-
-            if let selectedImage = selectedImage {
-                ZStack(alignment: .topTrailing) {
-                    Image(uiImage: selectedImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 200)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
-
-                    Button(action: { self.selectedImage = nil }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .background(Circle().fill(Color.red))
-                    }
-                    .padding(8)
-                }
-            } else {
-                HStack(spacing: 12) {
-                    // Camera Button
-                    Button(action: { showCamera = true }) {
-                        VStack(spacing: 6) {
-                            Image(systemName: "camera")
-                                .font(.system(size: 24))
-                            Text("Take Photo")
-                                .font(.caption2)
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 80)
-                        .background(Color.gray.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-
-                    // Photo Library Button
-                    Button(action: { showPhotoPicker = true }) {
-                        VStack(spacing: 6) {
-                            Image(systemName: "photo.on.rectangle.angled")
-                                .font(.system(size: 24))
-                            Text("Choose Photo")
-                                .font(.caption2)
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 80)
-                        .background(Color.gray.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .photosPicker(
-                        isPresented: $showPhotoPicker,
-                        selection: $selectedPhotoItem,
-                        matching: .images
-                    )
-                    .onChange(of: selectedPhotoItem) { newItem in
-                        Task {
-                            if let data = try? await newItem?.loadTransferable(type: Data.self),
-                               let uiImage = UIImage(data: data) {
-                                selectedImage = uiImage
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-// MARK: - AI Model Section
-struct AIModelSection: View {
-    let modelName: String
-    let modelDescription: String
-    let modelImageName: String
-    let price: Double?
-    let priceCaption: String?
-
-    init(
-        modelName: String,
-        modelDescription: String,
-        modelImageName: String,
-        price: Double? = nil,
-        priceCaption: String? = nil
-    ) {
-        self.modelName = modelName
-        self.modelDescription = modelDescription
-        self.modelImageName = modelImageName
-        self.price = price
-        self.priceCaption = priceCaption
-    }
-
-    var body: some View {
-        VStack(spacing: 12) {
-            
-//            HStack{
-//                Spacer()
-//                // Optional price caption (e.g., "Price per 8s video" or "Price per image")
-//                if let priceCaption = priceCaption {
-//                    HStack {
-//                        Spacer()
-//                        Text(priceCaption)
-//                            .font(.caption)
-//                            .foregroundColor(.secondary)
-//                    }
-//                }
-//            }
-
-            HStack(alignment: .top) {
-                // Model Image on the left
-                Image(modelImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 100, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                
-                // Model name and description on the right
-                VStack(alignment: .leading, spacing: 6) {
-                    
-                    HStack(alignment: .top) {
-                        Text(modelName)
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.primary)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
-                        
-                        Spacer()
-                        
-                        // Optional price badge on the trailing side
-                        if let price = price {
-                            Text(String(format: "$%.2f", price))
-                                .font(.caption)
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.black)
-                                .cornerRadius(6)
-                        }
-                    }
-                    
-                    Text(modelDescription)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .multilineTextAlignment(.leading)
-                }
-                
-                Spacer()
-            }
-            .padding(12)
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-        }
-    }
-}
-
-// MARK: - Prompt Section
-struct PromptSection: View {
-    @Binding var prompt: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Prompt")
-                .font(.headline)
-                .foregroundColor(.secondary)
-
-            TextEditor(text: $prompt)
-                .font(.system(size: 14)).opacity(0.8)
-                .frame(minHeight: 120)
-                .padding(8)
-                .background(Color.gray.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
-        }
-    }
-}
-
-// MARK: - Generate Button
-struct GenerateButton: View {
-    @Binding var isGenerating: Bool
-    let selectedImage: UIImage?
-    let prompt: String
-    
-    private var isDisabled: Bool {
-        isGenerating || selectedImage == nil || prompt.isEmpty
-    }
-
-    var body: some View {
-        Button(action: {
-            isGenerating = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                isGenerating = false
-            }
-        }) {
-            HStack(spacing: 12) {
-                if isGenerating {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .scaleEffect(0.9)
-                } else {
-                    Image(systemName: "photo.on.rectangle")
-                        .font(.system(size: 18))
-                }
-                Text(isGenerating ? "Transforming Your Photo..." : "Transform Photo")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(
-                Group {
-                    if isDisabled {
-                        Color.gray.opacity(0.5)
-                    } else {
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    }
-                }
-            )
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 7))
-            .shadow(color: isDisabled ? Color.clear : Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
-        }
-        .disabled(isDisabled)
-        .animation(.easeInOut(duration: 0.2), value: isDisabled)
     }
 }
 
@@ -569,11 +232,164 @@ struct AnimatedTitle: View {
     }
 }
 
+// MARK: - Diagonal Overlapping Images
+struct DiagonalOverlappingImages: View {
+    let leftImageName: String
+    let rightImageName: String
+    
+    @State private var arrowWiggle: Bool = false
+
+    var body: some View {
+        GeometryReader { geometry in
+            let imageWidth = geometry.size.width * 0.48
+            let imageHeight = imageWidth * 1.33
+            let arrowYOffset = -imageHeight * 0.15
+            
+            ZStack(alignment: .center) {
+                // Left image
+                Image(leftImageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: imageWidth, height: imageHeight)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: -4, y: 4)
+                    .rotationEffect(.degrees(-8))
+                    .offset(x: -imageWidth * 0.50)
+
+                // Right image
+                Image(rightImageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: imageWidth, height: imageHeight)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: 4, y: 4)
+                    .rotationEffect(.degrees(8))
+                    .offset(x: imageWidth * 0.50)
+
+                // Arrow with gentle wiggle
+                Image("arrow")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 62, height: 62)
+                    .rotationEffect(.degrees(arrowWiggle ? 6 : -6))
+                    .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: arrowWiggle)
+                    .offset(x: 0, y: arrowYOffset)
+            }
+            .onAppear {
+                arrowWiggle = true
+            }
+            .frame(width: geometry.size.width, height: imageHeight + 20)
+        }
+        .frame(height: 260)
+        .padding(.horizontal, 20)
+    }
+}
+
+
+
+struct SpinningPlusButton: View {
+    @Binding var showPhotoPicker: Bool
+    @State private var rotation: Double = 0
+    @State private var shine = false
+    @State private var isAnimating = false
+
+    var body: some View {
+        Button(action: {
+            showPhotoPicker = true
+        }) {
+            HStack {
+                Spacer()
+                Text("Pick A Photo")
+                    .font(.custom("Nunito-ExtraBold", size: 20))
+                    .foregroundColor(.black)
+                Spacer()
+                Image(systemName: "plus")
+                    .font(.custom("Nunito-ExtraBold", size: 22))
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                    .rotationEffect(.degrees(rotation))
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(16)
+            .overlay(
+                LinearGradient(
+                    colors: [.white.opacity(0.0), .white.opacity(0.25), .white.opacity(0.0)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .rotationEffect(.degrees(20))
+                .offset(x: shine ? 250 : -250)
+                .mask(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(lineWidth: 2)
+                )
+            )
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+            .scaleEffect(isAnimating ? 1.03 : 1.0)
+            .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: isAnimating)
+        }
+        .onAppear {
+            isAnimating = true
+            // Spin every 6 seconds (subtle and less constant)
+            Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    rotation += 360
+                }
+            }
+            // Smooth gradient sweep
+            withAnimation(.linear(duration: 3.5).repeatForever(autoreverses: false)) {
+                shine.toggle()
+            }
+        }
+    }
+}
+
+
+
+// MARK: - ImagePicker for Camera
+struct ImagePicker: UIViewControllerRepresentable {
+    let sourceType: UIImagePickerController.SourceType
+    @Binding var selectedImage: UIImage?
+    @Environment(\.dismiss) private var dismiss
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = sourceType
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: ImagePicker
+        init(_ parent: ImagePicker) { self.parent = parent }
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.selectedImage = image
+            }
+            parent.dismiss()
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.dismiss()
+        }
+    }
+}
+
+
 // MARK: - Example Images Section
 struct ExampleImagesSection: View {
     let images: [String]
     @State private var selectedImageIndex: Int = 0
     @State private var showFullScreen = false
+    @State private var appeared = false  // <- new
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -595,7 +411,7 @@ struct ExampleImagesSection: View {
                         Image(imageName)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: geo.size.width, height: geo.size.width) // 1:1 square
+                            .frame(width: geo.size.width, height: geo.size.width)
                             .clipped()
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
@@ -604,8 +420,16 @@ struct ExampleImagesSection: View {
                                 showFullScreen = true
                             }
                     }
-                    .aspectRatio(1.0, contentMode: .fit) // 1:1 square ratio for the cell
+                    .aspectRatio(1.0, contentMode: .fit)
                 }
+            }
+        }
+        .opacity(appeared ? 1 : 0)
+        .offset(y: appeared ? 0 : 30)
+        .animation(.easeOut(duration: 0.8), value: appeared)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                appeared = true
             }
         }
         .sheet(isPresented: $showFullScreen) {
@@ -618,6 +442,8 @@ struct ExampleImagesSection: View {
         }
     }
 }
+
+
 // MARK: - Full Screen Image Viewer
 struct FullScreenImageViewer: View {
     let images: [String]
@@ -718,96 +544,137 @@ struct FullScreenImageViewer: View {
     }
 }
 
-// MARK: - ImagePicker for Camera
-struct ImagePicker: UIViewControllerRepresentable {
-    let sourceType: UIImagePickerController.SourceType
-    @Binding var selectedImage: UIImage?
-    @Environment(\.dismiss) private var dismiss
+//// MARK: - Photo Upload Section
+//struct PhotoUploadSection: View {
+//    @Binding var selectedImage: UIImage?
+//    @Binding var showCamera: Bool
+//    @Binding var showPhotoPicker: Bool
+//
+//    @State private var selectedPhotoItem: PhotosPickerItem?
+//
+//    var body: some View {
+//        VStack(alignment: .leading, spacing: 8) {
+//            Text("Upload or Take Photo")
+//                .font(.headline)
+//                .foregroundColor(.secondary)
+//
+//            if let selectedImage = selectedImage {
+//                ZStack(alignment: .topTrailing) {
+//                    Image(uiImage: selectedImage)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fill)
+//                        .frame(height: 200)
+//                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 12)
+//                                .stroke(Color.blue, lineWidth: 2)
+//                        )
+//
+//                    Button(action: { self.selectedImage = nil }) {
+//                        Image(systemName: "xmark.circle.fill")
+//                            .font(.title2)
+//                            .foregroundColor(.white)
+//                            .background(Circle().fill(Color.red))
+//                    }
+//                    .padding(8)
+//                }
+//            } else {
+//                HStack(spacing: 12) {
+//                    // Camera Button
+//                    Button(action: { showCamera = true }) {
+//                        VStack(spacing: 6) {
+//                            Image(systemName: "camera")
+//                                .font(.system(size: 24))
+//                            Text("Take Photo")
+//                                .font(.caption2)
+//                        }
+//                        .frame(maxWidth: .infinity, minHeight: 80)
+//                        .background(Color.gray.opacity(0.1))
+//                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                    }
+//
+//                    // Photo Library Button
+//                    Button(action: { showPhotoPicker = true }) {
+//                        VStack(spacing: 6) {
+//                            Image(systemName: "photo.on.rectangle.angled")
+//                                .font(.system(size: 24))
+//                            Text("Choose Photo")
+//                                .font(.caption2)
+//                        }
+//                        .frame(maxWidth: .infinity, minHeight: 80)
+//                        .background(Color.gray.opacity(0.1))
+//                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                    }
+//                    .photosPicker(
+//                        isPresented: $showPhotoPicker,
+//                        selection: $selectedPhotoItem,
+//                        matching: .images
+//                    )
+//                    .onChange(of: selectedPhotoItem) { newItem in
+//                        Task {
+//                            if let data = try? await newItem?.loadTransferable(type: Data.self),
+//                               let uiImage = UIImage(data: data) {
+//                                selectedImage = uiImage
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.sourceType = sourceType
-        picker.delegate = context.coordinator
-        return picker
-    }
 
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let parent: ImagePicker
-        init(_ parent: ImagePicker) { self.parent = parent }
-
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                parent.selectedImage = image
-            }
-            parent.dismiss()
-        }
-
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.dismiss()
-        }
-    }
-}
-
-// MARK: - Diagonal Overlapping Images
-struct DiagonalOverlappingImages: View {
-    let leftImageName: String
-    let rightImageName: String
-    
-    @State private var arrowWiggle: Bool = false
-
-    var body: some View {
-        GeometryReader { geometry in
-            let imageWidth = geometry.size.width * 0.48
-            let imageHeight = imageWidth * 1.33
-            let arrowYOffset = -imageHeight * 0.15 // About 1/3 from top
-            
-            ZStack(alignment: .center) {
-                // Left image (original) - rotated counter-clockwise
-                Image(leftImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: imageWidth, height: imageHeight)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: -4, y: 4)
-                    .rotationEffect(.degrees(-8))
-                    .offset(x: -imageWidth * 0.50, y: 0)
-                
-                // Right image (transformed) - rotated clockwise
-                Image(rightImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: imageWidth, height: imageHeight)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: 4, y: 4)
-                    .rotationEffect(.degrees(8))
-                    .offset(x: imageWidth * 0.50, y: 0)
-                
-                // Arrow image overlapping both images
-                ZStack {
-                    // White circle background for visibility
-                    // ...existing code...
-
-                    // Arrow icon (static)
-                    Image("arrow")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 62, height: 62)
-                        .rotationEffect(.degrees(arrowWiggle ? 4 : -4))
-                        .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: arrowWiggle)
-                }
-                .onAppear { arrowWiggle = true }
-                .offset(x: 0, y: arrowYOffset)
-            }
-            .frame(width: geometry.size.width, height: imageHeight + 20)
-        }
-        .frame(height: 260)
-        .padding(.horizontal, 20)
-    }
-}
-
+//// MARK: - Generate Button
+//struct GenerateButton: View {
+//    @Binding var isGenerating: Bool
+//    let selectedImage: UIImage?
+//    let prompt: String
+//    
+//    private var isDisabled: Bool {
+//        isGenerating || selectedImage == nil || prompt.isEmpty
+//    }
+//
+//    var body: some View {
+//        Button(action: {
+//            isGenerating = true
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                isGenerating = false
+//            }
+//        }) {
+//            HStack(spacing: 12) {
+//                if isGenerating {
+//                    ProgressView()
+//                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+//                        .scaleEffect(0.9)
+//                } else {
+//                    Image(systemName: "photo.on.rectangle")
+//                        .font(.system(size: 18))
+//                }
+//                Text(isGenerating ? "Transforming Your Photo..." : "Transform Photo")
+//                    .font(.headline)
+//                    .fontWeight(.semibold)
+//            }
+//            .frame(maxWidth: .infinity)
+//            .padding(.vertical, 16)
+//            .background(
+//                Group {
+//                    if isDisabled {
+//                        Color.gray.opacity(0.5)
+//                    } else {
+//                        LinearGradient(
+//                            gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
+//                            startPoint: .leading,
+//                            endPoint: .trailing
+//                        )
+//                    }
+//                }
+//            )
+//            .foregroundColor(.white)
+//            .clipShape(RoundedRectangle(cornerRadius: 7))
+//            .shadow(color: isDisabled ? Color.clear : Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
+//        }
+//        .disabled(isDisabled)
+//        .animation(.easeInOut(duration: 0.2), value: isDisabled)
+//    }
+//}

@@ -10,7 +10,7 @@ let mermaidVideosItems = [
         imageName: "mermaid",
         imageNameOriginal: "anime",
         title: "🧜‍♀️ Mermaid",
-        cost: "0.20",
+        cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -21,7 +21,7 @@ let mermaidVideosItems = [
     TrendingItem(
         imageName: "mermaid1",
         title: "🧜‍♀️ Mermaid",
-        cost: "0.20",
+        cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -32,7 +32,7 @@ let mermaidVideosItems = [
     TrendingItem(
         imageName: "mermaid2",
         title: "🧜‍♀️ Mermaid",
-        cost: "0.20",
+        cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -43,7 +43,7 @@ let mermaidVideosItems = [
     TrendingItem(
         imageName: "mermaid3",
         title: "🧜‍♀️ Mermaid",
-        cost: "0.20",
+        cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -54,7 +54,7 @@ let mermaidVideosItems = [
     TrendingItem(
         imageName: "mermaid4",
         title: "🧜‍♀️ Mermaid",
-        cost: "0.20",
+        cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",
         prompt: "",
         modelName: "",
@@ -65,7 +65,7 @@ let mermaidVideosItems = [
     TrendingItem(
         imageName: "mermaid5",
         title: "🧜‍♀️ Mermaid",
-        cost: "0.20",
+        cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",
         prompt: "",
         modelName: "",

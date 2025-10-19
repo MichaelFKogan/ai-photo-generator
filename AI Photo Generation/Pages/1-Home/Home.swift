@@ -13,7 +13,7 @@ struct TrendingItem: Identifiable {
     let imageName: String
     let imageNameOriginal: String?
     let title: String
-    let cost: String
+    let cost: Double
     let description: String
     
     let prompt: String
@@ -22,7 +22,7 @@ struct TrendingItem: Identifiable {
     let modelImageName: String
     let exampleImages: [String]
     
-    init(imageName: String, imageNameOriginal: String? = nil, title: String, cost: String, description: String, prompt: String, modelName: String, modelDescription: String, modelImageName: String, exampleImages: [String]) {
+    init(imageName: String, imageNameOriginal: String? = nil, title: String, cost: Double, description: String, prompt: String, modelName: String, modelDescription: String, modelImageName: String, exampleImages: [String]) {
         self.imageName = imageName
         self.imageNameOriginal = imageNameOriginal
         self.title = title

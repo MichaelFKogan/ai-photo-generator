@@ -141,7 +141,7 @@ struct VideoTile: View {
 //                            )
                     }
                     .overlay(alignment: .topTrailing) {
-                        Text("$\(item.cost)")
+                        Text("$\(item.cost, specifier: "%.2f")")
                             .font(.custom("Nunito-Bold", size: 11))
                             .foregroundColor(.white)
                             .shadow(color: .black, radius: 2, x: 1, y: 1)

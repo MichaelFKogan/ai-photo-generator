@@ -9,8 +9,8 @@
 let transformyourphotosItems = [
     TrendingItem(
         imageName: "squeeze",
-        title: "Squeeze",
-        cost: "0.30",
+        title: "Squish Effect",
+        cost: 0.30,
         description: "",
         prompt: "",
         modelName: "",
@@ -21,7 +21,7 @@ let transformyourphotosItems = [
     TrendingItem(
         imageName: "kissing",
         title: "Kissing",
-        cost: "0.20",
+        cost: 0.20,
         description: "",
         prompt: "",
         modelName: "",
@@ -32,7 +32,7 @@ let transformyourphotosItems = [
     TrendingItem(
         imageName: "labubu",
         title: "Labubu",
-        cost: "0.20",
+        cost: 0.20,
         description: "",
         prompt: "",
         modelName: "",
@@ -43,7 +43,7 @@ let transformyourphotosItems = [
     TrendingItem(
         imageName: "helicopterpilot",
         title: "Helicopter Pilot",
-        cost: "0.30",
+        cost: 0.30,
         description: "",
         prompt: "",
         modelName: "",
@@ -54,7 +54,7 @@ let transformyourphotosItems = [
     TrendingItem(
         imageName: "photostolife",
         title: "Photos To Life",
-        cost: "0.30",
+        cost: 0.30,
         description: "",
         prompt: "",
         modelName: "",
@@ -66,7 +66,7 @@ let transformyourphotosItems = [
 //    TrendingItem(
 //        imageName: "video3",
 //        title: "Dark Fantasy",
-//        cost: "0.04",
+//        cost: 0.04,
 //        description: "",
 //        prompt: "AI-enhanced time lapse, accelerated motion, cinematic flow, dynamic camera movement",
 //        modelName: "Runway Gen-2",
@@ -77,7 +77,7 @@ let transformyourphotosItems = [
 //    TrendingItem(
 //        imageName: "video4",
 //        title: "Character Animation",
-//        cost: "0.04",
+//        cost: 0.04,
 //        description: "",
 //        prompt: "Animated character with personality, expressive movements, 3D animation style, smooth transitions",
 //        modelName: "Pika Labs",
@@ -88,7 +88,7 @@ let transformyourphotosItems = [
 //    TrendingItem(
 //        imageName: "video5",
 //        title: "Scene Transition",
-//        cost: "0.04",
+//        cost: 0.04,
 //        description: "",
 //        prompt: "Cinematic scene transition, smooth morphing, creative effects, professional video editing",
 //        modelName: "Runway Gen-2",
@@ -99,7 +99,7 @@ let transformyourphotosItems = [
 //    TrendingItem(
 //        imageName: "video6",
 //        title: "Nature Animation",
-//        cost: "0.04",
+//        cost: 0.04,
 //        description: "",
 //        prompt: "Animated nature scene, flowing water, moving clouds, realistic motion, peaceful atmosphere",
 //        modelName: "Pika Labs",

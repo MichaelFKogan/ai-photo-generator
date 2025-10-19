@@ -43,7 +43,7 @@ struct HomeRowSplit: View {
                                     .overlay(alignment: .topTrailing) {
 //                                        if let price = item.price {
 //                                            Text("$\(price, specifier: "%.2f")")
-                                        Text(item.cost)
+                                        Text("$\(item.cost, specifier: "%.2f")")
                                                 .font(.custom("Nunito-Bold", size: 11))
                                                 .foregroundColor(.white)
                                                 .padding(.horizontal, 6)
