@@ -1,12 +1,15 @@
 import SwiftUI
 
 struct PhotoConfirmationView: View {
+    let item: InfoPacket
     let image: UIImage
-    let cost: String
     
     @State private var shimmer: Bool = false
     @State private var sparklePulse: Bool = false
     @State private var generatePulse: Bool = false
+    
+    @State private var rotation: Double = 0
+    @State private var isAnimating = false
     
     @State private var generatedImage: UIImage? = nil
     @State private var isLoading = false
@@ -90,40 +93,68 @@ struct PhotoConfirmationView: View {
                 }
 
                 
-//                // MARK: - Generate Button
-//                Button(action: {
-//                    print("Generate pressed")
-//                }) {
-//                    Text("Generate")
-//                        .font(.custom("Nunito-ExtraBold", size: 22))
-//                        .foregroundColor(.black)
-//                        .padding(.vertical, 16)
-//                        .frame(maxWidth: .infinity)
-//                        .background(.white)
-////                        .background(
-////                            LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
-////                        )
-//                        .cornerRadius(12)
-//                        .shadow(color: Color.purple.opacity(0.3), radius: 8, x: 0, y: 4)
-//                        .scaleEffect(generatePulse ? 1.05 : 1.0)
-//                        .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: generatePulse)
-//                }
-//                .padding(.horizontal, 24)
-//                .onAppear { generatePulse = true }
-                
+                // MARK: - Generate Button                
                 Button(action: {
                     Task {
                         isLoading = true
+//                        print("Sending image to WaveSpeed…")
+                        
+                        // ✅ Instead of calling the API, log all the data that would be sent
+                          print("""
+                          --- WaveSpeed Request Info ---
+                          ------------------------------
+                          Endpoint: \(item.endpoint)
+                          Prompt: \(item.prompt)
+                          Aspect Ratio: \(item.aspectRatio ?? "default")
+                          Output Format: \(item.outputFormat)
+                          Enable Sync Mode: \(item.enableSyncMode)
+                          Enable Base64 Output: \(item.enableBase64Output)
+                          Cost: \(item.cost)
+                          ------------------------------
+                          """)
+
+                          // Example log of image info
+                          print("Attached image size: \(image.size.width)x\(image.size.height)")
+                          print("Image data size: \((image.jpegData(compressionQuality: 0.8)?.count ?? 0) / 1024) KB")
+                        
+                        print("""
+                              ------------------------------
+                              """)
+
+                          // 💤 Simulate a short delay for realism
+                          try? await Task.sleep(for: .seconds(1.5))
+
+                          // Stop loading
+                          isLoading = false
+                          print("✅ Mock request complete — no network call made.")
+                        
                         do {
-                            let response = try await sendImageToWaveSpeed(image: image, prompt: "Your desired prompt here")
+                            let response = try await sendImageToWaveSpeed(
+                                image: image,
+                                prompt: item.prompt,
+                                aspectRatio: item.aspectRatio,
+                                outputFormat: item.outputFormat,
+                                enableSyncMode: item.enableSyncMode,
+                                enableBase64Output: item.enableBase64Output,
+                                endpoint: item.endpoint
+                            )
+                            
+                            print("Image sent. Response received.")
+                            
                             if let urlString = response.data.outputs?.first, let url = URL(string: urlString) {
-                                let imageData = try Data(contentsOf: url)
+                                print("[WaveSpeed] Fetching generated image…")
+                                let (imageData, _) = try await URLSession.shared.data(from: url)
                                 generatedImage = UIImage(data: imageData)
+                                print("[WaveSpeed] Generated image loaded successfully.")
+                            }
+                            else {
+                                print("No output URL returned from WaveSpeed.")
                             }
                         } catch {
-                            print("WaveSpeed error: \(error.localizedDescription)")
+                            print("WaveSpeed error: \(error)")
                         }
                         isLoading = false
+                        
                     }
                 }) {
                     HStack {
@@ -133,13 +164,37 @@ struct PhotoConfirmationView: View {
                         Text("Generate")
                             .font(.custom("Nunito-ExtraBold", size: 22))
                             .foregroundColor(.black)
+                        Image(systemName: "photo.on.rectangle")
+                            .font(.system(size: 18))
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                            .rotationEffect(.degrees(rotation))
                     }
                     .padding(.vertical, 16)
                     .frame(maxWidth: .infinity)
                     .background(.white)
                     .cornerRadius(12)
                     .shadow(color: Color.purple.opacity(0.3), radius: 8, x: 0, y: 4)
+                    .scaleEffect(generatePulse ? 1.05 : 1.0)
+                    .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: generatePulse)
                 }
+                .padding(.horizontal, 24)
+                .onAppear {
+                    generatePulse = true
+                    
+                    isAnimating = true
+                    // Kick off the first rotation immediately
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        rotation += 360
+                    }
+                    // Then continue spinning every 4 seconds
+                    Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
+                        withAnimation(.easeInOut(duration: 1.0)) {
+                            rotation += 360
+                        }
+                    }
+                }
+
 
                 
                 // MARK: - Cost Display
@@ -149,7 +204,7 @@ struct PhotoConfirmationView: View {
                         .foregroundStyle(
                             LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
                         )
-                    Text("Cost: $\(cost)")
+                    Text("Cost: $\(String(format: "%.2f", item.cost))")
                         .font(.headline)
                         .foregroundColor(.primary)
                 }

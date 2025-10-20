@@ -7,7 +7,7 @@
 
 // AI Videos category items
 let transformyourphotosItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "squeeze",
         title: "Squish Effect",
         cost: 0.30,
@@ -18,7 +18,7 @@ let transformyourphotosItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "kissing",
         title: "Kissing",
         cost: 0.20,
@@ -29,7 +29,7 @@ let transformyourphotosItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "labubu",
         title: "Labubu",
         cost: 0.20,
@@ -40,7 +40,7 @@ let transformyourphotosItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "helicopterpilot",
         title: "Helicopter Pilot",
         cost: 0.30,
@@ -51,7 +51,7 @@ let transformyourphotosItems = [
         modelImageName: "",
         exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "photostolife",
         title: "Photos To Life",
         cost: 0.30,
@@ -63,7 +63,7 @@ let transformyourphotosItems = [
         exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
     ),
     
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video3",
 //        title: "Dark Fantasy",
 //        cost: 0.04,
@@ -74,7 +74,7 @@ let transformyourphotosItems = [
 //        modelImageName: "runway",
 //        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video4",
 //        title: "Character Animation",
 //        cost: 0.04,
@@ -85,7 +85,7 @@ let transformyourphotosItems = [
 //        modelImageName: "pikalabs",
 //        exampleImages: ["video4_1", "video4_2", "video4_3", "video4_4", "video4_5", "video4_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video5",
 //        title: "Scene Transition",
 //        cost: 0.04,
@@ -96,7 +96,7 @@ let transformyourphotosItems = [
 //        modelImageName: "runway",
 //        exampleImages: ["video5_1", "video5_2", "video5_3", "video5_4", "video5_5", "video5_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video6",
 //        title: "Nature Animation",
 //        cost: 0.04,

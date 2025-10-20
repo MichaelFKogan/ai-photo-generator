@@ -7,7 +7,7 @@
 //
 //// Array of trending items with images and titles
 //let trendingItems = [
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "trending5",
 //        title: "Nature Vista",
 //        cost: 0.04,
@@ -18,7 +18,7 @@
 //        modelImageName: "midjourney",
 //        exampleImages: ["example5_1", "example5_2", "example5_3", "example5_4", "example5_5", "example5_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "trending6",
 //        title: "Abstract Art",
 //        cost: 0.04,
@@ -29,7 +29,7 @@
 //        modelImageName: "stablediffusion",
 //        exampleImages: ["example6_1", "example6_2", "example6_3", "example6_4", "example6_5", "example6_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "trending7",
 //        title: "Retro Vibes",
 //        cost: 0.04,
@@ -40,7 +40,7 @@
 //        modelImageName: "dalle3",
 //        exampleImages: ["example7_1", "example7_2", "example7_3", "example7_4", "example7_5", "example7_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "trending8",
 //        title: "Digital Painting",
 //        cost: 0.04,

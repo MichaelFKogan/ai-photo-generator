@@ -6,7 +6,7 @@
 //
 
 let videogamesVideosItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "minecraft",
         imageNameOriginal: "",
         title: "Minecraft",
@@ -18,7 +18,7 @@ let videogamesVideosItems = [
         modelImageName: "",
         exampleImages: ["", "", "", "", "", ""]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "hulkexplode",
         imageNameOriginal: "",
         title: "Hulk Explode",
@@ -30,7 +30,7 @@ let videogamesVideosItems = [
         modelImageName: "",
         exampleImages: ["", "", "", "", "", ""]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "captainamerica",
         imageNameOriginal: "captainamerica",
         title: "Captain America",
@@ -42,7 +42,7 @@ let videogamesVideosItems = [
         modelImageName: "",
         exampleImages: ["captainamerica2", "captainamerica3", "captainamerica4", "captainamerica5", "captainamerica6", "captainamerica7"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "hulkride",
         imageNameOriginal: "",
         title: "Hulk Ride",

@@ -7,7 +7,7 @@
 
 // Array of trending items with images and titles
 let actionfigureItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "micro-landscape-mini-world1",
         imageNameOriginal: "micro-landscape-mini-world",
         title: "Micro Landscape",
@@ -19,7 +19,7 @@ let actionfigureItems = [
         modelImageName: "",
         exampleImages: ["micro-landscape-mini-world2", "micro-landscape-mini-world3", "micro-landscape-mini-world4", "micro-landscape-mini-world5", "micro-landscape-mini-world6", "micro-landscape-mini-world7"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "plasticbubblefigure1",
         imageNameOriginal: "plasticbubblefigure",
         title: "Plastic Bubble Figure",
@@ -31,7 +31,7 @@ let actionfigureItems = [
         modelImageName: "",
         exampleImages: ["plasticbubblefigure6", "plasticbubblefigure3", "plasticbubblefigure4", "plasticbubblefigure5", "plasticbubblefigure2", "plasticbubblefigure7"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "trending1",
         imageNameOriginal: "trending",
         title: "Designer Toy Figure",
@@ -43,7 +43,7 @@ let actionfigureItems = [
         modelImageName: "geminiflashimage25",
         exampleImages: []
     ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "trending2",
 //        imageNameOriginal: "trending5",
 //        title: "Starter Pack",

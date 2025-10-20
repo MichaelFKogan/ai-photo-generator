@@ -7,7 +7,7 @@
 
 // Pranks category items
 let prankItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "trending3",
         title: "Homeless Man Prank",
         cost: 0.04,
@@ -18,7 +18,7 @@ let prankItems = [
         modelImageName: "stablediffusion",
         exampleImages: []
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "trending4",
         title: "Shirtless Plumber Prank",
         cost: 0.04,
@@ -29,7 +29,7 @@ let prankItems = [
         modelImageName: "dalle3",
         exampleImages: []
     ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "prank1",
 //        title: "Surprise Reaction",
 //        cost: 0.04,
@@ -40,7 +40,7 @@ let prankItems = [
 //        modelImageName: "dalle3",
 //        exampleImages: ["prank1_1", "prank1_2", "prank1_3", "prank1_4", "prank1_5", "prank1_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "prank2",
 //        title: "Jump Scare",
 //        cost: 0.04,
@@ -51,7 +51,7 @@ let prankItems = [
 //        modelImageName: "midjourney",
 //        exampleImages: ["prank2_1", "prank2_2", "prank2_3", "prank2_4", "prank2_5", "prank2_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "prank3",
 //        title: "Hidden Camera",
 //        cost: 0.04,
@@ -62,7 +62,7 @@ let prankItems = [
 //        modelImageName: "stablediffusion",
 //        exampleImages: ["prank3_1", "prank3_2", "prank3_3", "prank3_4", "prank3_5", "prank3_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "prank4",
 //        title: "Fake Spider",
 //        cost: 0.04,
@@ -73,7 +73,7 @@ let prankItems = [
 //        modelImageName: "dalle3",
 //        exampleImages: ["prank4_1", "prank4_2", "prank4_3", "prank4_4", "prank4_5", "prank4_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "prank5",
 //        title: "Water Balloon",
 //        cost: 0.04,

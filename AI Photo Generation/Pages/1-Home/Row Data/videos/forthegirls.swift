@@ -1,5 +1,5 @@
 let forthegirlsItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
@@ -10,7 +10,7 @@ let forthegirlsItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "redcarpetwalk",
         imageNameOriginal: "redcarpetwalk",
         title: "Red Carpet Walk",
@@ -22,7 +22,7 @@ let forthegirlsItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "princess",
         title: "Princess",
         cost: 0.20,
@@ -33,7 +33,7 @@ let forthegirlsItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "runwaywalk",
         imageNameOriginal: "runwaywalk",
         title: "Runway Walk",
@@ -45,7 +45,7 @@ let forthegirlsItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "goldenera",
         imageNameOriginal: "goldenera",
         title: "Golden Era",
@@ -57,7 +57,7 @@ let forthegirlsItems = [
         modelImageName: "",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "fairy",
         title: "🧚 Fairy",
         cost: 0.20,

@@ -6,16 +6,24 @@
 //
 
 let animeItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "anime1",
         imageNameOriginal: "anime",
+        
         title: "Anime",
         cost: 0.04,
         description: "",
         prompt: "",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/image-effects/my-world",
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["anime2", "anime3", "anime4", "anime5", "anime6", "anime7"]
-    ),
+        exampleImages: ["anime2", "anime3", "anime4", "anime5", "anime6", "anime7"],
+        
+        aspectRatio: nil,
+        outputFormat: "jpeg",
+        enableSyncMode: true,
+        enableBase64Output: false
+    )
 ]

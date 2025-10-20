@@ -10,7 +10,7 @@ import AVKit
 
 struct HomeRowVideo: View {
     let title: String
-    let items: [TrendingItem]
+    let items: [InfoPacket]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -78,11 +78,11 @@ struct HomeRowVideo: View {
 // MARK: - Mosaic building
 extension HomeRowVideo {
     private enum MosaicBlock {
-        case large(TrendingItem)
-        case grid([TrendingItem])
+        case large(InfoPacket)
+        case grid([InfoPacket])
     }
 
-    private func mosaicBlocks(from items: [TrendingItem]) -> [MosaicBlock] {
+    private func mosaicBlocks(from items: [InfoPacket]) -> [MosaicBlock] {
         var result: [MosaicBlock] = []
         var index = 0
         while index < items.count {
@@ -105,7 +105,7 @@ extension HomeRowVideo {
 
 // MARK: - Reusable video tile
 struct VideoTile: View {
-    let item: TrendingItem
+    let item: InfoPacket
     let width: CGFloat
     let height: CGFloat
 

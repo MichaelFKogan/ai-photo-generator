@@ -6,7 +6,7 @@
 //
 
 let videogamesItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "minecraft1",
         imageNameOriginal: "minecraft",
         title: "Blocky Aesthetic",
@@ -18,7 +18,7 @@ let videogamesItems = [
         modelImageName: "",
         exampleImages: ["minecraft2", "minecraft3", "minecraft4", "minecraft5", "minecraft6", "minecraft7"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "cyberpunk1",
         imageNameOriginal: "cyberpunk",
         title: "Cyberpunk",

@@ -6,7 +6,7 @@
 //
 
 let photographyItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "lowkeylighting1",
         imageNameOriginal: "lowkeylighting",
         title: "Low-Key Lighting",

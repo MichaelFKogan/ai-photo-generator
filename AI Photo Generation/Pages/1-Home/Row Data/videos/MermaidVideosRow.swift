@@ -6,7 +6,7 @@
 //
 
 let mermaidVideosItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid",
         imageNameOriginal: "anime",
         title: "🧜‍♀️ Mermaid",
@@ -18,7 +18,7 @@ let mermaidVideosItems = [
         modelImageName: "",
         exampleImages: ["mermaid1", "mermaid2", "mermaid3", "mermaid4", "mermaid5", "mermaid6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid1",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
@@ -29,7 +29,7 @@ let mermaidVideosItems = [
         modelImageName: "",
         exampleImages: ["mermaid1", "mermaid2", "mermaid3", "mermaid4", "mermaid5", "mermaid6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid2",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
@@ -40,7 +40,7 @@ let mermaidVideosItems = [
         modelImageName: "",
         exampleImages: ["mermaid1", "mermaid2", "mermaid3", "mermaid4", "mermaid5", "mermaid6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid3",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
@@ -51,7 +51,7 @@ let mermaidVideosItems = [
         modelImageName: "",
         exampleImages: ["mermaid1", "mermaid2", "mermaid3", "mermaid4", "mermaid5", "mermaid6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid4",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
@@ -62,7 +62,7 @@ let mermaidVideosItems = [
         modelImageName: "",
         exampleImages: ["mermaid1", "mermaid2", "mermaid3", "mermaid4", "mermaid5", "mermaid6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "mermaid5",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,

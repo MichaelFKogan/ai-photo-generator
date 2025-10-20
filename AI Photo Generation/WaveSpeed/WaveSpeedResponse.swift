@@ -21,36 +21,126 @@ struct WaveSpeedResponse: Decodable {
 
 let apiKey = "5fb599c5eca75157f34d7da3efc734a3422a4b5ae0e6bbf753a09b82e6caebdf"
 
-func sendImageToWaveSpeed(image: UIImage, prompt: String) async throws -> WaveSpeedResponse {
+func sendImageToWaveSpeed(
     
-//    guard let apiKey = ProcessInfo.processInfo.environment["WAVESPEED_API_KEY"] else {
-//        throw URLError(.userAuthenticationRequired)
-//    }
+    image: UIImage,
+    prompt: String,
+    aspectRatio: String? = nil,      // optional, e.g., "1:1", "16:9"
+    outputFormat: String = "jpeg",   // "jpeg" or "png"
+    enableSyncMode: Bool = true,
+    enableBase64Output: Bool = false,
+    endpoint: String
     
-    // Convert UIImage to JPEG Data, then base64 URL (data URL)
+) async throws -> WaveSpeedResponse {
+    
+    //    guard let apiKey = ProcessInfo.processInfo.environment["WAVESPEED_API_KEY"] else {
+    //        throw URLError(.userAuthenticationRequired)
+    //    }
+    
+    print("[WaveSpeed] Preparing request…")
+    
+    // Convert UIImage to JPEG Data, then base64 URL
     guard let jpegData = image.jpegData(compressionQuality: 0.8) else {
-        throw URLError(.cannotDecodeRawData) // or a custom error
+        print("[WaveSpeed] Failed to convert UIImage to JPEG data.")
+        throw URLError(.cannotDecodeRawData)
     }
     
     let base64String = jpegData.base64EncodedString()
     let dataURL = "data:image/jpeg;base64,\(base64String)"
     
-    let url = URL(string: "https://api.wavespeed.ai/api/v3/google/gemini-2.5-flash-image/edit")!
+    let url = URL(string: endpoint)!
     
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
     
-    let body: [String: Any] = [
+    // Build request body
+    var body: [String: Any] = [
         "prompt": prompt,
-        "images": [dataURL],
-        "output_format": "jpeg",
-        "enable_sync_mode": true,       // synchronous for immediate result
-        "enable_base64_output": false   // we will receive a URL
+        "image": dataURL,
+        "output_format": outputFormat,
+        "enable_sync_mode": enableSyncMode,
+        "enable_base64_output": enableBase64Output
     ]
     
+    // Only include optional params if they’re set
+    if let aspectRatio = aspectRatio {
+        body["aspect_ratio"] = aspectRatio
+    }
+    
     request.httpBody = try JSONSerialization.data(withJSONObject: body)
+    
+    print("[WaveSpeed] Sending request to API…")
+    
+    do {
+        let (data, response) = try await URLSession.shared.data(for: request)
+        print("[WaveSpeed] Response received from API.")
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            print("[WaveSpeed] Invalid response object.")
+            throw URLError(.badServerResponse)
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            print("[WaveSpeed] HTTP error: \(httpResponse.statusCode)")
+            throw URLError(.badServerResponse)
+        }
+        
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let wavespeedResponse = try decoder.decode(WaveSpeedResponse.self, from: data)
+        print("[WaveSpeed] Decoded response. Status: \(wavespeedResponse.data.status)")
+        
+        
+        
+        if wavespeedResponse.data.status == "created" {
+            print("[WaveSpeed] Job created, polling for completion…")
+            let jobId = wavespeedResponse.data.id
+            var statusResponse: WaveSpeedResponse
+            for _ in 0..<15 {  // try up to 15 times (30 seconds)
+                try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+                statusResponse = try await fetchWaveSpeedJobStatus(id: jobId)
+                if statusResponse.data.status == "completed" {
+                    return statusResponse
+                } else if statusResponse.data.status == "failed" {
+                    throw NSError(domain: "WaveSpeedAPI", code: 2, userInfo: [
+                        NSLocalizedDescriptionKey: statusResponse.data.error ?? "WaveSpeed job failed."
+                    ])
+                }
+            }
+            throw NSError(domain: "WaveSpeedAPI", code: 1, userInfo: [
+                NSLocalizedDescriptionKey: "Timed out waiting for image generation."
+            ])
+
+        } else if wavespeedResponse.data.status != "completed" {
+            print("[WaveSpeed] Error from API: \(wavespeedResponse.data.error ?? "Unknown error")")
+            throw NSError(domain: "WaveSpeedAPI", code: 0, userInfo: [
+                NSLocalizedDescriptionKey: wavespeedResponse.data.error ?? "Unknown error"
+            ])
+        }
+        
+        
+        
+        if let urlString = wavespeedResponse.data.outputs?.first {
+            print("[WaveSpeed] Generated image URL: \(urlString)")
+        } else {
+            print("[WaveSpeed] No outputs returned from API.")
+        }
+        
+        return wavespeedResponse
+        
+    } catch {
+        print("[WaveSpeed] Network or decoding error: \(error)")
+        throw error
+    }
+}
+
+func fetchWaveSpeedJobStatus(id: String) async throws -> WaveSpeedResponse {
+    let url = URL(string: "https://api.wavespeed.ai/api/v3/predictions/\(id)/result")!
+    var request = URLRequest(url: url)
+    request.httpMethod = "GET"
+    request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
     
     let (data, response) = try await URLSession.shared.data(for: request)
     
@@ -61,11 +151,5 @@ func sendImageToWaveSpeed(image: UIImage, prompt: String) async throws -> WaveSp
     
     let decoder = JSONDecoder()
     decoder.keyDecodingStrategy = .convertFromSnakeCase
-    let wavespeedResponse = try decoder.decode(WaveSpeedResponse.self, from: data)
-    
-    if wavespeedResponse.data.status != "completed" {
-        throw NSError(domain: "WaveSpeedAPI", code: 0, userInfo: [NSLocalizedDescriptionKey: wavespeedResponse.data.error ?? "Unknown error"])
-    }
-    
-    return wavespeedResponse
+    return try decoder.decode(WaveSpeedResponse.self, from: data)
 }

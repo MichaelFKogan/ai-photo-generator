@@ -8,7 +8,7 @@
 import SwiftUI
 import AVKit
 
-struct TrendingItem: Identifiable {
+struct InfoPacket: Identifiable {
     let id = UUID()
     let imageName: String
     let imageNameOriginal: String?
@@ -17,24 +17,55 @@ struct TrendingItem: Identifiable {
     let description: String
     
     let prompt: String
+    let endpoint: String
     let modelName: String
     let modelDescription: String
     let modelImageName: String
     let exampleImages: [String]
     
-    init(imageName: String, imageNameOriginal: String? = nil, title: String, cost: Double, description: String, prompt: String, modelName: String, modelDescription: String, modelImageName: String, exampleImages: [String]) {
+    let aspectRatio: String?
+    let outputFormat: String
+    let enableSyncMode: Bool
+    let enableBase64Output: Bool
+
+    // ✅ Default values for flexibility
+    init(
+        imageName: String,
+        imageNameOriginal: String? = nil,
+        title: String = "",
+        cost: Double = 0.0,
+        description: String = "",
+        prompt: String = "",
+        endpoint: String = "",
+        modelName: String = "",
+        modelDescription: String = "",
+        modelImageName: String = "",
+        exampleImages: [String] = [],
+        aspectRatio: String? = nil,
+        outputFormat: String = "jpeg",
+        enableSyncMode: Bool = true,
+        enableBase64Output: Bool = false
+    ) {
         self.imageName = imageName
         self.imageNameOriginal = imageNameOriginal
         self.title = title
         self.cost = cost
         self.description = description
         self.prompt = prompt
+        self.endpoint = endpoint
         self.modelName = modelName
         self.modelDescription = modelDescription
         self.modelImageName = modelImageName
         self.exampleImages = exampleImages
+        self.aspectRatio = aspectRatio
+        self.outputFormat = outputFormat
+        self.enableSyncMode = enableSyncMode
+        self.enableBase64Output = enableBase64Output
     }
 }
+
+
+
 
 struct Home: View {
     @EnvironmentObject var themeManager: ThemeManager

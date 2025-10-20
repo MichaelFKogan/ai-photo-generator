@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeRowSingle: View {
     let title: String
-    let items: [TrendingItem]
+    let items: [InfoPacket]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

@@ -16,7 +16,7 @@ import SwiftUI
 import AVKit
 
 struct VideoDetailView: View {
-    let item: TrendingItem
+    let item: InfoPacket
     @State private var prompt: String = ""
     @State private var isGenerating: Bool = false
     @State private var createArrowMove: Bool = false

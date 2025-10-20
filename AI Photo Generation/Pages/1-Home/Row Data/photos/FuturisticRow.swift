@@ -6,7 +6,7 @@
 //
 
 let futuristicItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "futuristic1",
         imageNameOriginal: "futuristic",
         title: "Futuristic",
@@ -18,7 +18,7 @@ let futuristicItems = [
         modelImageName: "",
         exampleImages: ["futuristic2", "futuristic3", "futuristic4", "futuristic5", "futuristic6", "futuristic7"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "cyberpunk1",
         imageNameOriginal: "cyberpunk",
         title: "Cyberpunk",

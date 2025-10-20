@@ -7,7 +7,7 @@
 
 // AI Videos category items
 let texttovideoItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "yetivlog",
         title: "Yeti Vlog",
         cost: 0.80,
@@ -18,7 +18,7 @@ let texttovideoItems = [
         modelImageName: "veo3fast",
         exampleImages: ["video1_1", "video1_2", "video1_3", "video1_4", "video1_5", "video1_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "animevlog",
         title: "Anime Vlogger",
         cost: 0.80,
@@ -29,7 +29,7 @@ let texttovideoItems = [
         modelImageName: "sora2",
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video3",
 //        title: "Dark Fantasy",
 //        cost: 0.04,
@@ -40,7 +40,7 @@ let texttovideoItems = [
 //        modelImageName: "runway",
 //        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video4",
 //        title: "Character Animation",
 //        cost: 0.04,
@@ -51,7 +51,7 @@ let texttovideoItems = [
 //        modelImageName: "pikalabs",
 //        exampleImages: ["video4_1", "video4_2", "video4_3", "video4_4", "video4_5", "video4_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video5",
 //        title: "Scene Transition",
 //        cost: 0.04,
@@ -62,7 +62,7 @@ let texttovideoItems = [
 //        modelImageName: "runway",
 //        exampleImages: ["video5_1", "video5_2", "video5_3", "video5_4", "video5_5", "video5_6"]
 //    ),
-//    TrendingItem(
+//    InfoPacket(
 //        imageName: "video6",
 //        title: "Nature Animation",
 //        cost: 0.04,

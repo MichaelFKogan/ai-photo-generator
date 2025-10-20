@@ -6,7 +6,7 @@
 //
 
 let randomItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "felt3dpolaroid1",
         imageNameOriginal: "felt3dpolaroid",
         title: "Felt 3D Polaroid",
@@ -18,7 +18,7 @@ let randomItems = [
         modelImageName: "",
         exampleImages: ["felt3dpolaroid2", "felt3dpolaroid3", "felt3dpolaroid4", "felt3dpolaroid5", "felt3dpolaroid6", "felt3dpolaroid7"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "glassball1",
         imageNameOriginal: "glassball",
         title: "Snow Globe",

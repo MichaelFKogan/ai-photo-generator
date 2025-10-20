@@ -10,7 +10,7 @@ import SwiftUI
 import PhotosUI
 
 struct ImageDetailView: View {
-    let item: TrendingItem
+    let item: InfoPacket
     @State private var prompt: String = ""
     @State private var isGenerating: Bool = false
     @State private var selectedImage: UIImage?
@@ -103,7 +103,7 @@ struct ImageDetailView: View {
             NavigationLink(
                 destination: Group {
                     if let image = selectedImage {
-                        PhotoConfirmationView(image: image, cost: String(format: "%.2f", item.cost))
+                        PhotoConfirmationView(item: item, image: image)
                     } else {
                         EmptyView()
                     }
@@ -111,6 +111,7 @@ struct ImageDetailView: View {
                 isActive: $navigateToConfirmation,
                 label: { EmptyView() }
             )
+
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)

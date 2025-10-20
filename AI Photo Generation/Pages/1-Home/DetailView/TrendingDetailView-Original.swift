@@ -9,7 +9,7 @@
 //import PhotosUI
 //
 //struct TrendingDetailView: View {
-//    let item: TrendingItem
+//    let item: InfoPacket
 //    @State private var prompt: String = ""
 //    @State private var isGenerating: Bool = false
 //    @State private var selectedImage: UIImage?

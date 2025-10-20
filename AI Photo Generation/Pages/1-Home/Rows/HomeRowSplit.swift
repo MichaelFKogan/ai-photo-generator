@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeRowSplit: View {
     let title: String
-    let items: [TrendingItem]
+    let items: [InfoPacket]
     var diffAnimation: ImageDiffAnimation
 
     var body: some View {

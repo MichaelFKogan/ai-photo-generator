@@ -7,7 +7,7 @@
 
 // Relationships category items
 let relationshipItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "relationship1",
         title: "Couple Portrait",
         cost: 0.04,
@@ -18,7 +18,7 @@ let relationshipItems = [
         modelImageName: "dalle3",
         exampleImages: ["rel1_1", "rel1_2", "rel1_3", "rel1_4", "rel1_5", "rel1_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "relationship2",
         title: "Wedding Day",
         cost: 0.04,
@@ -29,7 +29,7 @@ let relationshipItems = [
         modelImageName: "midjourney",
         exampleImages: ["rel2_1", "rel2_2", "rel2_3", "rel2_4", "rel2_5", "rel2_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "relationship3",
         title: "Best Friends",
         cost: 0.04,
@@ -40,7 +40,7 @@ let relationshipItems = [
         modelImageName: "stablediffusion",
         exampleImages: ["rel3_1", "rel3_2", "rel3_3", "rel3_4", "rel3_5", "rel3_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "relationship4",
         title: "Date Night",
         cost: 0.04,
@@ -51,7 +51,7 @@ let relationshipItems = [
         modelImageName: "dalle3",
         exampleImages: ["rel4_1", "rel4_2", "rel4_3", "rel4_4", "rel4_5", "rel4_6"]
     ),
-    TrendingItem(
+    InfoPacket(
         imageName: "relationship5",
         title: "Proposal Moment",
         cost: 0.04,

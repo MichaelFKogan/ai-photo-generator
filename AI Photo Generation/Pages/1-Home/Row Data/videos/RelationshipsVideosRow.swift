@@ -6,7 +6,7 @@
 //
 
 let relationshipVideosItems = [
-    TrendingItem(
+    InfoPacket(
         imageName: "relationship1",
         title: "Couple Portrait",
         cost: 0.04,
