@@ -6,70 +6,48 @@
 //
 
 import SwiftUI
+import Kingfisher
 
+// MARK: - Profile View
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var viewModel = ProfileViewModel()
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
-                    // Profile header
-                    HStack(alignment: .top, spacing: 16) {
-                        // Profile image
-                        Circle()
-                            .fill(Color.blue.opacity(0.3))
-                            .frame(width: 100, height: 100)
-                            .overlay(
-                                Image(systemName: "person.fill")
-                                    .font(.system(size: 40))
-                                    .foregroundColor(.blue)
-                            )
-                        
-                        VStack(alignment: .leading, spacing: 12) {
-                            VStack(spacing: 4) {
-                                Text("Your Name")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                Text("@username")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            // Stats
-                            HStack(spacing: 32) {
-                                VStack {
-                                    Text("24")
-                                        .font(.title3)
-                                        .fontWeight(.bold)
-                                    Text("Creations")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                VStack {
-                                    Text("156")
-                                        .font(.title3)
-                                        .fontWeight(.bold)
-                                    Text("Likes")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                VStack {
-                                    Text("89")
-                                        .font(.title3)
-                                        .fontWeight(.bold)
-                                    Text("Followers")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
+        VStack {
+            if let user = authViewModel.user {
+                ProfileViewContent(viewModel: viewModel)
+                    .environmentObject(authViewModel)
+                    .task {
+                        // Set userId and fetch images once user is available
+                        if viewModel.userId != user.id.uuidString {
+                            viewModel.userId = user.id.uuidString
+                            await viewModel.fetchUserImages()
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top)
-                    .padding(.horizontal)
+            } else {
+                Text("Loading user…")
+            }
+        }
+    }
+}
+
+// MARK: - Profile Content
+struct ProfileViewContent: View {
+    @ObservedObject var viewModel: ProfileViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
+    private let columns = Array(repeating: GridItem(.flexible()), count: 3)
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 16) {
                     
-                    // Edit profile button
+                    // Profile Header
+                    profileHeader
+                    
+                    // Edit Profile Button
                     Button(action: {}) {
                         Text("Edit Profile")
                             .font(.headline)
@@ -81,43 +59,152 @@ struct ProfileView: View {
                     }
                     .padding(.horizontal)
                     
-                    // User's creations grid
+                    // User Creations Grid
                     VStack(alignment: .leading, spacing: 16) {
                         Text("My Creations")
                             .font(.title2)
                             .fontWeight(.semibold)
                             .padding(.horizontal)
                         
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
-                            ForEach(0..<15, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.gray.opacity(0.2))
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .overlay(
-                                        Image(systemName: "photo")
-                                            .font(.title3)
-                                            .foregroundColor(.gray)
-                                    )
+                        if viewModel.isLoading {
+                            Text("Loading images…")
+                                .foregroundColor(.gray)
+                                .padding()
+                        } else if viewModel.images.isEmpty {
+                            LazyVGrid(columns: columns, spacing: 8) {
+                                ForEach(0..<9, id: \.self) { _ in
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.gray.opacity(0.2))
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .overlay(
+                                            Image(systemName: "photo")
+                                                .foregroundColor(.gray)
+                                                .font(.title3)
+                                        )
+                                }
                             }
+                            .padding(.horizontal)
+                        } else {
+                            LazyVGrid(columns: columns, spacing: 8) {
+                                ForEach(viewModel.images, id: \.self) { urlString in
+                                    if let url = URL(string: urlString) {
+                                        KFImage(url)
+                                            .placeholder {
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .fill(Color.gray.opacity(0.2))
+                                                    .aspectRatio(1, contentMode: .fit)
+                                                    .overlay(
+                                                        ProgressView()
+                                                            .progressViewStyle(CircularProgressViewStyle(tint: .gray))
+                                                    )
+                                            }
+                                            .retry(maxCount: 2, interval: .seconds(2)) // retry on failure
+                                            .onFailure { error in
+                                                print("❌ Failed to load image: \(error.localizedDescription)")
+                                            }
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(maxWidth: .infinity)
+                                            .aspectRatio(1, contentMode: .fill)
+                                            .clipped()
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
                     }
                 }
+                .navigationTitle("Profile")
+                .toolbar {
+                    // 💎 Credits display
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "diamond.fill")
+                                .foregroundStyle(
+                                    LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                )
+                                .font(.system(size: 8))
+                            Text("$5.00")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .foregroundColor(.primary)
+                            Text("credits left")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.secondary.opacity(0.1)))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .strokeBorder(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
+                        )
+                    }
+                    // ✅ Settings button
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: SettingsView().environmentObject(authViewModel)) {
+                            Image(systemName: "gearshape.fill")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+
             }
-            .navigationTitle("Profile")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: SettingsView().environmentObject(authViewModel)) {
-                        Image(systemName: "gearshape.fill")
-                            .font(.headline)
-                            .foregroundColor(.gray)
+        }
+    }
+    
+    private var profileHeader: some View {
+        HStack(alignment: .top, spacing: 16) {
+            Circle()
+                .fill(Color.blue.opacity(0.3))
+                .frame(width: 100, height: 100)
+                .overlay(
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.blue)
+                )
+            
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(spacing: 4) {
+                    Text("Your Name")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    Text("@username")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                HStack(spacing: 32) {
+                    VStack {
+                        Text("24")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Text("Creations")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    VStack {
+                        Text("156")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Text("Likes")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    VStack {
+                        Text("89")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Text("Followers")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top)
+        .padding(.horizontal)
     }
-}
-
-#Preview {
-    ProfileView()
 }

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct PhotoConfirmationView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     let item: InfoPacket
     let image: UIImage
     
@@ -146,6 +148,25 @@ struct PhotoConfirmationView: View {
                                 let (imageData, _) = try await URLSession.shared.data(from: url)
                                 generatedImage = UIImage(data: imageData)
                                 print("[WaveSpeed] Generated image loaded successfully.")
+                                
+                                // Save to Supabase
+                                let userId = authViewModel.user?.id.uuidString ?? ""
+                                let modelName = item.modelName.isEmpty ? "default-model" : item.modelName
+                                Task {
+                                    do {
+                                        try await SupabaseManager.shared.client.database
+                                            .from("user_images")
+                                            .insert([
+                                                "user_id": userId,
+                                                "image_url": urlString,
+                                                "model": modelName
+                                            ])
+                                            .execute()
+                                        print("✅ Image saved for user")
+                                    } catch {
+                                        print("❌ Failed to save image: \(error)")
+                                    }
+                                }
                             }
                             else {
                                 print("No output URL returned from WaveSpeed.")

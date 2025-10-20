@@ -21,7 +21,7 @@ let animeItems = [
         modelImageName: "",
         exampleImages: ["anime2", "anime3", "anime4", "anime5", "anime6", "anime7"],
         
-        aspectRatio: "16:9",
+        aspectRatio: "",
         outputFormat: "jpeg",
         enableSyncMode: true,
         enableBase64Output: false
