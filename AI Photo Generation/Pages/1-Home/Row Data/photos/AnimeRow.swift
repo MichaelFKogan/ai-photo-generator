@@ -15,7 +15,7 @@ let animeItems = [
         description: "",
         prompt: "",
         
-        endpoint: "https://api.wavespeed.ai/api/v3/image-effects/my-world",
+        endpoint: "https://api.wavespeed.ai/api/v3/wavespeed-ai/ghibli",
         modelName: "",
         modelDescription: "",
         modelImageName: "",

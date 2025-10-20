@@ -17,11 +17,12 @@ struct ContentView: View {
                             removal: .opacity.combined(with: .move(edge: .leading))
                         ))
                 case 1:
-                    ExploreView()
-                        .transition(.asymmetric(
-                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
-                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
-                        ))
+                    //    ExploreView() // Old Explore page commented out
+                        PhotoFiltersView() // New Photo Filters page
+                            .transition(.asymmetric(
+                                insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                                removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                            ))
                 case 2:
                     CreateView()
                         .transition(.asymmetric(
@@ -59,7 +60,8 @@ struct ContentView: View {
                 Spacer()
                 HStack(spacing: 0) {
                     tabButton(icon: "house.fill", title: "Home", index: 0)
-                    tabButton(icon: "magnifyingglass", title: "Explore", index: 1)
+//                    tabButton(icon: "magnifyingglass", title: "Explore", index: 1)
+                    tabButton(icon: "photo.on.rectangle.angled", title: "AI Filters", index: 1)
                     tabButton(icon: "plus.circle.fill", title: "Create", index: 2)
                     tabButton(icon: "wrench.and.screwdriver", title: "Playground", index: 3)
                     // tabButton(icon: "cpu", title: "AI Models", index: 3)

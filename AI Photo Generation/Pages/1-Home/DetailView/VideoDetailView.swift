@@ -45,7 +45,7 @@ struct VideoDetailView: View {
                                 .foregroundColor(.black).opacity(0)
                                 .padding(.leading, 10)
                             Spacer()
-                            Text("Pick A Photo")
+                            Text("Add Photo")
                                 .font(.custom("Nunito-ExtraBold", size: 20))
                                 .foregroundColor(.black)
                             Spacer()

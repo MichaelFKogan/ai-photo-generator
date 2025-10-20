@@ -300,7 +300,7 @@ struct SpinningPlusButton: View {
         }) {
             HStack {
                 Spacer()
-                Text("Pick A Photo")
+                Text("Add Photo")
                     .font(.custom("Nunito-ExtraBold", size: 20))
                     .foregroundColor(.black)
                 Spacer()

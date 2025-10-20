@@ -18,11 +18,16 @@ struct ProfileView: View {
             if let user = authViewModel.user {
                 ProfileViewContent(viewModel: viewModel)
                     .environmentObject(authViewModel)
-                    .task {
-                        // Set userId and fetch images once user is available
+                    .onAppear {
+                        // Set userId if needed, then refresh images every time view appears
                         if viewModel.userId != user.id.uuidString {
                             viewModel.userId = user.id.uuidString
-                            await viewModel.fetchUserImages()
+                        }
+                        Task {
+                            print("🔄 Profile appeared, fetching images for user: \(user.id.uuidString)")
+                            await viewModel.fetchUserImages(forceRefresh: true)
+                            print("📸 Fetched \(viewModel.images.count) images")
+                            print("🖼️ Image URLs: \(viewModel.images)")
                         }
                     }
             } else {
@@ -36,6 +41,8 @@ struct ProfileView: View {
 struct ProfileViewContent: View {
     @ObservedObject var viewModel: ProfileViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
+    
+    @State private var selectedImageURL: URL? = nil
     
     private let columns = Array(repeating: GridItem(.flexible()), count: 3)
     
@@ -88,26 +95,31 @@ struct ProfileViewContent: View {
                             LazyVGrid(columns: columns, spacing: 8) {
                                 ForEach(viewModel.images, id: \.self) { urlString in
                                     if let url = URL(string: urlString) {
-                                        KFImage(url)
-                                            .placeholder {
-                                                RoundedRectangle(cornerRadius: 8)
-                                                    .fill(Color.gray.opacity(0.2))
-                                                    .aspectRatio(1, contentMode: .fit)
-                                                    .overlay(
-                                                        ProgressView()
-                                                            .progressViewStyle(CircularProgressViewStyle(tint: .gray))
-                                                    )
-                                            }
-                                            .retry(maxCount: 2, interval: .seconds(2)) // retry on failure
-                                            .onFailure { error in
-                                                print("❌ Failed to load image: \(error.localizedDescription)")
-                                            }
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(maxWidth: .infinity)
-                                            .aspectRatio(1, contentMode: .fill)
-                                            .clipped()
-                                            .cornerRadius(8)
+                                        Button {
+                                            selectedImageURL = url
+                                        } label: {
+                                            KFImage(url)
+                                                .placeholder {
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .fill(Color.gray.opacity(0.2))
+                                                        .aspectRatio(1, contentMode: .fit)
+                                                        .overlay(
+                                                            ProgressView()
+                                                                .progressViewStyle(CircularProgressViewStyle(tint: .gray))
+                                                        )
+                                                }
+                                                .retry(maxCount: 2, interval: .seconds(2))
+                                                .onFailure { error in
+                                                    print("❌ Failed to load image: \(error.localizedDescription)")
+                                                }
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(maxWidth: .infinity)
+                                                .aspectRatio(1, contentMode: .fill)
+                                                .clipped()
+                                                .cornerRadius(8)
+                                        }
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -149,7 +161,17 @@ struct ProfileViewContent: View {
                         }
                     }
                 }
-
+            }
+            .refreshable {
+                print("🔄 Manual refresh triggered")
+                await viewModel.fetchUserImages(forceRefresh: true)
+                print("📸 After refresh: \(viewModel.images.count) images")
+            }
+            .fullScreenCover(item: $selectedImageURL) { imageURL in
+                FullScreenImageView(imageURL: imageURL, isPresented: Binding(
+                    get: { selectedImageURL != nil },
+                    set: { if !$0 { selectedImageURL = nil } }
+                ))
             }
         }
     }
@@ -207,4 +229,52 @@ struct ProfileViewContent: View {
         .padding(.top)
         .padding(.horizontal)
     }
+}
+
+struct FullScreenImageView: View {
+    let imageURL: URL
+    @Binding var isPresented: Bool
+    
+    @State private var zoom: CGFloat = 1.0
+    @State private var uiImage: UIImage? = nil
+    @State private var showShareSheet = false
+    
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            
+            KFImage(imageURL)
+                .onFailure { error in
+                    print("❌ Full screen image failed to load: \(error.localizedDescription)")
+                }
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .scaleEffect(zoom)
+                .gesture(MagnificationGesture()
+                    .onChanged { value in zoom = value }
+                    .onEnded { _ in
+                        withAnimation { zoom = 1.0 }
+                    }
+                )
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: { isPresented = false }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 28))
+                            .foregroundColor(.white)
+                            .padding()
+                    }
+                }
+                Spacer()
+            }
+        }
+    }
+}
+
+// Make URL conform to Identifiable for item-based presentation
+extension URL: Identifiable {
+    public var id: String { self.absoluteString }
 }
