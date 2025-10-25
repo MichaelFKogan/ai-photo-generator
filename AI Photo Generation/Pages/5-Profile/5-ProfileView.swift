@@ -102,22 +102,17 @@ struct ProfileViewContent: View {
                                                 .placeholder {
                                                     RoundedRectangle(cornerRadius: 8)
                                                         .fill(Color.gray.opacity(0.2))
-                                                        .aspectRatio(1, contentMode: .fit)
                                                         .overlay(
                                                             ProgressView()
                                                                 .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                                                         )
                                                 }
-                                                .retry(maxCount: 2, interval: .seconds(2))
-                                                .onFailure { error in
-                                                    print("❌ Failed to load image: \(error.localizedDescription)")
-                                                }
                                                 .resizable()
                                                 .scaledToFill()
-                                                .frame(maxWidth: .infinity)
-                                                .aspectRatio(1, contentMode: .fill)
+                                                .frame(height: UIScreen.main.bounds.width / 3 - 12) // 3 columns minus spacing
                                                 .clipped()
                                                 .cornerRadius(8)
+
                                         }
                                         .buttonStyle(.plain)
                                     }
