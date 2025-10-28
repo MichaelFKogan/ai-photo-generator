@@ -80,7 +80,7 @@ struct VideoDetailView: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
                         
-                        Text("Cost: $\(item.cost)")
+                        Text("Cost: $\(item.cost, specifier: "%.2f")")
                             .font(.custom("Nunito-Bold", size: 16))
                             .foregroundColor(.primary)
                     }
@@ -159,8 +159,8 @@ struct DiagonalOverlappingVideos: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let cardWidth = geometry.size.width * 0.48
-            let cardHeight = cardWidth * 1.33
+            let cardWidth = geometry.size.width * 0.52
+            let cardHeight = cardWidth * 1.37
             let arrowYOffset = -cardHeight * 0.15
             
             ZStack {
@@ -170,6 +170,13 @@ struct DiagonalOverlappingVideos: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: cardWidth, height: cardHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(
+                                LinearGradient(colors: [.white, .gray], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                lineWidth: 2
+                            )
+                    )
                     .shadow(color: .black.opacity(0.25), radius: 12, x: -4, y: 4)
                     .rotationEffect(.degrees(-8))
                     .offset(x: -cardWidth * 0.5)
@@ -196,7 +203,7 @@ struct DiagonalOverlappingVideos: View {
             }
             .frame(width: geometry.size.width, height: cardHeight * 1.2)
         }
-        .frame(height: 280)
+        .frame(height: 320)
     }
 }
 

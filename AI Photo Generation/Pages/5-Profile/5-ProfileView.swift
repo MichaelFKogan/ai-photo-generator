@@ -19,7 +19,6 @@ struct ProfileView: View {
                 ProfileViewContent(viewModel: viewModel)
                     .environmentObject(authViewModel)
                     .onAppear {
-                        // Set userId if needed, then refresh images every time view appears
                         if viewModel.userId != user.id.uuidString {
                             viewModel.userId = user.id.uuidString
                         }
@@ -27,7 +26,6 @@ struct ProfileView: View {
                             print("🔄 Profile appeared, fetching images for user: \(user.id.uuidString)")
                             await viewModel.fetchUserImages(forceRefresh: true)
                             print("📸 Fetched \(viewModel.images.count) images")
-                            print("🖼️ Image URLs: \(viewModel.images)")
                         }
                     }
             } else {
@@ -41,48 +39,43 @@ struct ProfileView: View {
 struct ProfileViewContent: View {
     @ObservedObject var viewModel: ProfileViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-    
     @State private var selectedImageURL: URL? = nil
-    
-    private let columns = Array(repeating: GridItem(.flexible()), count: 3)
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
+                    // Header
+//                    profileHeader
                     
-                    // Profile Header
-                    profileHeader
+//                    // Edit Profile Button
+//                    Button(action: {}) {
+//                        Text("Edit Profile")
+//                            .font(.headline)
+//                            .foregroundColor(.white)
+//                            .frame(maxWidth: .infinity)
+//                            .padding()
+//                            .background(Color.blue)
+//                            .cornerRadius(12)
+//                    }
+//                    .padding(.horizontal)
                     
-                    // Edit Profile Button
-                    Button(action: {}) {
-                        Text("Edit Profile")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .cornerRadius(12)
-                    }
-                    .padding(.horizontal)
-                    
-                    // User Creations Grid
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("My Creations")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal)
+                    // My Creations Section
+                    VStack(alignment: .leading, spacing: 12) {
+//                        Text("My Creations")
+//                            .font(.title2)
+//                            .fontWeight(.semibold)
+//                            .padding(.horizontal)
                         
                         if viewModel.isLoading {
-                            Text("Loading images…")
-                                .foregroundColor(.gray)
+                            ProgressView("Loading images…")
                                 .padding()
                         } else if viewModel.images.isEmpty {
-                            LazyVGrid(columns: columns, spacing: 8) {
+                            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 4) {
                                 ForEach(0..<9, id: \.self) { _ in
-                                    RoundedRectangle(cornerRadius: 8)
+                                    RoundedRectangle(cornerRadius: 6)
                                         .fill(Color.gray.opacity(0.2))
-                                        .aspectRatio(1, contentMode: .fit)
+                                        .aspectRatio(1.8, contentMode: .fit)
                                         .overlay(
                                             Image(systemName: "photo")
                                                 .foregroundColor(.gray)
@@ -92,62 +85,29 @@ struct ProfileViewContent: View {
                             }
                             .padding(.horizontal)
                         } else {
-                            LazyVGrid(columns: columns, spacing: 8) {
-                                ForEach(viewModel.images, id: \.self) { urlString in
-                                    if let url = URL(string: urlString) {
-                                        Button {
-                                            selectedImageURL = url
-                                        } label: {
-                                            KFImage(url)
-                                                .placeholder {
-                                                    RoundedRectangle(cornerRadius: 8)
-                                                        .fill(Color.gray.opacity(0.2))
-                                                        .overlay(
-                                                            ProgressView()
-                                                                .progressViewStyle(CircularProgressViewStyle(tint: .gray))
-                                                        )
-                                                }
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(height: UIScreen.main.bounds.width / 3 - 12) // 3 columns minus spacing
-                                                .clipped()
-                                                .cornerRadius(8)
-
-                                        }
-                                        .buttonStyle(.plain)
-                                    }
-                                }
+                            ImageGridView(images: viewModel.images) { url in
+                                selectedImageURL = url
                             }
-                            .padding(.horizontal)
                         }
                     }
                 }
-                .navigationTitle("Profile")
+                .padding(.top, 10)
+//                .navigationTitle("Profile")
                 .toolbar {
-                    // 💎 Credits display
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "diamond.fill")
-                                .foregroundStyle(
-                                    LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Text("My Creations")
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
                                 )
-                                .font(.system(size: 8))
-                            Text("$5.00")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.primary)
-                            Text("credits left")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.secondary.opacity(0.1)))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .strokeBorder(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
-                        )
+                            )
                     }
-                    // ✅ Settings button
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        creditsDisplay
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink(destination: SettingsView().environmentObject(authViewModel)) {
                             Image(systemName: "gearshape.fill")
@@ -158,19 +118,24 @@ struct ProfileViewContent: View {
                 }
             }
             .refreshable {
-                print("🔄 Manual refresh triggered")
                 await viewModel.fetchUserImages(forceRefresh: true)
-                print("📸 After refresh: \(viewModel.images.count) images")
             }
-            .fullScreenCover(item: $selectedImageURL) { imageURL in
-                FullScreenImageView(imageURL: imageURL, isPresented: Binding(
-                    get: { selectedImageURL != nil },
-                    set: { if !$0 { selectedImageURL = nil } }
-                ))
+            .sheet(item: $selectedImageURL) { imageURL in
+                FullScreenImageView(
+                    imageURL: imageURL,
+                    isPresented: Binding(
+                        get: { selectedImageURL != nil },
+                        set: { if !$0 { selectedImageURL = nil } }
+                    )
+                )
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .ignoresSafeArea()
             }
         }
     }
     
+    // MARK: - Profile Header
     private var profileHeader: some View {
         HStack(alignment: .top, spacing: 16) {
             Circle()
@@ -193,30 +158,9 @@ struct ProfileViewContent: View {
                 }
                 
                 HStack(spacing: 32) {
-                    VStack {
-                        Text("24")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                        Text("Creations")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    VStack {
-                        Text("156")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                        Text("Likes")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    VStack {
-                        Text("89")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                        Text("Followers")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                    statView(value: "24", label: "Creations")
+                    statView(value: "156", label: "Likes")
+                    statView(value: "89", label: "Followers")
                 }
             }
         }
@@ -224,52 +168,195 @@ struct ProfileViewContent: View {
         .padding(.top)
         .padding(.horizontal)
     }
+    
+    private func statView(value: String, label: String) -> some View {
+        VStack {
+            Text(value)
+                .font(.title3)
+                .fontWeight(.bold)
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    // MARK: - Credits Display
+    private var creditsDisplay: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "diamond.fill")
+                .foregroundStyle(
+                    LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+                )
+                .font(.system(size: 8))
+            Text("$5.00")
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundColor(.primary)
+            Text("credits left")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(RoundedRectangle(cornerRadius: 20).fill(Color.secondary.opacity(0.1)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(
+                    LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
+                )
+        )
+    }
 }
 
+// MARK: - Image Grid (3×3 Portrait)
+struct ImageGridView: View {
+    let images: [String]
+    let spacing: CGFloat = 2
+    var onSelect: (URL) -> Void
+    
+    private var gridColumns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: spacing), count: 3)
+    }
+    
+    var body: some View {
+        GeometryReader { proxy in
+            let totalSpacing = spacing * 2
+            let contentWidth = proxy.size.width - totalSpacing - 8
+            let itemWidth = contentWidth / 3
+            let itemHeight = itemWidth * 1.4
+            
+            LazyVGrid(columns: gridColumns, spacing: spacing) {
+                ForEach(images, id: \.self) { urlString in
+                    if let url = URL(string: urlString) {
+                        Button {
+                            onSelect(url)
+                        } label: {
+                            KFImage(url)
+                                .placeholder {
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.2))
+                                        .overlay(ProgressView())
+                                }
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: itemWidth, height: itemHeight)
+                                .clipped()
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            .padding(.horizontal, 4)
+        }
+        .frame(height: calculateHeight(for: images.count))
+    }
+    
+    private func calculateHeight(for count: Int) -> CGFloat {
+        let rows = ceil(Double(count) / 3.0)
+        let itemWidth = (UIScreen.main.bounds.width - 16) / 3
+        return CGFloat(rows) * (itemWidth * 1.8 + spacing)
+    }
+}
+
+// MARK: - Full Screen Image View
 struct FullScreenImageView: View {
     let imageURL: URL
     @Binding var isPresented: Bool
-    
     @State private var zoom: CGFloat = 1.0
-    @State private var uiImage: UIImage? = nil
-    @State private var showShareSheet = false
     
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
             
-            KFImage(imageURL)
-                .onFailure { error in
-                    print("❌ Full screen image failed to load: \(error.localizedDescription)")
-                }
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .scaleEffect(zoom)
-                .gesture(MagnificationGesture()
-                    .onChanged { value in zoom = value }
-                    .onEnded { _ in
-                        withAnimation { zoom = 1.0 }
-                    }
-                )
-            
-            VStack {
-                HStack {
-                    Spacer()
-                    Button(action: { isPresented = false }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 28))
+            VStack(spacing: 0) {
+                // Top spacing to sit below drag indicator
+//                Color.clear.frame(height: 20)
+                
+                // Image section
+                KFImage(imageURL)
+                    .resizable()
+                    .scaledToFit()
+                    .scaleEffect(zoom)
+                    .gesture(
+                        MagnificationGesture()
+                            .onChanged { value in zoom = value }
+                            .onEnded { _ in withAnimation { zoom = 1.0 } }
+                    )
+                    .frame(maxWidth: .infinity)
+                
+                // Info section below image
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Generation Details")
+                            .font(.headline)
                             .foregroundColor(.white)
-                            .padding()
+                        
+                        Spacer()
+                        
+                        // Share button
+                        ShareLink(item: imageURL) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.title3)
+                                .foregroundColor(.white)
+                        }
                     }
+                    
+                    HStack {
+                        Label("Anime Style", systemImage: "paintbrush.fill")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Text("Model: SD 1.5")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    
+                    HStack {
+                        Text("Steps: 50")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Text("CFG: 7.5")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    
+                    // Reuse Model Button
+                    Button(action: {
+                        // TODO: Load this model/preset and navigate to generation view
+                        isPresented = false
+                        // You'll need to pass the model parameters back to your generation view
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Reuse This Model")
+                                .fontWeight(.semibold)
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(10)
+                    }
+                    .padding(.top, 4)
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.black.opacity(0.8))
+                
                 Spacer()
             }
         }
     }
 }
 
-// Make URL conform to Identifiable for item-based presentation
+// MARK: - URL Identifiable
 extension URL: Identifiable {
-    public var id: String { self.absoluteString }
+    public var id: String { absoluteString }
 }

@@ -102,7 +102,7 @@ struct PlaygroundView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("Playground")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [.blue, .purple],
@@ -432,7 +432,7 @@ struct VideoPlaygroundTab: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                         }
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.blue)
                         .padding(.bottom, 6)
 
                         HStack {
@@ -621,7 +621,7 @@ struct ImagePlaygroundTab: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                         }
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.blue)
                         .padding(.bottom, 6)
                         
                         HStack {

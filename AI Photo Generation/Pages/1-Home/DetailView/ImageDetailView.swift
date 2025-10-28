@@ -97,7 +97,6 @@ struct ImageDetailView: View {
                 }
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 32)
             .padding(.bottom, 150)
             
             NavigationLink(
@@ -161,12 +160,26 @@ struct ImageDetailView: View {
         .sheet(isPresented: $showCamera) {
             ImagePicker(sourceType: .camera, selectedImage: $selectedImage)
         }
+        // Replace the existing .onChange(of: selectedPhotoItem) modifier with this:
+
         .onChange(of: selectedPhotoItem) { newItem in
             Task {
-                if let data = try? await newItem?.loadTransferable(type: Data.self),
-                   let uiImage = UIImage(data: data) {
-                    selectedImage = uiImage
-                    navigateToConfirmation = true
+                // Wait for the image to load first
+                guard let data = try? await newItem?.loadTransferable(type: Data.self),
+                      let uiImage = UIImage(data: data) else {
+                    return
+                }
+
+                // Update state on the main actor - but do it in the right order
+                await MainActor.run {
+                    selectedImage = uiImage  // Set the image FIRST
+                }
+                
+                // Small delay to ensure state is fully updated before navigation
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                
+                await MainActor.run {
+                    navigateToConfirmation = true  // Then trigger navigation
                 }
             }
         }
@@ -242,8 +255,8 @@ struct DiagonalOverlappingImages: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let imageWidth = geometry.size.width * 0.48
-            let imageHeight = imageWidth * 1.33
+            let imageWidth = geometry.size.width * 0.53
+            let imageHeight = imageWidth * 1.38
             let arrowYOffset = -imageHeight * 0.15
             
             ZStack(alignment: .center) {
@@ -253,8 +266,15 @@ struct DiagonalOverlappingImages: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: imageWidth, height: imageHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(
+                                LinearGradient(colors: [.white, .gray], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                lineWidth: 2
+                            )
+                    )
                     .shadow(color: Color.black.opacity(0.25), radius: 12, x: -4, y: 4)
-                    .rotationEffect(.degrees(-8))
+                    .rotationEffect(.degrees(-6))
                     .offset(x: -imageWidth * 0.50)
 
                 // Right image
@@ -263,6 +283,13 @@ struct DiagonalOverlappingImages: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: imageWidth, height: imageHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(
+                                LinearGradient(colors: [.white, .gray], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                lineWidth: 2
+                            )
+                    )
                     .shadow(color: Color.black.opacity(0.25), radius: 12, x: 4, y: 4)
                     .rotationEffect(.degrees(8))
                     .offset(x: imageWidth * 0.50)
@@ -549,138 +576,3 @@ struct FullScreenImageViewer: View {
         }
     }
 }
-
-//// MARK: - Photo Upload Section
-//struct PhotoUploadSection: View {
-//    @Binding var selectedImage: UIImage?
-//    @Binding var showCamera: Bool
-//    @Binding var showPhotoPicker: Bool
-//
-//    @State private var selectedPhotoItem: PhotosPickerItem?
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 8) {
-//            Text("Upload or Take Photo")
-//                .font(.headline)
-//                .foregroundColor(.secondary)
-//
-//            if let selectedImage = selectedImage {
-//                ZStack(alignment: .topTrailing) {
-//                    Image(uiImage: selectedImage)
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fill)
-//                        .frame(height: 200)
-//                        .clipShape(RoundedRectangle(cornerRadius: 12))
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 12)
-//                                .stroke(Color.blue, lineWidth: 2)
-//                        )
-//
-//                    Button(action: { self.selectedImage = nil }) {
-//                        Image(systemName: "xmark.circle.fill")
-//                            .font(.title2)
-//                            .foregroundColor(.white)
-//                            .background(Circle().fill(Color.red))
-//                    }
-//                    .padding(8)
-//                }
-//            } else {
-//                HStack(spacing: 12) {
-//                    // Camera Button
-//                    Button(action: { showCamera = true }) {
-//                        VStack(spacing: 6) {
-//                            Image(systemName: "camera")
-//                                .font(.system(size: 24))
-//                            Text("Take Photo")
-//                                .font(.caption2)
-//                        }
-//                        .frame(maxWidth: .infinity, minHeight: 80)
-//                        .background(Color.gray.opacity(0.1))
-//                        .clipShape(RoundedRectangle(cornerRadius: 12))
-//                    }
-//
-//                    // Photo Library Button
-//                    Button(action: { showPhotoPicker = true }) {
-//                        VStack(spacing: 6) {
-//                            Image(systemName: "photo.on.rectangle.angled")
-//                                .font(.system(size: 24))
-//                            Text("Choose Photo")
-//                                .font(.caption2)
-//                        }
-//                        .frame(maxWidth: .infinity, minHeight: 80)
-//                        .background(Color.gray.opacity(0.1))
-//                        .clipShape(RoundedRectangle(cornerRadius: 12))
-//                    }
-//                    .photosPicker(
-//                        isPresented: $showPhotoPicker,
-//                        selection: $selectedPhotoItem,
-//                        matching: .images
-//                    )
-//                    .onChange(of: selectedPhotoItem) { newItem in
-//                        Task {
-//                            if let data = try? await newItem?.loadTransferable(type: Data.self),
-//                               let uiImage = UIImage(data: data) {
-//                                selectedImage = uiImage
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-//// MARK: - Generate Button
-//struct GenerateButton: View {
-//    @Binding var isGenerating: Bool
-//    let selectedImage: UIImage?
-//    let prompt: String
-//    
-//    private var isDisabled: Bool {
-//        isGenerating || selectedImage == nil || prompt.isEmpty
-//    }
-//
-//    var body: some View {
-//        Button(action: {
-//            isGenerating = true
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                isGenerating = false
-//            }
-//        }) {
-//            HStack(spacing: 12) {
-//                if isGenerating {
-//                    ProgressView()
-//                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-//                        .scaleEffect(0.9)
-//                } else {
-//                    Image(systemName: "photo.on.rectangle")
-//                        .font(.system(size: 18))
-//                }
-//                Text(isGenerating ? "Transforming Your Photo..." : "Transform Photo")
-//                    .font(.headline)
-//                    .fontWeight(.semibold)
-//            }
-//            .frame(maxWidth: .infinity)
-//            .padding(.vertical, 16)
-//            .background(
-//                Group {
-//                    if isDisabled {
-//                        Color.gray.opacity(0.5)
-//                    } else {
-//                        LinearGradient(
-//                            gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
-//                            startPoint: .leading,
-//                            endPoint: .trailing
-//                        )
-//                    }
-//                }
-//            )
-//            .foregroundColor(.white)
-//            .clipShape(RoundedRectangle(cornerRadius: 7))
-//            .shadow(color: isDisabled ? Color.clear : Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
-//        }
-//        .disabled(isDisabled)
-//        .animation(.easeInOut(duration: 0.2), value: isDisabled)
-//    }
-//}

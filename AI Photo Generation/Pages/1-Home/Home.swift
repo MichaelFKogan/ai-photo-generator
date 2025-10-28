@@ -152,7 +152,7 @@ struct Home: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("Creator AI Studio")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
                         )

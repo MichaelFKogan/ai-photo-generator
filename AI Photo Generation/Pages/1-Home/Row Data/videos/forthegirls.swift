@@ -1,6 +1,7 @@
 let forthegirlsItems = [
     InfoPacket(
         imageName: "mermaid",
+        imageNameOriginal: "mermaid1",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
         description: "",
@@ -8,7 +9,7 @@ let forthegirlsItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+        exampleImages: ["redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
         imageName: "redcarpetwalk",
@@ -20,7 +21,7 @@ let forthegirlsItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+        exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
         imageName: "princess",
@@ -31,7 +32,7 @@ let forthegirlsItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+        exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
         imageName: "runwaywalk",
@@ -43,7 +44,7 @@ let forthegirlsItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+        exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
         imageName: "goldenera",
@@ -55,7 +56,7 @@ let forthegirlsItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+        exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
         imageName: "fairy",
@@ -66,7 +67,7 @@ let forthegirlsItems = [
         modelName: "",
         modelDescription: "",
         modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+        exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
 ]
 

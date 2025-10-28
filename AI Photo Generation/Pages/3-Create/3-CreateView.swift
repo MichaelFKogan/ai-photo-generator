@@ -263,7 +263,7 @@ struct CreateView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("Create")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [.blue, .purple],

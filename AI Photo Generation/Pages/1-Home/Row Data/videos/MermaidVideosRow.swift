@@ -8,7 +8,7 @@
 let mermaidVideosItems = [
     InfoPacket(
         imageName: "mermaid",
-        imageNameOriginal: "anime",
+        imageNameOriginal: "mermaid1",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
         description: "Transform your photos into dynamic mermaid transformation videos with natural motion and emotion.",

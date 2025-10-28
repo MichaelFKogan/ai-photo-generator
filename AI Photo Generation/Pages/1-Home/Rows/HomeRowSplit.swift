@@ -4,6 +4,8 @@ struct HomeRowSplit: View {
     let title: String
     let items: [InfoPacket]
     var diffAnimation: ImageDiffAnimation
+    // Track which item was tapped
+    @State private var selectedItem: InfoPacket? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -14,7 +16,9 @@ struct HomeRowSplit: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
-                        NavigationLink(destination: ImageDetailView(item: item)) {
+                        Button {
+                            selectedItem = item   // ✅ This triggers the sheet
+                        } label: {
                             VStack(spacing: 8) {
                                 if let originalImage = item.imageNameOriginal {
                                     ImageAnimations(
@@ -39,19 +43,15 @@ struct HomeRowSplit: View {
                                             .clipShape(Capsule())
                                             .padding(.bottom, 6)
                                     }
-                                    // ✅ Top-right overlay (Price)
                                     .overlay(alignment: .topTrailing) {
-//                                        if let price = item.price {
-//                                            Text("$\(price, specifier: "%.2f")")
                                         Text("$\(item.cost, specifier: "%.2f")")
-                                                .font(.custom("Nunito-Bold", size: 11))
-                                                .foregroundColor(.white)
-                                                .padding(.horizontal, 6)
-                                                .padding(.vertical, 3)
-                                                .background(Color.black.opacity(0.8))
-                                                .clipShape(Capsule())
-                                                .padding(6)
-//                                        }
+                                            .font(.custom("Nunito-Bold", size: 11))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 3)
+                                            .background(Color.black.opacity(0.8))
+                                            .clipShape(Capsule())
+                                            .padding(6)
                                     }
 
                                     Text(item.title)
@@ -60,7 +60,6 @@ struct HomeRowSplit: View {
                                         .multilineTextAlignment(.center)
                                         .foregroundColor(.primary)
                                 } else {
-                                    // fallback to regular image if original missing
                                     Image(item.imageName)
                                         .resizable()
                                         .aspectRatio(contentMode: .fill)
@@ -90,9 +89,24 @@ struct HomeRowSplit: View {
                                 }
                             }
                         }
+                        .buttonStyle(.plain) // ✅ Keeps original look
                     }
+
                 }
                 .padding(.horizontal)
+            }
+        }
+        // 👇 Sheet presentation
+        .sheet(item: $selectedItem) { item in
+            NavigationStack {
+                ImageDetailView(item: item)
+                    .navigationTitle(item.title)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+            .transaction { transaction in
+                transaction.animation = nil  // Prevent inherited animations
             }
         }
     }

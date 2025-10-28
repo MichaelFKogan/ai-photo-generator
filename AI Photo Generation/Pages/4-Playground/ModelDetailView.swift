@@ -399,6 +399,26 @@ struct AIModelSection: View {
                         .lineLimit(3)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.leading)
+                
+                    HStack(spacing: 6) {
+                        Text("Text to Video")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .padding(.trailing, 4)
+                            .foregroundColor(.blue)
+                        
+                        Text("Image To Video")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .padding(.trailing, 4)
+                            .foregroundColor(.blue)
+                        
+                        Text("Audio")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .padding(.trailing, 4)
+                            .foregroundColor(.blue)
+                    }
                 }
 
                 Spacer()

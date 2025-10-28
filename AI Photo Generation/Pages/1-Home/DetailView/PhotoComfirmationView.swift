@@ -16,6 +16,8 @@ struct PhotoConfirmationView: View {
     @State private var generatedImage: UIImage? = nil
     @State private var isLoading = false
     
+    @State private var arrowWiggle: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -65,21 +67,64 @@ struct PhotoConfirmationView: View {
                 .onAppear { sparklePulse = true }
                 
                 // MARK: - Main Photo
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: 300)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .shadow(radius: 8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(
-                                LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing),
-                                lineWidth: 2
+                // MARK: - Diagonal Overlapping Images
+                GeometryReader { geometry in
+                    let imageWidth = geometry.size.width * 0.48
+                    let imageHeight = imageWidth * 1.38
+                    let arrowYOffset = -imageHeight * 0.15
+                    
+                    ZStack(alignment: .center) {
+                        // Right image (example result) - drawn first so it's behind
+                        Image(item.imageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: imageWidth, height: imageHeight)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(
+                                        LinearGradient(colors: [.white, .gray], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                        lineWidth: 2
+                                    )
                             )
-                    )
-                    .scaleEffect(generatePulse ? 1.02 : 1.0)
-                    .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: generatePulse)
+                            .shadow(color: Color.black.opacity(0.25), radius: 12, x: 4, y: 4)
+                            .rotationEffect(.degrees(8))
+                            .offset(x: imageWidth * 0.50)
+
+                        // Left image (user's photo) - drawn second so it's on top
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: imageWidth, height: imageHeight)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(
+                                        LinearGradient(colors: [.white, .gray], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                        lineWidth: 2
+                                    )
+                            )
+                            .shadow(color: Color.black.opacity(0.25), radius: 12, x: -4, y: 4)
+                            .rotationEffect(.degrees(-6))
+                            .offset(x: -imageWidth * 0.50)
+
+                        // Arrow with gentle wiggle
+                        Image("arrow")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 62, height: 62)
+                            .rotationEffect(.degrees(arrowWiggle ? 6 : -6))
+                            .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: arrowWiggle)
+                            .offset(x: 0, y: arrowYOffset)
+                    }
+                    .onAppear {
+                        arrowWiggle = true
+                    }
+                    .frame(width: geometry.size.width, height: imageHeight + 20)
+                }
+                .frame(height: 260)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
                 
                 if let generated = generatedImage {
                     VStack {
@@ -97,8 +142,10 @@ struct PhotoConfirmationView: View {
                 
                 // MARK: - Generate Button                
                 Button(action: {
+                    guard !isLoading else { return }
                     Task {
                         isLoading = true
+                        defer { isLoading = false }
 //                        print("Sending image to WaveSpeed…")
                         
                         // ✅ Instead of calling the API, log all the data that would be sent
@@ -152,20 +199,19 @@ struct PhotoConfirmationView: View {
                                 // Save to Supabase
                                 let userId = authViewModel.user?.id.uuidString ?? ""
                                 let modelName = item.modelName.isEmpty ? "default-model" : item.modelName
-                                Task {
-                                    do {
-                                        try await SupabaseManager.shared.client.database
-                                            .from("user_images")
-                                            .insert([
-                                                "user_id": userId,
-                                                "image_url": urlString,
-                                                "model": modelName
-                                            ])
-                                            .execute()
-                                        print("✅ Image saved for user")
-                                    } catch {
-                                        print("❌ Failed to save image: \(error)")
-                                    }
+
+                                do {
+                                    try await SupabaseManager.shared.client.database
+                                        .from("user_images")
+                                        .insert([
+                                            "user_id": userId,
+                                            "image_url": urlString,
+                                            "model": modelName
+                                        ])
+                                        .execute()
+                                    print("✅ Image saved for user")
+                                } catch {
+                                    print("❌ Failed to save image: \(error)")
                                 }
                             }
                             else {
@@ -184,16 +230,20 @@ struct PhotoConfirmationView: View {
                         }
                         Text("Generate")
                             .font(.custom("Nunito-ExtraBold", size: 22))
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                         Image(systemName: "photo.on.rectangle")
                             .font(.system(size: 18))
                             .fontWeight(.bold)
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                             .rotationEffect(.degrees(rotation))
+                            .drawingGroup()
                     }
                     .padding(.vertical, 16)
                     .frame(maxWidth: .infinity)
-                    .background(.white)
+//                    .background(.white)
+                    .background(
+                        LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
                     .cornerRadius(12)
                     .shadow(color: Color.purple.opacity(0.3), radius: 8, x: 0, y: 4)
                     .scaleEffect(generatePulse ? 1.05 : 1.0)
