@@ -359,16 +359,20 @@ struct SpinningPlusButton: View {
         }
         .onAppear {
             isAnimating = true
-            // Kick off the first rotation immediately
+            // Initial spin
             withAnimation(.easeInOut(duration: 1.0)) {
                 rotation += 360
             }
-            // Then continue spinning every 4 seconds
+
+            // Continuous spin every few seconds
             Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
-                withAnimation(.easeInOut(duration: 1.0)) {
-                    rotation += 360
+                DispatchQueue.main.async {
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        rotation += 360
+                    }
                 }
             }
+
             // Gradient shine animation
             withAnimation(.linear(duration: 3.5).repeatForever(autoreverses: false)) {
                 shine.toggle()

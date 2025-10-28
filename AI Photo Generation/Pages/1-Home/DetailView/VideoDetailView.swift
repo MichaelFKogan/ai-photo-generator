@@ -90,10 +90,34 @@ struct VideoDetailView: View {
                 .padding(.trailing, 6)
                 
                 
-                // MARK: - Example Gallery
-                if !item.exampleImages.isEmpty {
-                    ExampleVideosSection(videos: item.exampleImages)
+//                // MARK: - Example Gallery
+//                if !item.exampleImages.isEmpty {
+//                    ExampleVideosSection(videos: item.exampleImages)
+//                }
+                
+                
+                VStack{
+                    HStack {
+                        Image(systemName: "play.rectangle.fill")
+                            .foregroundColor(.blue)
+                        Text("More Styles")
+                            .font(.custom("Nunito-Bold", size: 22))
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Text("See what’s possible with this video style")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
                 }
+                ExampleVideosSectionMore(items: forthegirlsItems)
+                ExampleVideosSectionMore(items: transformyourphotosItems)
+                ExampleVideosSectionMore(items: funItems)
+                ExampleVideosSectionMore(items: texttovideoItems)
+                ExampleVideosSectionMore(items: videogamesVideosItems)
+                
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 150)
@@ -207,9 +231,8 @@ struct DiagonalOverlappingVideos: View {
     }
 }
 
-//
-// MARK: - Example Videos Section
-//
+
+// MARK: - Example Gallery
 struct ExampleVideosSection: View {
     let videos: [String] // expects filenames without .mp4
     @State private var selectedIndex: Int = 0
@@ -217,17 +240,23 @@ struct ExampleVideosSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Image(systemName: "play.rectangle.fill")
-                    .foregroundColor(.blue)
-                Text("Example Gallery")
-                    .font(.custom("Nunito-Bold", size: 22))
-                Spacer()
-            }
             
-            Text("See what’s possible with this video style")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            VStack{
+                HStack {
+                    Image(systemName: "play.rectangle.fill")
+                        .foregroundColor(.blue)
+                    Text("Example Gallery")
+                        .font(.custom("Nunito-Bold", size: 22))
+                    Spacer()
+                }
+                
+                HStack{
+                    Text("See what’s possible with this video style")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+            }
             
             LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 2),
@@ -257,6 +286,41 @@ struct ExampleVideosSection: View {
         }
     }
 }
+
+
+// MARK: - More Videos
+struct ExampleVideosSectionMore: View {
+    let items: [InfoPacket]   // InfoPacket-driven version of ExampleVideosSection
+
+    // 2x2 grid
+    private let gridColumns = [
+        GridItem(.flexible(), spacing: 6),
+        GridItem(.flexible(), spacing: 6)
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+
+            // MARK: - 2x2 Video Grid
+            LazyVGrid(columns: gridColumns, spacing: 6) {
+                ForEach(items) { item in
+                    if let url = Bundle.main.url(forResource: item.imageName, withExtension: "mp4") {
+                        NavigationLink(destination: VideoDetailView(item: item)) {
+                            VideoThumbnail(url: url)
+                                .frame(height: 260)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
+
+
 
 //
 // MARK: - Full Screen Video Player
