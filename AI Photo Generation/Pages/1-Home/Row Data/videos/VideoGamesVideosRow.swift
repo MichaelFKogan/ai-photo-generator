@@ -8,7 +8,7 @@
 let videogamesVideosItems = [
     InfoPacket(
         imageName: "minecraft",
-        imageNameOriginal: "",
+        imageNameOriginal: "minecraft",
         title: "Minecraft",
         cost: 0.20,
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
@@ -20,7 +20,7 @@ let videogamesVideosItems = [
     ),
     InfoPacket(
         imageName: "hulkexplode",
-        imageNameOriginal: "",
+        imageNameOriginal: "hulkexplode",
         title: "Hulk Explode",
         cost: 0.30,
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
@@ -44,7 +44,7 @@ let videogamesVideosItems = [
     ),
     InfoPacket(
         imageName: "hulkride",
-        imageNameOriginal: "",
+        imageNameOriginal: "hulkride",
         title: "Hulk Ride",
         cost: 0.30,
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",

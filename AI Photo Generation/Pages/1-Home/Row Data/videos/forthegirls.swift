@@ -1,7 +1,7 @@
 let forthegirlsItems = [
     InfoPacket(
         imageName: "mermaid",
-        imageNameOriginal: "mermaid1",
+        imageNameOriginal: "mermaid",
         title: "🧜‍♀️ Mermaid",
         cost: 0.20,
         description: "",

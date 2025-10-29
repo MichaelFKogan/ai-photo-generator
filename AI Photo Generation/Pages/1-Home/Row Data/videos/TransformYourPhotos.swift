@@ -9,6 +9,7 @@
 let transformyourphotosItems = [
     InfoPacket(
         imageName: "squeeze",
+        imageNameOriginal: "squeeze",
         title: "Squish Effect",
         cost: 0.30,
         description: "",
@@ -20,6 +21,7 @@ let transformyourphotosItems = [
     ),
     InfoPacket(
         imageName: "kissing",
+        imageNameOriginal: "kissing",
         title: "Kissing",
         cost: 0.20,
         description: "",
@@ -31,6 +33,7 @@ let transformyourphotosItems = [
     ),
     InfoPacket(
         imageName: "labubu",
+        imageNameOriginal: "labubu",
         title: "Labubu",
         cost: 0.20,
         description: "",
@@ -42,6 +45,7 @@ let transformyourphotosItems = [
     ),
     InfoPacket(
         imageName: "helicopterpilot",
+        imageNameOriginal: "helicopterpilot",
         title: "Helicopter Pilot",
         cost: 0.30,
         description: "",
@@ -53,6 +57,7 @@ let transformyourphotosItems = [
     ),
     InfoPacket(
         imageName: "photostolife",
+        imageNameOriginal: "photostolife",
         title: "Photos To Life",
         cost: 0.30,
         description: "",

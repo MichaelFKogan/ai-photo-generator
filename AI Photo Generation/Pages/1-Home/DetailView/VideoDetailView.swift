@@ -49,7 +49,7 @@ struct VideoDetailView: View {
                                 .font(.custom("Nunito-ExtraBold", size: 20))
                                 .foregroundColor(.black)
                             Spacer()
-                            Image(systemName: "plus") // Replace with your desired icon
+                            Image(systemName: "arrow.right") // Replace with your desired icon
                                 .font(.custom("Nunito-ExtraBold", size: 22))
                                 .fontWeight(.bold)
                                 .foregroundColor(.black)

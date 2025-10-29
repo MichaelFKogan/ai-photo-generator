@@ -1,6 +1,7 @@
 let funItems = [
     InfoPacket(
         imageName: "dogballoonflyaway",
+        imageNameOriginal: "dogballoonflyaway",
         title: "Balloon Fly Away",
         cost: 0.30,
         description: "",
@@ -12,6 +13,7 @@ let funItems = [
     ),
     InfoPacket(
         imageName: "pubgwinnerhit",
+        imageNameOriginal: "pubgwinnerhit",
         title: "PubG Dance",
         cost: 0.20,
         description: "",
@@ -23,6 +25,7 @@ let funItems = [
     ),
     InfoPacket(
         imageName: "flying",
+        imageNameOriginal: "flying",
         title: "Flying",
         cost: 0.20,
         description: "",
@@ -34,6 +37,7 @@ let funItems = [
     ),
     InfoPacket(
         imageName: "melting",
+        imageNameOriginal: "melting",
         title: "Melting",
         cost: 0.20,
         description: "",
@@ -45,6 +49,7 @@ let funItems = [
     ),
     InfoPacket(
         imageName: "papercutout",
+        imageNameOriginal: "papercutout",
         title: "Paper Cut Out",
         cost: 0.20,
         description: "",
