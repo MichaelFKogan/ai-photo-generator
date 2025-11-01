@@ -354,8 +354,8 @@ struct SpinningPlusButton: View {
                 )
             )
             .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
-            .scaleEffect(isAnimating ? 1.03 : 1.0)
-            .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: isAnimating)
+            .scaleEffect(isAnimating ? 1.04 : 1.0)
+            .animation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true), value: isAnimating)
         }
         .onAppear {
             isAnimating = true
