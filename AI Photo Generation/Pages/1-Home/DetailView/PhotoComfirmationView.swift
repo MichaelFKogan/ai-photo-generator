@@ -18,7 +18,7 @@ struct PhotoConfirmationView: View {
     @State private var isLoading = false
     
     @State private var arrowWiggle: Bool = false
-    @State private var currentNotificationId: UUID? = nil
+    @State private var currentTaskId: UUID? = nil
     
     var body: some View {
         ScrollView {
@@ -146,108 +146,25 @@ struct PhotoConfirmationView: View {
                 Button(action: {
                     guard !isLoading else { return }
                     
-                    // 🎯 Show notification immediately for testing and store its ID
-                    let notificationId = notificationManager.showNotification(
-                        title: "Transforming Your Photo",
-                        message: "Creating your \(item.title)...",
-                        progress: 0.0,
-                        thumbnailImage: image
-                    )
-                    currentNotificationId = notificationId
+                    isLoading = true
                     
-                    Task {
-                        isLoading = true
-                        defer { isLoading = false }
-                        
-                        // Simulate progress updates for this specific notification
-                        for progress in stride(from: 0.0, through: 1.0, by: 0.1) {
-                            try? await Task.sleep(for: .seconds(0.5))
-                            notificationManager.updateProgress(progress, for: notificationId)
-                            
-                            if progress > 0.5 {
-                                notificationManager.updateMessage("Almost done! Finalizing your creation...", for: notificationId)
+                    // Start background generation that persists across view changes
+                    // Note: The generation continues in background even if user leaves this view
+                    let taskId = notificationManager.startBackgroundGeneration(
+                        item: item,
+                        image: image,
+                        userId: authViewModel.user?.id.uuidString ?? "",
+                        onImageGenerated: { [weak notificationManager] downloadedImage in
+                            // Optional: Update local state only if still on this view
+                            // The image is already saved to database regardless
+                            DispatchQueue.main.async {
+                                generatedImage = downloadedImage
+                                isLoading = false
                             }
                         }
-                        
-                        // Show completion message
-                        notificationManager.updateMessage("✅ Transformation complete!", for: notificationId)
-                        
-                        // ✅ Instead of calling the API, log all the data that would be sent
-                          print("""
-                          --- WaveSpeed Request Info ---
-                          ------------------------------
-                          Endpoint: \(item.endpoint)
-                          Prompt: \(item.prompt)
-                          Aspect Ratio: \(item.aspectRatio ?? "default")
-                          Output Format: \(item.outputFormat)
-                          Enable Sync Mode: \(item.enableSyncMode)
-                          Enable Base64 Output: \(item.enableBase64Output)
-                          Cost: \(item.cost)
-                          ------------------------------
-                          """)
-
-                          // Example log of image info
-                          print("Attached image size: \(image.size.width)x\(image.size.height)")
-                          print("Image data size: \((image.jpegData(compressionQuality: 0.8)?.count ?? 0) / 1024) KB")
-                        
-                        print("""
-                              ------------------------------
-                              """)
-
-                          // 💤 Simulate a short delay for realism
-                          try? await Task.sleep(for: .seconds(1.5))
-
-                          // Stop loading
-                          isLoading = false
-                          print("✅ Mock request complete — no network call made.")
-                        
-                        /* COMMENTED OUT FOR TESTING - UNCOMMENT TO ENABLE API CALL
-                        do {
-                            let response = try await sendImageToWaveSpeed(
-                                image: image,
-                                prompt: item.prompt,
-                                aspectRatio: item.aspectRatio,
-                                outputFormat: item.outputFormat,
-                                enableSyncMode: item.enableSyncMode,
-                                enableBase64Output: item.enableBase64Output,
-                                endpoint: item.endpoint
-                            )
-                            
-                            print("Image sent. Response received.")
-                            
-                            if let urlString = response.data.outputs?.first, let url = URL(string: urlString) {
-                                print("[WaveSpeed] Fetching generated image…")
-                                let (imageData, _) = try await URLSession.shared.data(from: url)
-                                generatedImage = UIImage(data: imageData)
-                                print("[WaveSpeed] Generated image loaded successfully.")
-                                
-                                // Save to Supabase
-                                let userId = authViewModel.user?.id.uuidString ?? ""
-                                let modelName = item.modelName.isEmpty ? "default-model" : item.modelName
-
-                                do {
-                                    try await SupabaseManager.shared.client.database
-                                        .from("user_images")
-                                        .insert([
-                                            "user_id": userId,
-                                            "image_url": urlString,
-                                            "model": modelName
-                                        ])
-                                        .execute()
-                                    print("✅ Image saved for user")
-                                } catch {
-                                    print("❌ Failed to save image: \(error)")
-                                }
-                            }
-                            else {
-                                print("No output URL returned from WaveSpeed.")
-                            }
-                        } catch {
-                            print("WaveSpeed error: \(error)")
-                        }
-                        isLoading = false
-                        */
-                    }
+                    )
+                    
+                    currentTaskId = taskId
                 }) {
                     HStack {
                         if isLoading {

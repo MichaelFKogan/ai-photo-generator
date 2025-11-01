@@ -113,6 +113,8 @@ struct Home: View {
                 
                 VStack(spacing: 10) {
                     
+                    HomeRowSplit(title: "💯 All", items: allItems, diffAnimation: .scanHorizontal)
+                    
                     HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
                     HomeRowVideo(title: "💯 Popular", items: funItems)
 //                    HomeRowVideo(title: "🎃 Halloween", items: halloweenItems)
@@ -128,6 +130,7 @@ struct Home: View {
 //                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
                     HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
+                    
                     HomeRowSplit(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)
 //                  HomeRowVideo(title: "Trending", items: trendingItem, diffAnimation: .scanHorizontal)
                     
