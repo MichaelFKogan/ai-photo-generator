@@ -12,11 +12,13 @@ struct InfoPacket: Identifiable {
     let id = UUID()
     let imageName: String
     let imageNameOriginal: String?
+    
     let title: String
     let cost: Double
     let description: String
-    
     let prompt: String
+    let type: String?
+    
     let endpoint: String
     let modelName: String
     let modelDescription: String
@@ -32,15 +34,19 @@ struct InfoPacket: Identifiable {
     init(
         imageName: String,
         imageNameOriginal: String? = nil,
+        
         title: String = "",
         cost: Double = 0.0,
         description: String = "",
         prompt: String = "",
+        type: String? = nil,
+        
         endpoint: String = "",
         modelName: String = "",
         modelDescription: String = "",
         modelImageName: String = "",
         exampleImages: [String] = [],
+        
         aspectRatio: String? = nil,
         outputFormat: String = "jpeg",
         enableSyncMode: Bool = true,
@@ -48,15 +54,19 @@ struct InfoPacket: Identifiable {
     ) {
         self.imageName = imageName
         self.imageNameOriginal = imageNameOriginal
+        
         self.title = title
         self.cost = cost
         self.description = description
         self.prompt = prompt
+        self.type = type
+        
         self.endpoint = endpoint
         self.modelName = modelName
         self.modelDescription = modelDescription
         self.modelImageName = modelImageName
         self.exampleImages = exampleImages
+        
         self.aspectRatio = aspectRatio
         self.outputFormat = outputFormat
         self.enableSyncMode = enableSyncMode
@@ -154,7 +164,7 @@ struct Home: View {
 //            .navigationTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Creator AI Studio")
+                    Text("AI Creator Studio")
                         .font(.system(size: 28, weight: .bold, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
