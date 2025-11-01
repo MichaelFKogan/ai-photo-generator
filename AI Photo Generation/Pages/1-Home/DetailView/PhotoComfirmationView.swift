@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PhotoConfirmationView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var notificationManager: NotificationManager
     
     let item: InfoPacket
     let image: UIImage
@@ -17,6 +18,7 @@ struct PhotoConfirmationView: View {
     @State private var isLoading = false
     
     @State private var arrowWiggle: Bool = false
+    @State private var currentNotificationId: UUID? = nil
     
     var body: some View {
         ScrollView {
@@ -143,10 +145,32 @@ struct PhotoConfirmationView: View {
                 // MARK: - Generate Button                
                 Button(action: {
                     guard !isLoading else { return }
+                    
+                    // 🎯 Show notification immediately for testing and store its ID
+                    let notificationId = notificationManager.showNotification(
+                        title: "Transforming Your Photo",
+                        message: "Creating your \(item.title)...",
+                        progress: 0.0,
+                        thumbnailImage: image
+                    )
+                    currentNotificationId = notificationId
+                    
                     Task {
                         isLoading = true
                         defer { isLoading = false }
-//                        print("Sending image to WaveSpeed…")
+                        
+                        // Simulate progress updates for this specific notification
+                        for progress in stride(from: 0.0, through: 1.0, by: 0.1) {
+                            try? await Task.sleep(for: .seconds(0.5))
+                            notificationManager.updateProgress(progress, for: notificationId)
+                            
+                            if progress > 0.5 {
+                                notificationManager.updateMessage("Almost done! Finalizing your creation...", for: notificationId)
+                            }
+                        }
+                        
+                        // Show completion message
+                        notificationManager.updateMessage("✅ Transformation complete!", for: notificationId)
                         
                         // ✅ Instead of calling the API, log all the data that would be sent
                           print("""
@@ -177,6 +201,7 @@ struct PhotoConfirmationView: View {
                           isLoading = false
                           print("✅ Mock request complete — no network call made.")
                         
+                        /* COMMENTED OUT FOR TESTING - UNCOMMENT TO ENABLE API CALL
                         do {
                             let response = try await sendImageToWaveSpeed(
                                 image: image,
@@ -221,7 +246,7 @@ struct PhotoConfirmationView: View {
                             print("WaveSpeed error: \(error)")
                         }
                         isLoading = false
-                        
+                        */
                     }
                 }) {
                     HStack {

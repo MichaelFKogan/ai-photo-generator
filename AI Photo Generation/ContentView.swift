@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var notificationManager = NotificationManager.shared
     @State private var selectedTab = 0
     @State private var previousTab = 0
     @State private var currentTransitionEdge: Edge = .trailing
@@ -55,6 +56,14 @@ struct ContentView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .environmentObject(notificationManager)
+
+            // Notification Bar (above tab bar)
+            VStack {
+                Spacer()
+                NotificationBar(notificationManager: notificationManager)
+                    .padding(.bottom, 55) // add space above tab bar
+            }
 
             // Tab Bar
             VStack {
