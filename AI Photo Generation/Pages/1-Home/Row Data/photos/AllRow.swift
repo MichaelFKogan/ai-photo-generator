@@ -97,7 +97,7 @@ let allItems = [
         title: "Cyberpunk",
         cost: 0.04,
         type: "Photo Filter",
-        endpoint: "https://api.wavespeed.ai/api/v3/wavespeed-ai/ghibli",
+        endpoint: "https://api.wavespeed.ai/api/v3/image-effects/cyberpunk",
         exampleImages: ["cyberpunk2", "cyberpunk3", "cyberpunk4", "cyberpunk5", "cyberpunk6", "cyberpunk7"]
     ),
     InfoPacket(

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Kingfisher
+import Photos
 
 // MARK: - Profile View
 struct ProfileView: View {
@@ -272,6 +273,9 @@ struct FullScreenImageView: View {
     @State private var zoom: CGFloat = 1.0
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
+    @State private var isDownloading = false
+    @State private var showDownloadAlert = false
+    @State private var downloadAlertMessage = ""
     
     var imageURL: URL? {
         URL(string: userImage.image_url)
@@ -310,13 +314,23 @@ struct FullScreenImageView: View {
                         
                         Spacer()
                         
-                        // Share button
-                        if let url = imageURL {
-                            ShareLink(item: url) {
+                        HStack(spacing: 8) {
+                            // Download button
+                            Button(action: {
+                                Task {
+                                    await downloadImage()
+                                }
+                            }) {
                                 HStack(spacing: 4) {
-                                    Image(systemName: "square.and.arrow.up")
-                                    Text("Share")
-                                        .font(.subheadline)
+                                    if isDownloading {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .scaleEffect(0.8)
+                                    } else {
+                                        Image(systemName: "arrow.down.circle")
+                                        Text("Download")
+                                            .font(.subheadline)
+                                    }
                                 }
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 12)
@@ -324,7 +338,7 @@ struct FullScreenImageView: View {
                                 .background(Color.blue.opacity(0.3))
                                 .cornerRadius(8)
                             }
-                            .disabled(isDeleting)
+                            .disabled(isDeleting || isDownloading)
                         }
                     }
                     
@@ -455,6 +469,24 @@ struct FullScreenImageView: View {
                             .padding(.top, 4)
                         }
                         
+                        // Share button
+                        if let url = imageURL {
+                            ShareLink(item: url) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "square.and.arrow.up")
+                                    Text("Share")
+                                        .fontWeight(.semibold)
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color.purple.opacity(0.3))
+                                .cornerRadius(10)
+                            }
+                            .disabled(isDeleting || isDownloading)
+                        }
+                        
                         // Delete button
                         Button(action: {
                             showDeleteAlert = true
@@ -462,11 +494,12 @@ struct FullScreenImageView: View {
                             HStack(spacing: 4) {
                                 Image(systemName: "trash.fill")
                                 Text("Delete")
-                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                             }
+                            .font(.subheadline)
                             .foregroundColor(.white)
-                            .padding(.vertical, 12)
                             .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
                             .background(Color.red.opacity(0.3))
                             .cornerRadius(10)
                         }
@@ -491,6 +524,68 @@ struct FullScreenImageView: View {
             }
         } message: {
             Text("This will permanently delete this image. This action cannot be undone.")
+        }
+        .alert("Download", isPresented: $showDownloadAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(downloadAlertMessage)
+        }
+    }
+    
+    // MARK: - Download Image
+    private func downloadImage() async {
+        guard let url = imageURL else {
+            await MainActor.run {
+                downloadAlertMessage = "Invalid image URL"
+                showDownloadAlert = true
+            }
+            return
+        }
+        
+        await MainActor.run {
+            isDownloading = true
+        }
+        
+        do {
+            // Download the image data
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            guard let image = UIImage(data: data) else {
+                throw NSError(domain: "DownloadError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create image from data"])
+            }
+            
+            // Request photo library permission and save
+            let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+            
+            guard status == .authorized || status == .limited else {
+                await MainActor.run {
+                    isDownloading = false
+                    downloadAlertMessage = "Photo library access is required to save images. Please enable it in Settings."
+                    showDownloadAlert = true
+                }
+                return
+            }
+            
+            // Save to photo library
+            try await PHPhotoLibrary.shared().performChanges {
+                PHAssetCreationRequest.creationRequestForAsset(from: image)
+            }
+            
+            print("✅ Image saved to photo library successfully")
+            
+            await MainActor.run {
+                isDownloading = false
+                downloadAlertMessage = "Image saved to your photo library!"
+                showDownloadAlert = true
+            }
+            
+        } catch {
+            print("❌ Failed to download image: \(error)")
+            await MainActor.run {
+                isDownloading = false
+                downloadAlertMessage = "Failed to save image: \(error.localizedDescription)"
+                showDownloadAlert = true
+            }
         }
     }
     
