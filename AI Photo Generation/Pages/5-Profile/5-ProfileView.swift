@@ -8,6 +8,7 @@
 import SwiftUI
 import Kingfisher
 import Photos
+import AVKit
 
 // MARK: - Profile View
 struct ProfileView: View {
@@ -235,20 +236,71 @@ struct ImageGridView: View {
             
             LazyVGrid(columns: gridColumns, spacing: spacing) {
                 ForEach(userImages) { userImage in
-                    if let url = URL(string: userImage.image_url) {
+                    if let displayUrl = userImage.isVideo ? userImage.thumbnail_url : userImage.image_url,
+                       let url = URL(string: displayUrl) {
                         Button {
                             onSelect(userImage)
                         } label: {
-                            KFImage(url)
-                                .placeholder {
-                                    Rectangle()
-                                        .fill(Color.gray.opacity(0.2))
-                                        .overlay(ProgressView())
+                            ZStack {
+                                KFImage(url)
+                                    .placeholder {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.2))
+                                            .overlay(ProgressView())
+                                    }
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: itemWidth, height: itemHeight)
+                                    .clipped()
+                                
+                                // Video play icon overlay
+                                if userImage.isVideo {
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color.black.opacity(0.6))
+                                            .frame(width: 40, height: 40)
+                                        
+                                        Image(systemName: "play.fill")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.white)
+                                    }
                                 }
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: itemWidth, height: itemHeight)
-                                .clipped()
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    } else if let url = URL(string: userImage.image_url) {
+                        // Fallback for videos without thumbnails
+                        Button {
+                            onSelect(userImage)
+                        } label: {
+                            ZStack {
+                                KFImage(url)
+                                    .placeholder {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.2))
+                                            .overlay(
+                                                Image(systemName: "video.fill")
+                                                    .font(.largeTitle)
+                                                    .foregroundColor(.gray)
+                                            )
+                                    }
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: itemWidth, height: itemHeight)
+                                    .clipped()
+                                
+                                if userImage.isVideo {
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color.black.opacity(0.6))
+                                            .frame(width: 40, height: 40)
+                                        
+                                        Image(systemName: "play.fill")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
                         }
                         .buttonStyle(.plain)
                     }
@@ -277,9 +329,21 @@ struct FullScreenImageView: View {
     @State private var showDownloadConfirmation = false
     @State private var showDownloadResultAlert = false
     @State private var downloadAlertMessage = ""
+    @State private var player: AVPlayer?
     
-    var imageURL: URL? {
+    var mediaURL: URL? {
         URL(string: userImage.image_url)
+    }
+    
+    var thumbnailURL: URL? {
+        if let thumbnail = userImage.thumbnail_url {
+            return URL(string: thumbnail)
+        }
+        return nil
+    }
+    
+    var isVideo: Bool {
+        userImage.isVideo
     }
     
     var isPhotoFilter: Bool {
@@ -291,18 +355,36 @@ struct FullScreenImageView: View {
             Color.black.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Image section
-                if let url = imageURL {
-                    KFImage(url)
-                        .resizable()
-                        .scaledToFit()
-                        .scaleEffect(zoom)
-                        .gesture(
-                            MagnificationGesture()
-                                .onChanged { value in zoom = value }
-                                .onEnded { _ in withAnimation { zoom = 1.0 } }
-                        )
-                        .frame(maxWidth: .infinity)
+                // Media section (image or video)
+                if isVideo {
+                    // Video player
+                    if let url = mediaURL {
+                        VideoPlayer(player: player)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: .infinity)
+                            .onAppear {
+                                player = AVPlayer(url: url)
+                                player?.play()
+                            }
+                            .onDisappear {
+                                player?.pause()
+                                player = nil
+                            }
+                    }
+                } else {
+                    // Image viewer
+                    if let url = mediaURL {
+                        KFImage(url)
+                            .resizable()
+                            .scaledToFit()
+                            .scaleEffect(zoom)
+                            .gesture(
+                                MagnificationGesture()
+                                    .onChanged { value in zoom = value }
+                                    .onEnded { _ in withAnimation { zoom = 1.0 } }
+                            )
+                            .frame(maxWidth: .infinity)
+                    }
                 }
                 
                 // Info section below image
@@ -343,6 +425,33 @@ struct FullScreenImageView: View {
                     
                     Divider()
                         .background(Color.gray.opacity(0.3))
+                    
+                    // Display media type badge
+                    HStack {
+                        HStack(spacing: 4) {
+                            Image(systemName: isVideo ? "video.fill" : "photo.fill")
+                                .font(.caption)
+                            Text(isVideo ? "Video" : "Image")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill(isVideo ? Color.purple.opacity(0.3) : Color.blue.opacity(0.3))
+                        )
+                        
+                        if let ext = userImage.file_extension {
+                            Text(ext.uppercased())
+                                .font(.caption2)
+                                .foregroundColor(.gray)
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.bottom, 8)
                     
                     // Display Photo Filter specific information
                     if isPhotoFilter {
@@ -482,7 +591,7 @@ struct FullScreenImageView: View {
 //                        }
                         
                         // Share button
-                        if let url = imageURL {
+                        if let url = mediaURL {
                             ShareLink(item: url) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "square.and.arrow.up")
@@ -535,7 +644,7 @@ struct FullScreenImageView: View {
                 }
             }
         } message: {
-            Text("This will permanently delete this image. This action cannot be undone.")
+            Text("This will permanently delete this \(isVideo ? "video" : "image"). This action cannot be undone.")
         }
         .alert("Save to Photos?", isPresented: $showDownloadConfirmation) {
             Button("Cancel", role: .cancel) { }
@@ -545,7 +654,7 @@ struct FullScreenImageView: View {
                 }
             }
         } message: {
-            Text("Do you want to save this image to your photo library?")
+            Text("Do you want to save this \(isVideo ? "video" : "image") to your photo library?")
         }
         .alert("Download", isPresented: $showDownloadResultAlert) {
             Button("OK", role: .cancel) { }
@@ -554,9 +663,9 @@ struct FullScreenImageView: View {
         }
     }
     
-    // MARK: - Download Image
+    // MARK: - Download Media (Image or Video)
     private func downloadImage() async {
-        guard let url = imageURL else {
+        guard let url = mediaURL else {
             await MainActor.run {
                 downloadAlertMessage = "Invalid image URL"
                 showDownloadResultAlert = true
@@ -569,12 +678,8 @@ struct FullScreenImageView: View {
         }
         
         do {
-            // Download the image data
+            // Download the media data
             let (data, _) = try await URLSession.shared.data(from: url)
-            
-            guard let image = UIImage(data: data) else {
-                throw NSError(domain: "DownloadError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create image from data"])
-            }
             
             // Request photo library permission and save
             let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
@@ -582,30 +687,54 @@ struct FullScreenImageView: View {
             guard status == .authorized || status == .limited else {
                 await MainActor.run {
                     isDownloading = false
-                    downloadAlertMessage = "Photo library access is required to save images. Please enable it in Settings."
+                    downloadAlertMessage = "Photo library access is required to save media. Please enable it in Settings."
                     showDownloadResultAlert = true
                 }
                 return
             }
             
-            // Save to photo library
-            try await PHPhotoLibrary.shared().performChanges {
-                PHAssetCreationRequest.creationRequestForAsset(from: image)
+            if isVideo {
+                // Save video to photo library
+                // Write to temporary file first
+                let tempURL = FileManager.default.temporaryDirectory
+                    .appendingPathComponent(UUID().uuidString)
+                    .appendingPathExtension(userImage.file_extension ?? "mp4")
+                
+                try data.write(to: tempURL)
+                
+                // Save to photo library
+                try await PHPhotoLibrary.shared().performChanges {
+                    PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: tempURL)
+                }
+                
+                // Clean up temp file
+                try? FileManager.default.removeItem(at: tempURL)
+                
+                print("✅ Video saved to photo library successfully")
+            } else {
+                // Save image to photo library
+                guard let image = UIImage(data: data) else {
+                    throw NSError(domain: "DownloadError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create image from data"])
+                }
+                
+                try await PHPhotoLibrary.shared().performChanges {
+                    PHAssetCreationRequest.creationRequestForAsset(from: image)
+                }
+                
+                print("✅ Image saved to photo library successfully")
             }
-            
-            print("✅ Image saved to photo library successfully")
             
             await MainActor.run {
                 isDownloading = false
-                downloadAlertMessage = "Image saved to your photo library!"
+                downloadAlertMessage = isVideo ? "Video saved to your photo library!" : "Image saved to your photo library!"
                 showDownloadResultAlert = true
             }
             
         } catch {
-            print("❌ Failed to download image: \(error)")
+            print("❌ Failed to download media: \(error)")
             await MainActor.run {
                 isDownloading = false
-                downloadAlertMessage = "Failed to save image: \(error.localizedDescription)"
+                downloadAlertMessage = "Failed to save \(isVideo ? "video" : "image"): \(error.localizedDescription)"
                 showDownloadResultAlert = true
             }
         }
@@ -621,46 +750,72 @@ struct FullScreenImageView: View {
             
             // Delete from database first
             try await SupabaseManager.shared.client.database
-                .from("user_images")
+                .from("user_media")
                 .delete()
                 .eq("id", value: userImage.id)
                 .execute()
             
             print("✅ Image record deleted from database")
             
+            // Determine which storage bucket to use
+            let bucketName = isVideo ? "user-generated-videos" : "user-generated-images"
+            let bucketPath = isVideo ? "/user-generated-videos/" : "/user-generated-images/"
+            
             // Extract the storage path from the URL
             // Try multiple URL formats to find the path
             var storagePath: String?
             
-            // Method 1: Look for /user-generated-images/
-            if let bucketIndex = imageUrl.range(of: "/user-generated-images/") {
+            // Method 1: Look for bucket path
+            if let bucketIndex = imageUrl.range(of: bucketPath) {
                 storagePath = String(imageUrl[bucketIndex.upperBound...])
             }
-            // Method 2: Look for /public/user-generated-images/
-            else if let publicIndex = imageUrl.range(of: "/public/user-generated-images/") {
+            // Method 2: Look for /public/bucket/
+            else if let publicIndex = imageUrl.range(of: "/public\(bucketPath)") {
                 storagePath = String(imageUrl[publicIndex.upperBound...])
             }
             // Method 3: Parse URL components
             else if let url = URL(string: imageUrl) {
                 print("🔍 URL components: \(url.pathComponents)")
-                // Find "user-generated-images" in path components
-                if let bucketIdx = url.pathComponents.firstIndex(of: "user-generated-images") {
+                // Find bucket name in path components
+                let bucketComponent = isVideo ? "user-generated-videos" : "user-generated-images"
+                if let bucketIdx = url.pathComponents.firstIndex(of: bucketComponent) {
                     let pathAfterBucket = url.pathComponents.dropFirst(bucketIdx + 1)
                     storagePath = pathAfterBucket.joined(separator: "/")
                 }
             }
             
+            // Also delete thumbnail if it's a video
+            if isVideo, let thumbnailUrl = userImage.thumbnail_url {
+                print("🗑️ Also deleting video thumbnail: \(thumbnailUrl)")
+                
+                var thumbnailPath: String?
+                if let bucketIndex = thumbnailUrl.range(of: "/user-generated-images/") {
+                    thumbnailPath = String(thumbnailUrl[bucketIndex.upperBound...])
+                }
+                
+                if let thumbnailPath = thumbnailPath {
+                    do {
+                        let result = try await SupabaseManager.shared.client.storage
+                            .from("user-generated-images")
+                            .remove(paths: [thumbnailPath])
+                        print("✅ Thumbnail deleted: \(result)")
+                    } catch {
+                        print("❌ Thumbnail deletion error: \(error)")
+                    }
+                }
+            }
+            
             if let storagePath = storagePath {
-                print("🗑️ Extracted storage path: '\(storagePath)'")
+                print("🗑️ Extracted storage path: '\(storagePath)' from bucket: \(bucketName)")
                 
                 do {
                     // Delete from Supabase Storage
                     let result = try await SupabaseManager.shared.client.storage
-                        .from("user-generated-images")
+                        .from(bucketName)
                         .remove(paths: [storagePath])
                     
                     print("✅ Storage deletion result: \(result)")
-                    print("✅ Image file deleted from storage successfully")
+                    print("✅ \(isVideo ? "Video" : "Image") file deleted from storage successfully")
                 } catch {
                     print("❌ Storage deletion error: \(error)")
                     print("❌ Error description: \(error.localizedDescription)")

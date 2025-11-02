@@ -12,6 +12,18 @@ struct UserImage: Codable, Identifiable {
     let type: String?
     let endpoint: String?
     let created_at: String?
+    let media_type: String? // "image" or "video"
+    let file_extension: String? // e.g., "jpg", "mp4", "webm"
+    let thumbnail_url: String? // Thumbnail for videos
+    
+    // Computed property for convenience
+    var isVideo: Bool {
+        media_type == "video"
+    }
+    
+    var isImage: Bool {
+        media_type == "image" || media_type == nil
+    }
     
     // Custom coding keys to handle database field names
     enum CodingKeys: String, CodingKey {
@@ -23,6 +35,9 @@ struct UserImage: Codable, Identifiable {
         case type
         case endpoint
         case created_at
+        case media_type
+        case file_extension
+        case thumbnail_url
     }
     
     // Custom decoder to handle id as either Int or String
@@ -47,6 +62,9 @@ struct UserImage: Codable, Identifiable {
         self.type = try? container.decode(String.self, forKey: .type)
         self.endpoint = try? container.decode(String.self, forKey: .endpoint)
         self.created_at = try? container.decode(String.self, forKey: .created_at)
+        self.media_type = try? container.decode(String.self, forKey: .media_type)
+        self.file_extension = try? container.decode(String.self, forKey: .file_extension)
+        self.thumbnail_url = try? container.decode(String.self, forKey: .thumbnail_url)
     }
 }
 
@@ -96,7 +114,7 @@ class ProfileViewModel: ObservableObject {
         
         do {
             let response: PostgrestResponse<[UserImage]> = try await client.database
-                .from("user_images")
+                .from("user_media")
                 .select()
                 .eq("user_id", value: userId)
                 .order("created_at", ascending: false)

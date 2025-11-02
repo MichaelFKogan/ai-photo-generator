@@ -153,7 +153,7 @@ struct PhotoConfirmationView: View {
                     let taskId = notificationManager.startBackgroundGeneration(
                         item: item,
                         image: image,
-                        userId: authViewModel.user?.id.uuidString ?? "",
+                        userId: authViewModel.user?.id.uuidString.lowercased() ?? "",
                         onImageGenerated: { [weak notificationManager] downloadedImage in
                             // Optional: Update local state only if still on this view
                             // The image is already saved to database regardless

@@ -8,6 +8,7 @@
 import Foundation
 import Supabase
 import UIKit
+import AVFoundation
 
 class SupabaseManager {
     static let shared = SupabaseManager()
@@ -15,8 +16,9 @@ class SupabaseManager {
     // Replace with your actual Supabase URL and anon key
     let client: SupabaseClient
     
-    // Name of your storage bucket (you'll need to create this in Supabase dashboard)
-    private let storageBucket = "user-generated-images"
+    // Storage buckets (create these in Supabase dashboard)
+    private let imageStorageBucket = "user-generated-images"
+    private let videoStorageBucket = "user-generated-videos"
     
     private init() {
         self.client = SupabaseClient(
@@ -30,8 +32,9 @@ class SupabaseManager {
     ///   - image: The UIImage to upload
     ///   - userId: The user's ID for organizing files
     ///   - modelName: The AI model name used for generation
+    ///   - maxRetries: Maximum number of retry attempts for upload
     /// - Returns: The public URL of the uploaded image in Supabase Storage
-    func uploadImage(image: UIImage, userId: String, modelName: String) async throws -> String {
+    func uploadImage(image: UIImage, userId: String, modelName: String, maxRetries: Int = 3) async throws -> String {
         // Convert UIImage to JPEG data
         guard let imageData = image.jpegData(compressionQuality: 0.9) else {
             throw NSError(domain: "ImageError", code: -1,
@@ -44,30 +47,52 @@ class SupabaseManager {
                                           .replacingOccurrences(of: "/", with: "-")
         let filename = "\(userId)/\(timestamp)_\(sanitizedModelName).jpg"
         
-        print("[Storage] Uploading image to: \(storageBucket)/\(filename)")
+        print("[Storage] Uploading image to: \(imageStorageBucket)/\(filename)")
         
-        // Upload to Supabase Storage
-        let uploadResponse = try await client.storage
-            .from(storageBucket)
-            .upload(
-                path: filename,
-                file: imageData,
-                options: FileOptions(
-                    contentType: "image/jpeg",
-                    upsert: false
-                )
-            )
+        // Retry logic for upload
+        var lastError: Error?
+        for attempt in 1...maxRetries {
+            do {
+                // Upload to Supabase Storage
+                let uploadResponse = try await client.storage
+                    .from(imageStorageBucket)
+                    .upload(
+                        path: filename,
+                        file: imageData,
+                        options: FileOptions(
+                            contentType: "image/jpeg",
+                            upsert: false
+                        )
+                    )
+                
+                print("[Storage] Upload successful: \(uploadResponse)")
+                
+                // Get the public URL for the uploaded file
+                let publicURL = try client.storage
+                    .from(imageStorageBucket)
+                    .getPublicURL(path: filename)
+                
+                print("[Storage] Public URL: \(publicURL)")
+                
+                return publicURL.absoluteString
+                
+            } catch {
+                lastError = error
+                print("⚠️ Upload attempt \(attempt)/\(maxRetries) failed: \(error)")
+                
+                if attempt < maxRetries {
+                    // Exponential backoff: 2^attempt seconds
+                    let delay = pow(2.0, Double(attempt))
+                    print("[Storage] Retrying in \(delay) seconds...")
+                    try await Task.sleep(for: .seconds(delay))
+                } else {
+                    print("❌ All upload attempts failed")
+                    throw error
+                }
+            }
+        }
         
-        print("[Storage] Upload successful: \(uploadResponse)")
-        
-        // Get the public URL for the uploaded file
-        let publicURL = try client.storage
-            .from(storageBucket)
-            .getPublicURL(path: filename)
-        
-        print("[Storage] Public URL: \(publicURL)")
-        
-        return publicURL.absoluteString
+        throw lastError ?? NSError(domain: "StorageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Upload failed"])
     }
     
     /// Downloads an image from a URL and uploads it to Supabase Storage
@@ -92,5 +117,137 @@ class SupabaseManager {
         
         // Upload to Supabase Storage
         return try await uploadImage(image: image, userId: userId, modelName: modelName)
+    }
+    
+    /// Uploads a video to Supabase Storage and returns the public URL
+    /// - Parameters:
+    ///   - videoData: The video data to upload
+    ///   - userId: The user's ID for organizing files
+    ///   - modelName: The AI model name used for generation
+    ///   - fileExtension: The video file extension (e.g., "mp4", "webm")
+    ///   - maxRetries: Maximum number of retry attempts for upload
+    /// - Returns: The public URL of the uploaded video in Supabase Storage
+    func uploadVideo(videoData: Data, userId: String, modelName: String, fileExtension: String, maxRetries: Int = 3) async throws -> String {
+        // Create unique filename: userId/timestamp_modelName.extension
+        let timestamp = Int(Date().timeIntervalSince1970)
+        let sanitizedModelName = modelName.replacingOccurrences(of: " ", with: "-")
+                                          .replacingOccurrences(of: "/", with: "-")
+        let filename = "\(userId)/\(timestamp)_\(sanitizedModelName).\(fileExtension)"
+        
+        print("[Storage] Uploading video to: \(videoStorageBucket)/\(filename)")
+        print("[Storage] Video size: \(videoData.count) bytes (\(Double(videoData.count) / 1_000_000) MB)")
+        
+        // Determine content type based on extension
+        let contentType: String
+        switch fileExtension.lowercased() {
+        case "mp4":
+            contentType = "video/mp4"
+        case "webm":
+            contentType = "video/webm"
+        case "mov":
+            contentType = "video/quicktime"
+        case "avi":
+            contentType = "video/x-msvideo"
+        default:
+            contentType = "video/mp4" // Default to mp4
+        }
+        
+        // Retry logic for upload
+        var lastError: Error?
+        for attempt in 1...maxRetries {
+            do {
+                // Upload to Supabase Storage
+                let uploadResponse = try await client.storage
+                    .from(videoStorageBucket)
+                    .upload(
+                        path: filename,
+                        file: videoData,
+                        options: FileOptions(
+                            contentType: contentType,
+                            upsert: false
+                        )
+                    )
+                
+                print("[Storage] Video upload successful: \(uploadResponse)")
+                
+                // Get the public URL for the uploaded file
+                let publicURL = try client.storage
+                    .from(videoStorageBucket)
+                    .getPublicURL(path: filename)
+                
+                print("[Storage] Video public URL: \(publicURL)")
+                
+                return publicURL.absoluteString
+                
+            } catch {
+                lastError = error
+                print("⚠️ Video upload attempt \(attempt)/\(maxRetries) failed: \(error)")
+                
+                if attempt < maxRetries {
+                    // Exponential backoff: 2^attempt seconds
+                    let delay = pow(2.0, Double(attempt))
+                    print("[Storage] Retrying in \(delay) seconds...")
+                    try await Task.sleep(for: .seconds(delay))
+                } else {
+                    print("❌ All video upload attempts failed")
+                    throw error
+                }
+            }
+        }
+        
+        throw lastError ?? NSError(domain: "StorageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Video upload failed"])
+    }
+    
+    /// Downloads a video from a URL and uploads it to Supabase Storage
+    /// - Parameters:
+    ///   - urlString: The URL of the video to download
+    ///   - userId: The user's ID
+    ///   - modelName: The AI model name
+    ///   - fileExtension: The video file extension
+    /// - Returns: The Supabase Storage public URL
+    func downloadAndUploadVideo(from urlString: String, userId: String, modelName: String, fileExtension: String = "mp4") async throws -> String {
+        guard let url = URL(string: urlString) else {
+            throw NSError(domain: "URLError", code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+        
+        print("[Storage] Downloading video from: \(urlString)")
+        
+        // Download the video
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        print("[Storage] Video downloaded, size: \(data.count) bytes")
+        
+        // Upload to Supabase Storage
+        return try await uploadVideo(videoData: data, userId: userId, modelName: modelName, fileExtension: fileExtension)
+    }
+    
+    /// Generates a thumbnail from video data
+    /// - Parameter videoData: The video data
+    /// - Returns: UIImage thumbnail or nil if generation fails
+    func generateVideoThumbnail(from videoData: Data) async -> UIImage? {
+        // Save video data to temporary file
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+        
+        do {
+            try videoData.write(to: tempURL)
+            
+            let asset = AVAsset(url: tempURL)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            
+            // Generate thumbnail at 1 second or beginning
+            let time = CMTime(seconds: 1, preferredTimescale: 60)
+            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
+            
+            // Clean up temp file
+            try? FileManager.default.removeItem(at: tempURL)
+            
+            return UIImage(cgImage: cgImage)
+        } catch {
+            print("❌ Failed to generate video thumbnail: \(error)")
+            try? FileManager.default.removeItem(at: tempURL)
+            return nil
+        }
     }
 }

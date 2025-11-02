@@ -149,18 +149,18 @@ struct VideoConfirmationView: View {
                     
                     isLoading = true
                     
-                    // Start background generation that persists across view changes
+                    // Start background VIDEO generation that persists across view changes
                     // Note: The generation continues in background even if user leaves this view
-                    let taskId = notificationManager.startBackgroundGeneration(
+                    let taskId = notificationManager.startBackgroundVideoGeneration(
                         item: item,
                         image: image,
-                        userId: authViewModel.user?.id.uuidString ?? "",
-                        onImageGenerated: { [weak notificationManager] downloadedImage in
+                        userId: authViewModel.user?.id.uuidString.lowercased() ?? "",
+                        onVideoGenerated: { videoUrl in
                             // Optional: Update local state only if still on this view
-                            // The image is already saved to database regardless
+                            // The video is already saved to database regardless
                             DispatchQueue.main.async {
-                                generatedImage = downloadedImage
                                 isLoading = false
+                                print("✅ Video generated and saved: \(videoUrl)")
                             }
                         }
                     )
@@ -171,10 +171,10 @@ struct VideoConfirmationView: View {
                         if isLoading {
                             ProgressView()
                         }
-                        Text("Generate")
+                        Text("Generate Video")
                             .font(.custom("Nunito-ExtraBold", size: 22))
                             .foregroundColor(.white)
-                        Image(systemName: "photo.on.rectangle")
+                        Image(systemName: "video.fill")
                             .font(.system(size: 18))
                             .fontWeight(.bold)
                             .foregroundColor(.white)

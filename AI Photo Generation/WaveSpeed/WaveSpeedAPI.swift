@@ -29,7 +29,8 @@ func sendImageToWaveSpeed(
     outputFormat: String = "jpeg",   // "jpeg" or "png"
     enableSyncMode: Bool = true,
     enableBase64Output: Bool = false,
-    endpoint: String
+    endpoint: String,
+    maxPollingAttempts: Int = 15     // Default 15 for images (30s), use higher for videos
     
 ) async throws -> WaveSpeedResponse {
     
@@ -98,19 +99,27 @@ func sendImageToWaveSpeed(
             print("[WaveSpeed] Job created, polling for completion…")
             let jobId = wavespeedResponse.data.id
             var statusResponse: WaveSpeedResponse
-            for _ in 0..<15 {  // try up to 15 times (30 seconds)
-                try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+            let pollInterval: UInt64 = 5_000_000_000 // 5 seconds between polls
+            print("[WaveSpeed] Will poll up to \(maxPollingAttempts) times (every 5 seconds = \(maxPollingAttempts * 5)s max)")
+            
+            for attempt in 0..<maxPollingAttempts {
+                try await Task.sleep(nanoseconds: pollInterval)
+                print("[WaveSpeed] Polling attempt \(attempt + 1)/\(maxPollingAttempts)...")
                 statusResponse = try await fetchWaveSpeedJobStatus(id: jobId)
+                
                 if statusResponse.data.status == "completed" {
+                    print("[WaveSpeed] Job completed successfully!")
                     return statusResponse
                 } else if statusResponse.data.status == "failed" {
                     throw NSError(domain: "WaveSpeedAPI", code: 2, userInfo: [
                         NSLocalizedDescriptionKey: statusResponse.data.error ?? "WaveSpeed job failed."
                     ])
+                } else {
+                    print("[WaveSpeed] Status: \(statusResponse.data.status), continuing to poll...")
                 }
             }
             throw NSError(domain: "WaveSpeedAPI", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Timed out waiting for image generation."
+                NSLocalizedDescriptionKey: "Timed out waiting for generation after \(maxPollingAttempts * 5) seconds."
             ])
 
         } else if wavespeedResponse.data.status != "completed" {
