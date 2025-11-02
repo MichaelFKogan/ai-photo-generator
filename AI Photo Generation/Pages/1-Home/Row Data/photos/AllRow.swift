@@ -38,15 +38,6 @@ let allItems = [
         exampleImages: ["minecraft2", "minecraft3", "minecraft4", "minecraft5", "minecraft6", "minecraft7"]
     ),
     InfoPacket(
-        imageName: "cyberpunk1",
-        imageNameOriginal: "cyberpunk",
-        title: "Cyberpunk",
-        cost: 0.04,
-        type: "Photo Filter",
-        endpoint: "https://api.wavespeed.ai/api/v3/image-effects/cyberpunk",
-        exampleImages: ["cyberpunk2", "cyberpunk3", "cyberpunk4", "cyberpunk5", "cyberpunk6", "cyberpunk7"]
-    ),
-    InfoPacket(
         imageName: "micro-landscape-mini-world1",
         imageNameOriginal: "micro-landscape-mini-world",
         title: "Micro Landscape",

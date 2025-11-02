@@ -46,6 +46,27 @@ struct GenerationTaskInfo {
     var generatedImage: UIImage?
 }
 
+// MARK: - Image Metadata for Database
+struct ImageMetadata: Encodable {
+    let user_id: String
+    let image_url: String
+    let model: String?
+    let title: String?
+    let cost: Double?
+    let type: String?
+    let endpoint: String?
+    
+    init(userId: String, imageUrl: String, model: String? = nil, title: String? = nil, cost: Double? = nil, type: String? = nil, endpoint: String? = nil) {
+        self.user_id = userId
+        self.image_url = imageUrl
+        self.model = model
+        self.title = title
+        self.cost = cost
+        self.type = type
+        self.endpoint = endpoint
+    }
+}
+
 // MARK: - Global Notification Manager
 class NotificationManager: ObservableObject {
     static let shared = NotificationManager()
@@ -200,7 +221,7 @@ class NotificationManager: ObservableObject {
                 print("✅ Image sent. Response received.")
                 
                 if let urlString = response.data.outputs?.first, let url = URL(string: urlString) {
-                    await self.updateProgress(0.7, for: notificationId)
+                    await self.updateProgress(0.6, for: notificationId)
                     await self.updateMessage("Downloading result...", for: notificationId)
                     
                     print("[WaveSpeed] Fetching generated image…")
@@ -217,11 +238,42 @@ class NotificationManager: ObservableObject {
                     
                     print("[WaveSpeed] Generated image loaded successfully.")
                     
+                    await self.updateProgress(0.75, for: notificationId)
+                    await self.updateMessage("Uploading to storage...", for: notificationId)
+                    
+                    // Upload image to Supabase Storage
+                    let modelName = item.modelName
+                    let supabaseImageURL: String
+                    
+                    do {
+                        supabaseImageURL = try await SupabaseManager.shared.uploadImage(
+                            image: downloadedImage,
+                            userId: userId,
+                            modelName: modelName.isEmpty ? "unknown" : modelName
+                        )
+                        print("✅ Image uploaded to Supabase Storage: \(supabaseImageURL)")
+                    } catch {
+                        print("❌ Failed to upload to Supabase Storage: \(error)")
+                        throw error
+                    }
+                    
                     await self.updateProgress(0.9, for: notificationId)
                     await self.updateMessage("Saving to profile...", for: notificationId)
                     
-                    // Save to Supabase with retry logic
-                    let modelName = item.modelName.isEmpty ? "default-model" : item.modelName
+                    // Prepare metadata for database insert - only add non-empty fields
+                    let metadata = ImageMetadata(
+                        userId: userId,
+                        imageUrl: supabaseImageURL,
+                        model: modelName.isEmpty ? nil : modelName,
+                        title: item.title.isEmpty ? nil : item.title,
+                        cost: item.cost > 0 ? item.cost : nil,
+                        type: item.type?.isEmpty == false ? item.type : nil,
+                        endpoint: item.endpoint.isEmpty ? nil : item.endpoint
+                    )
+                    
+                    print("📝 Saving metadata: title=\(metadata.title ?? "none"), cost=\(metadata.cost ?? 0), type=\(metadata.type ?? "none")")
+                    
+                    // Save to Supabase database with retry logic
                     var saveSuccessful = false
                     var retryCount = 0
                     let maxRetries = 3
@@ -230,13 +282,9 @@ class NotificationManager: ObservableObject {
                         do {
                             try await SupabaseManager.shared.client.database
                                 .from("user_images")
-                                .insert([
-                                    "user_id": userId,
-                                    "image_url": urlString,
-                                    "model": modelName
-                                ])
+                                .insert(metadata)
                                 .execute()
-                            print("✅ Image saved for user")
+                            print("✅ Image metadata saved to database")
                             saveSuccessful = true
                         } catch {
                             retryCount += 1

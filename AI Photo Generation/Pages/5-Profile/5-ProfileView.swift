@@ -39,7 +39,7 @@ struct ProfileView: View {
 struct ProfileViewContent: View {
     @ObservedObject var viewModel: ProfileViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var selectedImageURL: URL? = nil
+    @State private var selectedUserImage: UserImage? = nil
     
     var body: some View {
         NavigationStack {
@@ -71,22 +71,24 @@ struct ProfileViewContent: View {
                             ProgressView("Loading images…")
                                 .padding()
                         } else if viewModel.images.isEmpty {
-                            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 4) {
+                            
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 3), spacing: 4) {
                                 ForEach(0..<9, id: \.self) { _ in
                                     RoundedRectangle(cornerRadius: 6)
                                         .fill(Color.gray.opacity(0.2))
-                                        .aspectRatio(1.8, contentMode: .fit)
                                         .overlay(
                                             Image(systemName: "photo")
                                                 .foregroundColor(.gray)
                                                 .font(.title3)
                                         )
+                                        .aspectRatio(1/1.4, contentMode: .fit) // ✅ portrait ratio (≈0.714)
                                 }
                             }
                             .padding(.horizontal)
+
                         } else {
-                            ImageGridView(images: viewModel.images) { url in
-                                selectedImageURL = url
+                            ImageGridView(userImages: viewModel.userImages) { userImage in
+                                selectedUserImage = userImage
                             }
                         }
                     }
@@ -120,17 +122,23 @@ struct ProfileViewContent: View {
             .refreshable {
                 await viewModel.fetchUserImages(forceRefresh: true)
             }
-            .sheet(item: $selectedImageURL) { imageURL in
+            .sheet(item: $selectedUserImage) { userImage in
                 FullScreenImageView(
-                    imageURL: imageURL,
+                    userImage: userImage,
                     isPresented: Binding(
-                        get: { selectedImageURL != nil },
-                        set: { if !$0 { selectedImageURL = nil } }
+                        get: { selectedUserImage != nil },
+                        set: { if !$0 { selectedUserImage = nil } }
                     )
                 )
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .ignoresSafeArea()
+                .onDisappear {
+                    // Refresh the image list when the sheet is dismissed
+                    Task {
+                        await viewModel.fetchUserImages(forceRefresh: true)
+                    }
+                }
             }
         }
     }
@@ -209,9 +217,9 @@ struct ProfileViewContent: View {
 
 // MARK: - Image Grid (3×3 Portrait)
 struct ImageGridView: View {
-    let images: [String]
+    let userImages: [UserImage]
     let spacing: CGFloat = 2
-    var onSelect: (URL) -> Void
+    var onSelect: (UserImage) -> Void
     
     private var gridColumns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: spacing), count: 3)
@@ -225,10 +233,10 @@ struct ImageGridView: View {
             let itemHeight = itemWidth * 1.4
             
             LazyVGrid(columns: gridColumns, spacing: spacing) {
-                ForEach(images, id: \.self) { urlString in
-                    if let url = URL(string: urlString) {
+                ForEach(userImages) { userImage in
+                    if let url = URL(string: userImage.image_url) {
                         Button {
-                            onSelect(url)
+                            onSelect(userImage)
                         } label: {
                             KFImage(url)
                                 .placeholder {
@@ -247,7 +255,7 @@ struct ImageGridView: View {
             }
             .padding(.horizontal, 4)
         }
-        .frame(height: calculateHeight(for: images.count))
+        .frame(height: calculateHeight(for: userImages.count))
     }
     
     private func calculateHeight(for count: Int) -> CGFloat {
@@ -259,32 +267,42 @@ struct ImageGridView: View {
 
 // MARK: - Full Screen Image View
 struct FullScreenImageView: View {
-    let imageURL: URL
+    let userImage: UserImage
     @Binding var isPresented: Bool
     @State private var zoom: CGFloat = 1.0
+    @State private var showDeleteAlert = false
+    @State private var isDeleting = false
+    
+    var imageURL: URL? {
+        URL(string: userImage.image_url)
+    }
+    
+    var isPhotoFilter: Bool {
+        userImage.type == "Photo Filter"
+    }
     
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Top spacing to sit below drag indicator
-//                Color.clear.frame(height: 20)
-                
                 // Image section
-                KFImage(imageURL)
-                    .resizable()
-                    .scaledToFit()
-                    .scaleEffect(zoom)
-                    .gesture(
-                        MagnificationGesture()
-                            .onChanged { value in zoom = value }
-                            .onEnded { _ in withAnimation { zoom = 1.0 } }
-                    )
-                    .frame(maxWidth: .infinity)
+                if let url = imageURL {
+                    KFImage(url)
+                        .resizable()
+                        .scaledToFit()
+                        .scaleEffect(zoom)
+                        .gesture(
+                            MagnificationGesture()
+                                .onChanged { value in zoom = value }
+                                .onEnded { _ in withAnimation { zoom = 1.0 } }
+                        )
+                        .frame(maxWidth: .infinity)
+                }
                 
                 // Info section below image
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 16) {
+                    // Header with action buttons
                     HStack {
                         Text("Generation Details")
                             .font(.headline)
@@ -293,64 +311,260 @@ struct FullScreenImageView: View {
                         Spacer()
                         
                         // Share button
-                        ShareLink(item: imageURL) {
-                            Image(systemName: "square.and.arrow.up")
-                                .font(.title3)
+                        if let url = imageURL {
+                            ShareLink(item: url) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "square.and.arrow.up")
+                                    Text("Share")
+                                        .font(.subheadline)
+                                }
                                 .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(Color.blue.opacity(0.3))
+                                .cornerRadius(8)
+                            }
+                            .disabled(isDeleting)
                         }
                     }
                     
-                    HStack {
-                        Label("Anime Style", systemImage: "paintbrush.fill")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Text("Model: SD 1.5")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
+                    Divider()
+                        .background(Color.gray.opacity(0.3))
                     
-                    HStack {
-                        Text("Steps: 50")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Text("CFG: 7.5")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    
-                    // Reuse Model Button
-                    Button(action: {
-                        // TODO: Load this model/preset and navigate to generation view
-                        isPresented = false
-                        // You'll need to pass the model parameters back to your generation view
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                            Text("Reuse This Model")
-                                .fontWeight(.semibold)
+                    // Display Photo Filter specific information
+                    if isPhotoFilter {
+                        if let title = userImage.title, !title.isEmpty {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Image(systemName: "paintbrush.fill")
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [.blue, .purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .font(.caption)
+                                    Text("Filter Name")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                                Text(title)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.white)
+                            }
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(
-                            LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(10)
+                        
+                        if let type = userImage.type {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Type")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                    Text(type)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                }
+                                
+                                Spacer()
+                                
+                                if let cost = userImage.cost {
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        Text("Cost")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text("$\(String(format: "%.2f", cost))")
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if let model = userImage.model, !model.isEmpty {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Model")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                Text(model)
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                            }
+                        }
+                    } else {
+                        // For non-Photo Filter types, show generic info
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.blue, .purple],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .font(.caption)
+                                Text("AI Generated")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            if let model = userImage.model, !model.isEmpty {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Model")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                    Text(model)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
                     }
-                    .padding(.top, 4)
+                    
+                    Spacer()
+                    
+                    VStack{
+                        
+                        // Reuse Model Button (only for Photo Filters)
+                        if isPhotoFilter {
+                            Button(action: {
+                                // TODO: Load this model/preset and navigate to generation view
+//                                isPresented = false
+                                // You'll need to pass the model parameters back to your generation view
+                            }) {
+                                HStack {
+                                    Image(systemName: "arrow.clockwise")
+                                    Text("Use This Filter")
+                                        .fontWeight(.semibold)
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(
+                                    LinearGradient(
+                                        colors: [.blue, .purple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(10)
+                            }
+                            .padding(.top, 4)
+                        }
+                        
+                        // Delete button
+                        Button(action: {
+                            showDeleteAlert = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "trash.fill")
+                                Text("Delete")
+                                    .font(.subheadline)
+                            }
+                            .foregroundColor(.white)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity)
+                            .background(Color.red.opacity(0.3))
+                            .cornerRadius(10)
+                        }
+                        .disabled(isDeleting)
+                    }
+                    .padding(.bottom, 40)
+                    
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.black.opacity(0.8))
                 
                 Spacer()
+            }
+        }
+        .alert("Delete Image?", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                Task {
+                    await deleteImage()
+                }
+            }
+        } message: {
+            Text("This will permanently delete this image. This action cannot be undone.")
+        }
+    }
+    
+    // MARK: - Delete Image
+    private func deleteImage() async {
+        isDeleting = true
+        
+        do {
+            let imageUrl = userImage.image_url
+            print("🔍 Full image URL: \(imageUrl)")
+            
+            // Delete from database first
+            try await SupabaseManager.shared.client.database
+                .from("user_images")
+                .delete()
+                .eq("id", value: userImage.id)
+                .execute()
+            
+            print("✅ Image record deleted from database")
+            
+            // Extract the storage path from the URL
+            // Try multiple URL formats to find the path
+            var storagePath: String?
+            
+            // Method 1: Look for /user-generated-images/
+            if let bucketIndex = imageUrl.range(of: "/user-generated-images/") {
+                storagePath = String(imageUrl[bucketIndex.upperBound...])
+            }
+            // Method 2: Look for /public/user-generated-images/
+            else if let publicIndex = imageUrl.range(of: "/public/user-generated-images/") {
+                storagePath = String(imageUrl[publicIndex.upperBound...])
+            }
+            // Method 3: Parse URL components
+            else if let url = URL(string: imageUrl) {
+                print("🔍 URL components: \(url.pathComponents)")
+                // Find "user-generated-images" in path components
+                if let bucketIdx = url.pathComponents.firstIndex(of: "user-generated-images") {
+                    let pathAfterBucket = url.pathComponents.dropFirst(bucketIdx + 1)
+                    storagePath = pathAfterBucket.joined(separator: "/")
+                }
+            }
+            
+            if let storagePath = storagePath {
+                print("🗑️ Extracted storage path: '\(storagePath)'")
+                
+                do {
+                    // Delete from Supabase Storage
+                    let result = try await SupabaseManager.shared.client.storage
+                        .from("user-generated-images")
+                        .remove(paths: [storagePath])
+                    
+                    print("✅ Storage deletion result: \(result)")
+                    print("✅ Image file deleted from storage successfully")
+                } catch {
+                    print("❌ Storage deletion error: \(error)")
+                    print("❌ Error description: \(error.localizedDescription)")
+                    if let nsError = error as NSError? {
+                        print("❌ Error domain: \(nsError.domain), code: \(nsError.code)")
+                        print("❌ Error userInfo: \(nsError.userInfo)")
+                    }
+                }
+            } else {
+                print("⚠️ Could not extract storage path from URL: \(imageUrl)")
+            }
+            
+            // Close the view
+            await MainActor.run {
+                isPresented = false
+            }
+            
+        } catch {
+            print("❌ Failed to delete image: \(error)")
+            await MainActor.run {
+                isDeleting = false
             }
         }
     }

@@ -8,44 +8,18 @@
 import SwiftUI
 import PhotosUI
 
-// MARK: - Filter Model
-struct FilterItem: Identifiable {
-    let id = UUID()
-    let name: String
-    let imageName: String   // Local asset or URL later
-}
-
 // MARK: - Main View
 struct PhotoFiltersView: View {
     
     @State private var prompt: String = ""
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var showPhotoPicker: Bool = false
-    @State private var selectedFilter: String? = "Anime"
+    @State private var selectedFilter: InfoPacket? = nil
+    @State private var selectedImage: UIImage?
+    @State private var navigateToConfirmation: Bool = false
     
-    // MARK: - Sample Filters
-    let filters: [FilterItem] = [
-        FilterItem(name: "Anime", imageName: "anime1"),
-        FilterItem(name: "Minecraft", imageName: "minecraft1"),
-        FilterItem(name: "Cyberpunk", imageName: "cyberpunk1"),
-        
-        FilterItem(name: "Mini World", imageName: "micro-landscape-mini-world1"),
-        FilterItem(name: "Plastic Bubble Figure", imageName: "plasticbubblefigure1"),
-        FilterItem(name: "Designer Toy Figure", imageName: "trending1"),
-        
-        FilterItem(name: "Felt 3D Polaroid", imageName: "felt3dpolaroid1"),
-        FilterItem(name: "Snow Globe", imageName: "glassball1"),
-        FilterItem(name: "Futuristic", imageName: "futuristic1"),
-        
-        FilterItem(name: "Low Key Lighting", imageName: "lowkeylighting1"),
-        
-        FilterItem(name: "Nature Glow", imageName: "filter11"),
-        FilterItem(name: "Noir", imageName: "filter12"),
-        FilterItem(name: "Golden Hour", imageName: "filter13"),
-        FilterItem(name: "Pastel", imageName: "filter14"),
-        FilterItem(name: "Futuristic", imageName: "filter15"),
-        FilterItem(name: "Classic", imageName: "filter16")
-    ]
+    // MARK: - Load Filters from AllRow
+    let filters: [InfoPacket] = allItems
     
     var body: some View {
         NavigationStack {
@@ -64,13 +38,13 @@ struct PhotoFiltersView: View {
                         ) {
                             ForEach(filters) { filter in
                                 FilterThumbnail(
-                                    title: filter.name,
+                                    title: filter.title,
                                     imageName: filter.imageName,
-                                    isSelected: selectedFilter == filter.name,
+                                    isSelected: selectedFilter?.id == filter.id,
                                     size: itemSize
                                 )
                                 .onTapGesture {
-                                    selectedFilter = filter.name
+                                    selectedFilter = filter
                                 }
                             }
                         }
@@ -96,7 +70,7 @@ struct PhotoFiltersView: View {
                     // Cost Badge
                     HStack {
                         Spacer()
-                        CostBadge(cost: 0.04)
+                        CostBadge(cost: selectedFilter?.cost ?? 0.04)
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 80)
@@ -106,6 +80,19 @@ struct PhotoFiltersView: View {
             }
             
             .background(Color(.systemGroupedBackground))
+            
+            // Navigation to PhotoConfirmationView
+            NavigationLink(
+                destination: Group {
+                    if let image = selectedImage, let filter = selectedFilter {
+                        PhotoConfirmationView(item: filter, image: image)
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: $navigateToConfirmation,
+                label: { EmptyView() }
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("Photo Filters")
@@ -121,6 +108,33 @@ struct PhotoFiltersView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     creditsDisplay
                 }
+            }
+        }
+        .onChange(of: selectedPhotoItem) { newItem in
+            Task {
+                // Wait for the image to load first
+                guard let data = try? await newItem?.loadTransferable(type: Data.self),
+                      let uiImage = UIImage(data: data) else {
+                    return
+                }
+
+                // Update state on the main actor - but do it in the right order
+                await MainActor.run {
+                    selectedImage = uiImage  // Set the image FIRST
+                }
+                
+                // Small delay to ensure state is fully updated before navigation
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                
+                await MainActor.run {
+                    navigateToConfirmation = true  // Then trigger navigation
+                }
+            }
+        }
+        .onAppear {
+            // Set default selected filter to first item
+            if selectedFilter == nil, let firstFilter = filters.first {
+                selectedFilter = firstFilter
             }
         }
     }

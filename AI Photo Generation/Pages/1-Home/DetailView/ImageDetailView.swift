@@ -331,7 +331,7 @@ struct SpinningPlusButton: View {
                     .font(.custom("Nunito-ExtraBold", size: 20))
                     .foregroundColor(.black)
                 Spacer()
-                Image(systemName: "plus")
+                Image(systemName: "arrow.right")
                     .font(.custom("Nunito-ExtraBold", size: 22))
                     .fontWeight(.bold)
                     .foregroundColor(.black)
