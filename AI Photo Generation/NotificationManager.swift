@@ -203,7 +203,7 @@ class NotificationManager: ObservableObject {
                 await self.updateMessage("Sending image to AI...", for: notificationId)
                 
                 // Call API with timeout
-                let response = try await withTimeout(seconds: 180) { // 3 minutes
+                let response = try await withTimeout(seconds: 360) { // 6 minutes
                     try await sendImageToWaveSpeed(
                         image: image,
                         prompt: item.prompt,

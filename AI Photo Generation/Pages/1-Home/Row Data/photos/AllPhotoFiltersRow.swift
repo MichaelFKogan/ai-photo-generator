@@ -1,11 +1,11 @@
 //
-//  AllRow.swift
+//  AllPhotoFiltersRow.swift
 //  AI Photo Generation
 //
 //  Created by Mike K on 10/31/25.
 //
 
-let allItems = [
+let allPhotoFilters = [
 
     InfoPacket(
         imageName: "anime1",

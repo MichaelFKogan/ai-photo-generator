@@ -274,7 +274,8 @@ struct FullScreenImageView: View {
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
     @State private var isDownloading = false
-    @State private var showDownloadAlert = false
+    @State private var showDownloadConfirmation = false
+    @State private var showDownloadResultAlert = false
     @State private var downloadAlertMessage = ""
     
     var imageURL: URL? {
@@ -317,9 +318,7 @@ struct FullScreenImageView: View {
                         HStack(spacing: 8) {
                             // Download button
                             Button(action: {
-                                Task {
-                                    await downloadImage()
-                                }
+                                showDownloadConfirmation = true
                             }) {
                                 HStack(spacing: 4) {
                                     if isDownloading {
@@ -441,33 +440,46 @@ struct FullScreenImageView: View {
                     
                     VStack{
                         
-                        // Reuse Model Button (only for Photo Filters)
-                        if isPhotoFilter {
-                            Button(action: {
-                                // TODO: Load this model/preset and navigate to generation view
-//                                isPresented = false
-                                // You'll need to pass the model parameters back to your generation view
-                            }) {
-                                HStack {
-                                    Image(systemName: "arrow.clockwise")
-                                    Text("Use This Filter")
-                                        .fontWeight(.semibold)
-                                }
-                                .font(.subheadline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
-                                .background(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .cornerRadius(10)
-                            }
-                            .padding(.top, 4)
-                        }
+//                        // Animate button
+//                        HStack(spacing: 4) {
+//                            Image(systemName: "video.fill")
+//                            Text("Animate This Image")
+//                                .fontWeight(.semibold)
+//                        }
+//                        .font(.subheadline)
+//                        .foregroundColor(.white)
+//                        .frame(maxWidth: .infinity)
+//                        .padding(.vertical, 12)
+//                        .background(Color.green.opacity(0.3))
+//                        .cornerRadius(10)
+//
+//                        
+//                        // Reuse Model Button (only for Photo Filters)
+//                        if isPhotoFilter {
+//                            Button(action: {
+//                                // TODO: Load this model/preset and navigate to generation view
+////                                isPresented = false
+//                                // You'll need to pass the model parameters back to your generation view
+//                            }) {
+//                                HStack {
+//                                    Image(systemName: "arrow.clockwise")
+//                                    Text("Use This Filter")
+//                                        .fontWeight(.semibold)
+//                                }
+//                                .font(.subheadline)
+//                                .foregroundColor(.white)
+//                                .frame(maxWidth: .infinity)
+//                                .padding(.vertical, 12)
+//                                .background(
+//                                    LinearGradient(
+//                                        colors: [.blue, .purple],
+//                                        startPoint: .leading,
+//                                        endPoint: .trailing
+//                                    )
+//                                )
+//                                .cornerRadius(10)
+//                            }
+//                        }
                         
                         // Share button
                         if let url = imageURL {
@@ -525,7 +537,17 @@ struct FullScreenImageView: View {
         } message: {
             Text("This will permanently delete this image. This action cannot be undone.")
         }
-        .alert("Download", isPresented: $showDownloadAlert) {
+        .alert("Save to Photos?", isPresented: $showDownloadConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Save") {
+                Task {
+                    await downloadImage()
+                }
+            }
+        } message: {
+            Text("Do you want to save this image to your photo library?")
+        }
+        .alert("Download", isPresented: $showDownloadResultAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text(downloadAlertMessage)
@@ -537,7 +559,7 @@ struct FullScreenImageView: View {
         guard let url = imageURL else {
             await MainActor.run {
                 downloadAlertMessage = "Invalid image URL"
-                showDownloadAlert = true
+                showDownloadResultAlert = true
             }
             return
         }
@@ -561,7 +583,7 @@ struct FullScreenImageView: View {
                 await MainActor.run {
                     isDownloading = false
                     downloadAlertMessage = "Photo library access is required to save images. Please enable it in Settings."
-                    showDownloadAlert = true
+                    showDownloadResultAlert = true
                 }
                 return
             }
@@ -576,7 +598,7 @@ struct FullScreenImageView: View {
             await MainActor.run {
                 isDownloading = false
                 downloadAlertMessage = "Image saved to your photo library!"
-                showDownloadAlert = true
+                showDownloadResultAlert = true
             }
             
         } catch {
@@ -584,7 +606,7 @@ struct FullScreenImageView: View {
             await MainActor.run {
                 isDownloading = false
                 downloadAlertMessage = "Failed to save image: \(error.localizedDescription)"
-                showDownloadAlert = true
+                showDownloadResultAlert = true
             }
         }
     }

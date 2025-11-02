@@ -19,7 +19,7 @@ struct PhotoFiltersView: View {
     @State private var navigateToConfirmation: Bool = false
     
     // MARK: - Load Filters from AllRow
-    let filters: [InfoPacket] = allItems
+    let filters: [InfoPacket] = allPhotoFilters
     
     var body: some View {
         NavigationStack {

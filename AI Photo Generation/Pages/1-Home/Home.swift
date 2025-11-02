@@ -123,7 +123,8 @@ struct Home: View {
                 
                 VStack(spacing: 10) {
                     
-                    HomeRowSplit(title: "💯 All", items: allItems, diffAnimation: .scanHorizontal)
+                    HomeRowSplit(title: "📸 Photo Filters", items: allPhotoFilters, diffAnimation: .scanHorizontal)
+                    HomeRowVideo(title: "📹 Video Filters", items: allVideoFilters)
                     
                     HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
                     HomeRowVideo(title: "💯 Popular", items: funItems)

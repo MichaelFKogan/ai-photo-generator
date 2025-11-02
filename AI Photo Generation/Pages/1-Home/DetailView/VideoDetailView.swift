@@ -14,12 +14,17 @@
 
 import SwiftUI
 import AVKit
+import PhotosUI
 
 struct VideoDetailView: View {
     let item: InfoPacket
     @State private var prompt: String = ""
     @State private var isGenerating: Bool = false
     @State private var createArrowMove: Bool = false
+    @State private var selectedImage: UIImage?
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var showPhotoPicker: Bool = false
+    @State private var navigateToConfirmation: Bool = false
 
     var body: some View {
         ScrollView {
@@ -34,39 +39,12 @@ struct VideoDetailView: View {
                 )
                 
                 HStack(alignment: .center, spacing: 16) {
-                    
-                    Button(action: {
-//                        showPhotoPicker = true
-                    }) {
-                        HStack{
-                            Image(systemName: "plus")
-                                .font(.custom("Nunito-ExtraBold", size: 22))
-                                .fontWeight(.bold)
-                                .foregroundColor(.black).opacity(0)
-                                .padding(.leading, 10)
-                            Spacer()
-                            Text("Add Photo")
-                                .font(.custom("Nunito-ExtraBold", size: 20))
-                                .foregroundColor(.black)
-                            Spacer()
-                            Image(systemName: "arrow.right") // Replace with your desired icon
-                                .font(.custom("Nunito-ExtraBold", size: 22))
-                                .fontWeight(.bold)
-                                .foregroundColor(.black)
-                                .padding(.trailing, 10)
-                            
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white)
-                        .foregroundColor(.black)
-                        .cornerRadius(16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.gray, lineWidth: 1)
+                    SpinningPlusButton(showPhotoPicker: $showPhotoPicker)
+                        .photosPicker(
+                            isPresented: $showPhotoPicker,
+                            selection: $selectedPhotoItem,
+                            matching: .images
                         )
-                        
-                    }
                 }
                 .padding(.horizontal, 16)
                 .cornerRadius(16)
@@ -121,8 +99,41 @@ struct VideoDetailView: View {
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 150)
+            
+            NavigationLink(
+                destination: Group {
+                    if let image = selectedImage {
+                        VideoConfirmationView(item: item, image: image)
+                    } else {
+                        EmptyView()
+                    }
+                },
+                isActive: $navigateToConfirmation,
+                label: { EmptyView() }
+            )
         }
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: selectedPhotoItem) { newItem in
+            Task {
+                // Wait for the image to load first
+                guard let data = try? await newItem?.loadTransferable(type: Data.self),
+                      let uiImage = UIImage(data: data) else {
+                    return
+                }
+
+                // Update state on the main actor
+                await MainActor.run {
+                    selectedImage = uiImage
+                }
+                
+                // Small delay to ensure state is fully updated before navigation
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                
+                await MainActor.run {
+                    navigateToConfirmation = true
+                }
+            }
+        }
         .onAppear {
             prompt = item.prompt
             createArrowMove = true
