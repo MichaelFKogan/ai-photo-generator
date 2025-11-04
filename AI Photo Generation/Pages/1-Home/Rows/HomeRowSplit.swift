@@ -34,32 +34,33 @@ struct HomeRowSplit: View {
                                             RoundedRectangle(cornerRadius: 20)
                                                 .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                         )
-                                        .overlay(alignment: .bottom) {
-                                            Text("Try This")
-                                                .font(.custom("Nunito-ExtraBold", size: 12))
-                                                .foregroundColor(.white)
-                                                .padding(.horizontal, 8)
-                                                .padding(.vertical, 5)
-                                                .background(Color.black.opacity(0.6))
-                                                .clipShape(Capsule())
-                                                .padding(.bottom, 6)
-                                        }
-                                        .overlay(alignment: .topTrailing) {
-                                            Text("$\(item.cost, specifier: "%.2f")")
-                                                .font(.custom("Nunito-Bold", size: 11))
-                                                .foregroundColor(.white)
-                                                .padding(.horizontal, 6)
-                                                .padding(.vertical, 3)
-                                                .background(Color.black.opacity(0.8))
-                                                .clipShape(Capsule())
-                                                .padding(6)
-                                        }
                                         
-                                        Text(item.title)
-                                            .font(.custom("Nunito-ExtraBold", size: 11))
-                                            .lineLimit(2)
-                                            .multilineTextAlignment(.center)
-                                            .foregroundColor(.primary)
+//                                        .overlay(alignment: .bottom) {
+//                                            Text("Try This")
+//                                                .font(.custom("Nunito-ExtraBold", size: 12))
+//                                                .foregroundColor(.white)
+//                                                .padding(.horizontal, 8)
+//                                                .padding(.vertical, 5)
+//                                                .background(Color.black.opacity(0.6))
+//                                                .clipShape(Capsule())
+//                                                .padding(.bottom, 6)
+//                                        }
+//                                        .overlay(alignment: .topTrailing) {
+//                                            Text("$\(item.cost, specifier: "%.2f")")
+//                                                .font(.custom("Nunito-Bold", size: 11))
+//                                                .foregroundColor(.white)
+//                                                .padding(.horizontal, 6)
+//                                                .padding(.vertical, 3)
+//                                                .background(Color.black.opacity(0.8))
+//                                                .clipShape(Capsule())
+//                                                .padding(6)
+//                                        }
+                                        
+//                                        Text(item.title)
+//                                            .font(.custom("Nunito-ExtraBold", size: 11))
+//                                            .lineLimit(2)
+//                                            .multilineTextAlignment(.center)
+//                                            .foregroundColor(.primary)
                                     } else {
                                         Image(item.imageName)
                                             .resizable()

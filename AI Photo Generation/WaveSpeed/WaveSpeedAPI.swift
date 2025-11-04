@@ -30,7 +30,8 @@ func sendImageToWaveSpeed(
     enableSyncMode: Bool = true,
     enableBase64Output: Bool = false,
     endpoint: String,
-    maxPollingAttempts: Int = 15     // Default 15 for images (30s), use higher for videos
+    maxPollingAttempts: Int = 15,    // Default 15 for images (30s), use higher for videos
+    userId: String? = nil             // Required for endpoints that need URL format (like nano-banana)
     
 ) async throws -> WaveSpeedResponse {
     
@@ -40,15 +41,6 @@ func sendImageToWaveSpeed(
     
     print("[WaveSpeed] Preparing request…")
     
-    // Convert UIImage to JPEG Data, then base64 URL
-    guard let jpegData = image.jpegData(compressionQuality: 0.8) else {
-        print("[WaveSpeed] Failed to convert UIImage to JPEG data.")
-        throw URLError(.cannotDecodeRawData)
-    }
-    
-    let base64String = jpegData.base64EncodedString()
-    let dataURL = "data:image/jpeg;base64,\(base64String)"
-    
     let url = URL(string: endpoint)!
     
     var request = URLRequest(url: url)
@@ -56,21 +48,83 @@ func sendImageToWaveSpeed(
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
     
-    // Build request body
-    var body: [String: Any] = [
-        "prompt": prompt,
-        "image": dataURL,
-        "output_format": outputFormat,
-        "enable_sync_mode": enableSyncMode,
-        "enable_base64_output": enableBase64Output
-    ]
+    // Check if this endpoint requires URL format instead of base64
+    let requiresURLFormat = endpoint.contains("nano-banana") || endpoint.contains("google/")
     
-    // Only include optional params if they’re set
-    if let aspectRatio = aspectRatio {
+    print("[WaveSpeed] Endpoint: \(endpoint)")
+    print("[WaveSpeed] Requires URL format: \(requiresURLFormat)")
+    
+    var body: [String: Any] = [:]
+    
+    if requiresURLFormat {
+        // Endpoints like nano-banana require images as URL array
+        print("[WaveSpeed] 📤 Uploading image to Supabase to get public URL...")
+        
+        guard let userId = userId else {
+            throw NSError(domain: "WaveSpeedAPI", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: "userId is required for this endpoint"
+            ])
+        }
+        
+        // Upload image to Supabase to get a public URL
+        let imageURL = try await SupabaseManager.shared.uploadImage(
+            image: image,
+            userId: userId,
+            modelName: "temp-wavespeed"
+        )
+        
+        print("[WaveSpeed] Image uploaded, public URL: \(imageURL)")
+        
+        // Use "images" array format for nano-banana
+        // Note: nano-banana typically uses enable_sync_mode: false and polls for results
+        body["images"] = [imageURL]
+        body["output_format"] = outputFormat
+        body["enable_sync_mode"] = false  // nano-banana uses async mode with polling
+        body["enable_base64_output"] = false
+        
+    } else {
+        // Standard base64 format for most endpoints
+        print("[WaveSpeed] Using standard base64 format...")
+        
+        guard let jpegData = image.jpegData(compressionQuality: 0.8) else {
+            print("[WaveSpeed] Failed to convert UIImage to JPEG data.")
+            throw URLError(.cannotDecodeRawData)
+        }
+        
+        let base64String = jpegData.base64EncodedString()
+        let dataURL = "data:image/jpeg;base64,\(base64String)"
+        
+        body["image"] = dataURL
+        body["output_format"] = outputFormat
+        body["enable_sync_mode"] = enableSyncMode
+        body["enable_base64_output"] = enableBase64Output
+    }
+    
+    // Only include prompt if it's not empty
+    if !prompt.isEmpty {
+        body["prompt"] = prompt
+        print("[WaveSpeed] Including prompt: \(prompt)")
+    } else {
+        print("[WaveSpeed] No prompt provided, skipping prompt parameter")
+    }
+    
+    // Only include optional params if they're set AND not empty
+    if let aspectRatio = aspectRatio, !aspectRatio.isEmpty {
         body["aspect_ratio"] = aspectRatio
+        print("[WaveSpeed] Including aspect_ratio: \(aspectRatio)")
     }
     
     request.httpBody = try JSONSerialization.data(withJSONObject: body)
+    
+    // Debug: Print request body structure (without full base64 data)
+    var debugBody = body
+    if let imageData = debugBody["image"] as? String, imageData.hasPrefix("data:image") {
+        debugBody["image"] = "data:image/jpeg;base64,[BASE64_DATA_TRUNCATED]"
+    }
+    if let bodyJSON = try? JSONSerialization.data(withJSONObject: debugBody),
+       let bodyString = String(data: bodyJSON, encoding: .utf8) {
+        print("[WaveSpeed] Request body: \(bodyString)")
+    }
     
     print("[WaveSpeed] Sending request to API…")
     

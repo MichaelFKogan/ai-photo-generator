@@ -112,38 +112,38 @@ struct VideoTile: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                     )
-                    .overlay(alignment: .bottomLeading) {
-                        Text(item.title)
-                            .font(.custom("Nunito-Bold", size: 11))
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
-                            .foregroundColor(.white)
-//                            .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
-                            .shadow(color: .black, radius: 2, x: 1, y: 1)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(6)
-//                            .background(
-//                                LinearGradient(
-//                                    gradient: Gradient(colors: [
-//                                        Color.black.opacity(0.6),
-//                                        Color.black.opacity(0)
-//                                    ]),
-//                                    startPoint: .bottom,
-//                                    endPoint: .top
-//                                )
-//                            )
-                    }
-                    .overlay(alignment: .topTrailing) {
-                        Text("$\(item.cost, specifier: "%.2f")")
-                            .font(.custom("Nunito-Bold", size: 11))
-                            .foregroundColor(.white)
-                            .shadow(color: .black, radius: 2, x: 1, y: 1)
-//                            .padding(.horizontal, 4)
-//                            .padding(.vertical, 2)
-//                            .background(Color.black.opacity(0.3))
-//                            .clipShape(Capsule())
-                            .padding(6)
-                    }
+//                    .overlay(alignment: .bottomLeading) {
+//                        Text(item.title)
+//                            .font(.custom("Nunito-Bold", size: 11))
+//                            .lineLimit(2)
+//                            .multilineTextAlignment(.leading)
+//                            .foregroundColor(.white)
+////                            .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
+//                            .shadow(color: .black, radius: 2, x: 1, y: 1)
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                            .padding(6)
+////                            .background(
+////                                LinearGradient(
+////                                    gradient: Gradient(colors: [
+////                                        Color.black.opacity(0.6),
+////                                        Color.black.opacity(0)
+////                                    ]),
+////                                    startPoint: .bottom,
+////                                    endPoint: .top
+////                                )
+////                            )
+//                    }
+//                    .overlay(alignment: .topTrailing) {
+//                        Text("$\(item.cost, specifier: "%.2f")")
+//                            .font(.custom("Nunito-Bold", size: 11))
+//                            .foregroundColor(.white)
+//                            .shadow(color: .black, radius: 2, x: 1, y: 1)
+////                            .padding(.horizontal, 4)
+////                            .padding(.vertical, 2)
+////                            .background(Color.black.opacity(0.3))
+////                            .clipShape(Capsule())
+//                            .padding(6)
+//                    }
             } else {
                 VideoPlaceholder()
                     .frame(width: width, height: height)

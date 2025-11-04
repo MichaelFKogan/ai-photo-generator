@@ -121,13 +121,24 @@ struct Home: View {
 //                            .lineSpacing(4)
 //                }
                 
-                VStack(spacing: 10) {
+                VStack(spacing: 20) {
                     
                     HomeRowSplit(title: "📸 Photo Filters", items: allPhotoFilters, diffAnimation: .scanHorizontal)
                     HomeRowVideo(title: "📹 Video Filters", items: allVideoFilters)
                     
+                    
+//                    Text To Video
+                    HomeRowAIModels(title: "📹 Video Models", items: videoModelsRow)
+                    
+                    HomeRowAIModels(title: "📸 Image Models", items: imageModelsRow)
+                    
+//                    Image To Image
+//                    Text To Image
+                    
+                    
                     HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
                     HomeRowVideo(title: "💯 Popular", items: funItems)
+                    
 //                    HomeRowVideo(title: "🎃 Halloween", items: halloweenItems)
                     HomeRowVideo(title: "🎃 Halloween", items: texttovideoItems)
                     
@@ -140,25 +151,25 @@ struct Home: View {
                     
 //                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
-                    HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
-                    
-                    HomeRowSplit(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)
-//                  HomeRowVideo(title: "Trending", items: trendingItem, diffAnimation: .scanHorizontal)
-                    
-                    
-                    HomeRowSplit(title: "Anime", items: animeItems, diffAnimation: .scanHorizontal)
-                    HomeRowSplit(title: "🦸‍♂️ Action Figures", items: actionfigureItems, diffAnimation: .scanHorizontal)
-                    
-                    HomeRowSingle(title: "🎲 Random", items: randomItems)
-                    
-//                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
-                    
-                    HomeRowSplit(title: "💫 Futuristic", items: futuristicItems, diffAnimation: .scanHorizontal)
-                    HomeRowSplit(title: "📸 Photography", items: photographyItems, diffAnimation: .crossfade)
-                    
-                    HomeRowSplit(title: "😂 Pranks", items: prankItems, diffAnimation: .slider)
-//                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
-//                    HomeRowSplit(title: "🧑‍🧑‍🧒 Family", items: familyItems, diffAnimation: .crossfade)
+//                    HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
+//                    
+//                    HomeRowSplit(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)
+////                  HomeRowVideo(title: "Trending", items: trendingItem, diffAnimation: .scanHorizontal)
+//                    
+//                    
+//                    HomeRowSplit(title: "Anime", items: animeItems, diffAnimation: .scanHorizontal)
+//                    HomeRowSplit(title: "🦸‍♂️ Action Figures", items: actionfigureItems, diffAnimation: .scanHorizontal)
+//                    
+//                    HomeRowSingle(title: "🎲 Random", items: randomItems)
+//                    
+////                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+//                    
+//                    HomeRowSplit(title: "💫 Futuristic", items: futuristicItems, diffAnimation: .scanHorizontal)
+//                    HomeRowSplit(title: "📸 Photography", items: photographyItems, diffAnimation: .crossfade)
+//                    
+//                    HomeRowSplit(title: "😂 Pranks", items: prankItems, diffAnimation: .slider)
+////                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+////                    HomeRowSplit(title: "🧑‍🧑‍🧒 Family", items: familyItems, diffAnimation: .crossfade)
 
                 }
             }

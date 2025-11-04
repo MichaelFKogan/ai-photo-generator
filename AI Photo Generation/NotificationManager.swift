@@ -215,7 +215,7 @@ class NotificationManager: ObservableObject {
             --- WaveSpeed Request Info ---
             ------------------------------
             Endpoint: \(item.endpoint)
-            Prompt: \(item.prompt)
+            Prompt: \(item.prompt.isEmpty ? "(no prompt)" : "\(item.prompt)")
             Aspect Ratio: \(item.aspectRatio ?? "default")
             Output Format: \(item.outputFormat)
             Enable Sync Mode: \(item.enableSyncMode)
@@ -240,7 +240,8 @@ class NotificationManager: ObservableObject {
                         enableSyncMode: item.enableSyncMode,
                         enableBase64Output: item.enableBase64Output,
                         endpoint: item.endpoint,
-                        maxPollingAttempts: 60  // 60 × 5s = 5 minutes for image generation
+                        maxPollingAttempts: 60,  // 60 × 5s = 5 minutes for image generation
+                        userId: userId
                     )
                 }
                 
@@ -437,7 +438,7 @@ class NotificationManager: ObservableObject {
             --- WaveSpeed Video Request Info ---
             ------------------------------------
             Endpoint: \(item.endpoint)
-            Prompt: \(item.prompt)
+            Prompt: \(item.prompt.isEmpty ? "(no prompt)" : "\(item.prompt)")
             Aspect Ratio: \(item.aspectRatio ?? "default")
             Output Format: \(item.outputFormat)
             Enable Sync Mode: \(item.enableSyncMode)
@@ -461,7 +462,8 @@ class NotificationManager: ObservableObject {
                         enableSyncMode: item.enableSyncMode,
                         enableBase64Output: item.enableBase64Output,
                         endpoint: item.endpoint,
-                        maxPollingAttempts: 120  // 120 × 5s = 10 minutes for video generation
+                        maxPollingAttempts: 120,  // 120 × 5s = 10 minutes for video generation
+                        userId: userId
                     )
                 }
                 

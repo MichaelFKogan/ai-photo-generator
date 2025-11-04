@@ -29,9 +29,12 @@ struct PhotoFiltersView: View {
                     GeometryReader { proxy in
                         let spacing: CGFloat = 8
                         let totalSpacing = spacing * 3 // 4 columns -> 3 gaps
-                        let availableWidth = proxy.size.width - totalSpacing - 32 // padding
-                        let itemSize = availableWidth / 4
-                        
+
+                        // compute available width and clamp to >= 0
+                        let availableWidth = max(0, proxy.size.width - totalSpacing - 32)
+                        // clamp item size to a sane minimum (e.g. 44)
+                        let itemSize = max(44, availableWidth / 4)
+
                         LazyVGrid(
                             columns: Array(repeating: GridItem(.flexible(), spacing: spacing), count: 4),
                             spacing: spacing
@@ -51,7 +54,8 @@ struct PhotoFiltersView: View {
                         .padding(.horizontal, 16)
                         .padding(.top, 16)
                     }
-                    .frame(minHeight: 600) // ensures scroll region height
+                    .frame(minHeight: 600)
+
                 }
                 
                 // MARK: - Fixed Bottom Section
