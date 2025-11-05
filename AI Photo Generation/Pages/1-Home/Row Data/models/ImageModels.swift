@@ -9,7 +9,7 @@ let imageModelsRow = [
 
     InfoPacket(
         imageName: "geminiflashimage25",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "Google Nano Banana",
         cost: 0.80,
@@ -31,7 +31,7 @@ let imageModelsRow = [
 
     InfoPacket(
         imageName: "gptimage1",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "GPT Image 1",
         cost: 0.80,
@@ -53,7 +53,7 @@ let imageModelsRow = [
     
     InfoPacket(
         imageName: "seedream40",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "Seedream 4.0",
         cost: 0.80,
@@ -75,7 +75,7 @@ let imageModelsRow = [
 
     InfoPacket(
         imageName: "fluxkontextdev",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "FLUX.1 Kontext [dev]",
         cost: 0.04,
@@ -97,7 +97,7 @@ let imageModelsRow = [
     
     InfoPacket(
         imageName: "fluxkontextpro",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "FLUX.1 Kontext [pro]",
         cost: 0.08,
@@ -119,7 +119,7 @@ let imageModelsRow = [
 
     InfoPacket(
         imageName: "fluxkontextmax",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "FLUX.1 Kontext [max]",
         cost: 0.12,

@@ -248,6 +248,7 @@ let allVideoFilters = [
     ),
     InfoPacket(
         imageName: "fairy",
+        imageNameOriginal: "fairy",
         
         title: "🧚 Fairy",
         cost: 0.20,

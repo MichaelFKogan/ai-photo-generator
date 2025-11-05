@@ -9,7 +9,7 @@ let videoModelsRow = [
 
     InfoPacket(
         imageName: "sora2",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "Sora 2",
         cost: 0.80,
@@ -31,7 +31,7 @@ let videoModelsRow = [
 
     InfoPacket(
         imageName: "veo3",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "Google Veo 3",
         cost: 0.80,
@@ -53,7 +53,7 @@ let videoModelsRow = [
     
     InfoPacket(
         imageName: "klingai",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "Kling AI",
         cost: 0.80,
@@ -75,7 +75,7 @@ let videoModelsRow = [
 
     InfoPacket(
         imageName: "wan",
-        imageNameOriginal: "black",
+        imageNameOriginal: "yourphoto",
         
         title: "Wan",
         cost: 0.80,

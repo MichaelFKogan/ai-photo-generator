@@ -126,24 +126,50 @@ struct Home: View {
                     HomeRowSplit(title: "📸 Photo Filters", items: allPhotoFilters, diffAnimation: .scanHorizontal)
                     HomeRowVideo(title: "📹 Video Filters", items: allVideoFilters)
                     
+                    HomeRowSingle(title: "🍌 Nano Banana", items: nanoBanana)
                     
-//                    Text To Video
-                    HomeRowAIModels(title: "📹 Video Models", items: videoModelsRow)
+                    HomeRowSingle(title: "🍌 Nano Banana Two", items: nanoBananaTwo)
                     
-                    HomeRowAIModels(title: "📸 Image Models", items: imageModelsRow)
+                    HomeRowSingle(title: "🌳 Outdoor Photography", items: outdoorsPhotography)
                     
-//                    Image To Image
-//                    Text To Image
+                    HomeRowSingle(title: "📷 Street Photography", items: streetPhotography)
+                    
+                    HomeRowSingle(title: "👔 Professional Headshots", items: linkedInHeadshots)
+                    
+//                    LinkedIn Headshots
+                    
+//                    Aesthetic Photoshoot - men's photos - rain
+//                    Aesthetic Photoshoot - women's
                     
                     
-                    HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
-                    HomeRowVideo(title: "💯 Popular", items: funItems)
                     
-//                    HomeRowVideo(title: "🎃 Halloween", items: halloweenItems)
-                    HomeRowVideo(title: "🎃 Halloween", items: texttovideoItems)
+//                    Studio Photoshoot
+//                    Street Photography
                     
-                    HomeRowVideo(title: "For The Girls", items: forthegirlsItems)
-//                    HomeRowVideo(title: "For The Guys", items: fortheguysItems)
+//                    Spotlight Portraits
+//                    Photobooth
+//                    Polaroid Photo
+                    
+                        .padding(.bottom, 200)
+                    
+                    
+////                    Text To Video
+//                    HomeRowAIModels(title: "📹 Video Models", items: videoModelsRow)
+//                    
+//                    HomeRowAIModels(title: "📸 Image Models", items: imageModelsRow)
+//                    
+////                    Image To Image
+////                    Text To Image
+//                    
+//                    
+//                    HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
+//                    HomeRowVideo(title: "💯 Popular", items: funItems)
+//                    
+////                    HomeRowVideo(title: "🎃 Halloween", items: halloweenItems)
+//                    HomeRowVideo(title: "🎃 Halloween", items: texttovideoItems)
+//                    
+//                    HomeRowVideo(title: "For The Girls", items: forthegirlsItems)
+////                    HomeRowVideo(title: "For The Guys", items: fortheguysItems)
                     
 //                    HomeRowVideo(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
 //                    HomeRowVideo(title: "Family", items: fortheguysItems)
