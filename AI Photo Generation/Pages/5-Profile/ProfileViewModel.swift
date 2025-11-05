@@ -96,7 +96,7 @@ class ProfileViewModel: ObservableObject {
         if let decoded = try? JSONDecoder().decode([UserImage].self, from: cachedUserImagesData) {
             userImages = decoded
             hasLoadedOnce = true
-            print("📦 Loaded cached user images (\(userImages.count))")
+//            print("📦 Loaded cached user images (\(userImages.count))")
         }
     }
     
@@ -123,7 +123,7 @@ class ProfileViewModel: ObservableObject {
             userImages = response.value ?? []
             saveCachedImages()   // ✅ Store new images locally
             hasLoadedOnce = true
-            print("✅ Fetched and cached \(userImages.count) images from Supabase")
+//            print("✅ Fetched and cached \(userImages.count) images from Supabase")
             
         } catch {
             print("❌ Failed to fetch user images: \(error)")

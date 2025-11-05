@@ -25,9 +25,9 @@ struct ProfileView: View {
                             viewModel.userId = user.id.uuidString
                         }
                         Task {
-                            print("🔄 Profile appeared, fetching images for user: \(user.id.uuidString)")
+//                            print("🔄 Profile appeared, fetching images for user: \(user.id.uuidString)")
                             await viewModel.fetchUserImages(forceRefresh: true)
-                            print("📸 Fetched \(viewModel.images.count) images")
+//                            print("📸 Fetched \(viewModel.images.count) images")
                         }
                     }
             } else {
