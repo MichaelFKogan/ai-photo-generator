@@ -7,11 +7,12 @@
 
 let outdoorsPhotography = [
     InfoPacket(
+        title: "Golden Hour Elegance",
+        cost: 0.05,
+        
         imageName: "goldenhourelegance",
         imageNameOriginal: "yourphoto",
         
-        title: "Golden Hour Elegance",
-        cost: 0.05,
         description: "",
         prompt: """
         
@@ -41,11 +42,12 @@ let outdoorsPhotography = [
         enableBase64Output: false
     ),
     InfoPacket(
+        title: "Vintage Gray Suit",
+        cost: 0.05,
+        
         imageName: "vintagegraysuit",
         imageNameOriginal: "yourphoto",
         
-        title: "Vintage Gray Suit",
-        cost: 0.05,
         description: "",
         prompt: """
         

@@ -8,11 +8,12 @@
 let allVideoFilters = [
     
     InfoPacket(
+        title: "Squish Effect",
+        cost: 0.30,
+        
         imageName: "squeeze",
         imageNameOriginal: "squeeze",
         
-        title: "Squish Effect",
-        cost: 0.30,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -24,75 +25,12 @@ let allVideoFilters = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
-        imageName: "kissing",
-        imageNameOriginal: "kissing",
-        
-        title: "Kissing",
-        cost: 0.20,
-        description: "",
-        prompt: "",
-        type: "Video Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/wavespeed/kissing-pro",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
-    ),
-    InfoPacket(
-        imageName: "labubu",
-        imageNameOriginal: "labubu",
-        
-        title: "Labubu",
-        cost: 0.20,
-        description: "",
-        prompt: "",
-        type: "Video Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/ladudu-me-random",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
-    ),
-    InfoPacket(
-        imageName: "helicopterpilot",
-        imageNameOriginal: "helicopterpilot",
-        
-        title: "Helicopter Pilot",
+        title: "Balloon Fly Away",
         cost: 0.30,
-        description: "",
-        prompt: "",
-        type: "Video Filter",
         
-        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/pilot",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
-        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
-    ),
-    InfoPacket(
-        imageName: "photostolife",
-        imageNameOriginal: "photostolife",
-        
-        title: "Photos To Life",
-        cost: 0.30,
-        description: "",
-        prompt: "",
-        type: "Video Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/live-memory",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
-        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
-    ),
-    InfoPacket(
         imageName: "dogballoonflyaway",
         imageNameOriginal: "dogballoonflyaway",
         
-        title: "Balloon Fly Away",
-        cost: 0.30,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -104,43 +42,12 @@ let allVideoFilters = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
-        imageName: "pubgwinnerhit",
-        imageNameOriginal: "pubgwinnerhit",
-        
-        title: "PubG Dance",
+        title: "Melting",
         cost: 0.20,
-        description: "",
-        prompt: "",
-        type: "Video Filter",
         
-        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/pubg-winner-hit",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
-    ),
-    InfoPacket(
-        imageName: "flying",
-        imageNameOriginal: "flying",
-        
-        title: "Flying",
-        cost: 0.20,
-        description: "",
-        prompt: "",
-        type: "Video Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/flying",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
-        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
-    ),
-    InfoPacket(
         imageName: "melting",
         imageNameOriginal: "melting",
         
-        title: "Melting",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -152,11 +59,12 @@ let allVideoFilters = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
+        title: "Paper Cut Out",
+        cost: 0.20,
+        
         imageName: "papercutout",
         imageNameOriginal: "papercutout",
         
-        title: "Paper Cut Out",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -168,11 +76,114 @@ let allVideoFilters = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
+        title: "Flying",
+        cost: 0.20,
+        
+        imageName: "flying",
+        imageNameOriginal: "flying",
+        
+        description: "",
+        prompt: "",
+        type: "Video Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/flying",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    InfoPacket(
+        title: "Kissing",
+        cost: 0.20,
+        
+        imageName: "kissing",
+        imageNameOriginal: "kissing",
+        
+        description: "",
+        prompt: "",
+        type: "Video Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/wavespeed/kissing-pro",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    InfoPacket(
+        title: "Labubu",
+        cost: 0.20,
+        
+        imageName: "labubu",
+        imageNameOriginal: "labubu",
+        
+        description: "",
+        prompt: "",
+        type: "Video Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/ladudu-me-random",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    InfoPacket(
+        title: "Helicopter Pilot",
+        cost: 0.30,
+        
+        imageName: "helicopterpilot",
+        imageNameOriginal: "helicopterpilot",
+        
+        description: "",
+        prompt: "",
+        type: "Video Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/pilot",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
+    ),
+    InfoPacket(
+        title: "Photos To Life",
+        cost: 0.30,
+        
+        imageName: "photostolife",
+        imageNameOriginal: "photostolife",
+        
+        description: "",
+        prompt: "",
+        type: "Video Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/live-memory",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
+    ),
+    InfoPacket(
+        title: "PubG Dance",
+        cost: 0.20,
+        
+        imageName: "pubgwinnerhit",
+        imageNameOriginal: "pubgwinnerhit",
+        
+        description: "",
+        prompt: "",
+        type: "Video Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/video-effects/pubg-winner-hit",
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
+    ),
+    InfoPacket(
+        title: "🧜‍♀️ Mermaid",
+        cost: 0.20,
+        
         imageName: "mermaid",
         imageNameOriginal: "mermaid",
         
-        title: "🧜‍♀️ Mermaid",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -184,11 +195,12 @@ let allVideoFilters = [
         exampleImages: ["redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
+        title: "Red Carpet Walk",
+        cost: 0.20,
+        
         imageName: "redcarpetwalk",
         imageNameOriginal: "redcarpetwalk",
         
-        title: "Red Carpet Walk",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -200,10 +212,11 @@ let allVideoFilters = [
         exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
-        imageName: "princess",
-        
         title: "Princess",
         cost: 0.20,
+        
+        imageName: "princess",
+        
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -215,11 +228,12 @@ let allVideoFilters = [
         exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
+        title: "Runway Walk",
+        cost: 0.20,
+        
         imageName: "runwaywalk",
         imageNameOriginal: "runwaywalk",
         
-        title: "Runway Walk",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -231,11 +245,12 @@ let allVideoFilters = [
         exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
+        title: "Golden Era",
+        cost: 0.20,
+        
         imageName: "goldenera",
         imageNameOriginal: "goldenera",
         
-        title: "Golden Era",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -247,11 +262,12 @@ let allVideoFilters = [
         exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
+        title: "🧚 Fairy",
+        cost: 0.20,
+        
         imageName: "fairy",
         imageNameOriginal: "fairy",
         
-        title: "🧚 Fairy",
-        cost: 0.20,
         description: "",
         prompt: "",
         type: "Video Filter",
@@ -263,11 +279,12 @@ let allVideoFilters = [
         exampleImages: ["mermaid", "redcarpetwalk", "runwaywalk", "princess", "goldenera", "fairy", "labubu"]
     ),
     InfoPacket(
+        title: "Minecraft",
+        cost: 0.20,
+        
         imageName: "minecraft",
         imageNameOriginal: "minecraft",
         
-        title: "Minecraft",
-        cost: 0.20,
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
         prompt: "",
         type: "Video Filter",
@@ -279,11 +296,12 @@ let allVideoFilters = [
         exampleImages: ["", "", "", "", "", ""]
     ),
     InfoPacket(
+        title: "Hulk Explode",
+        cost: 0.30,
+        
         imageName: "hulkexplode",
         imageNameOriginal: "hulkexplode",
         
-        title: "Hulk Explode",
-        cost: 0.30,
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
         prompt: "",
         type: "Video Filter",
@@ -295,11 +313,12 @@ let allVideoFilters = [
         exampleImages: ["", "", "", "", "", ""]
     ),
     InfoPacket(
+        title: "Captain America",
+        cost: 0.30,
+        
         imageName: "captainamerica",
         imageNameOriginal: "captainamerica",
         
-        title: "Captain America",
-        cost: 0.30,
         description: "MTransform your photos into epic costume transformation videos.",
         prompt: "",
         type: "Video Filter",
@@ -311,11 +330,12 @@ let allVideoFilters = [
         exampleImages: ["captainamerica2", "captainamerica3", "captainamerica4", "captainamerica5", "captainamerica6", "captainamerica7"]
     ),
     InfoPacket(
+        title: "Hulk Ride",
+        cost: 0.30,
+        
         imageName: "hulkride",
         imageNameOriginal: "hulkride",
         
-        title: "Hulk Ride",
-        cost: 0.30,
         description: "Transform your photos into dynamic Hulk dive videos with natural motion and emotion.",
         prompt: "",
         type: "Video Filter",

@@ -7,9 +7,11 @@
 
 let relationshipVideosItems = [
     InfoPacket(
-        imageName: "relationship1",
         title: "Couple Portrait",
         cost: 0.04,
+        
+        imageName: "relationship1",
+
         description: "",
         prompt: "Romantic couple portrait, soft lighting, intimate moment, professional photography, warm tones, emotional connection",
         modelName: "DALL-E 3",

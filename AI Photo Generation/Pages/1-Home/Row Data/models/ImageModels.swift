@@ -8,11 +8,12 @@
 let imageModelsRow = [
 
     InfoPacket(
+        title: "Google Nano Banana",
+        cost: 0.80,
+        
         imageName: "geminiflashimage25",
         imageNameOriginal: "yourphoto",
         
-        title: "Google Nano Banana",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Image Model",
@@ -30,11 +31,12 @@ let imageModelsRow = [
     ),
 
     InfoPacket(
+        title: "GPT Image 1",
+        cost: 0.80,
+        
         imageName: "gptimage1",
         imageNameOriginal: "yourphoto",
         
-        title: "GPT Image 1",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Image Model",
@@ -52,11 +54,12 @@ let imageModelsRow = [
     ),
     
     InfoPacket(
+        title: "Seedream 4.0",
+        cost: 0.80,
+        
         imageName: "seedream40",
         imageNameOriginal: "yourphoto",
         
-        title: "Seedream 4.0",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Image Model",
@@ -74,11 +77,12 @@ let imageModelsRow = [
     ),
 
     InfoPacket(
+        title: "FLUX.1 Kontext [dev]",
+        cost: 0.04,
+        
         imageName: "fluxkontextdev",
         imageNameOriginal: "yourphoto",
         
-        title: "FLUX.1 Kontext [dev]",
-        cost: 0.04,
         description: "",
         prompt: "",
         type: "AI Image Model",
@@ -96,11 +100,12 @@ let imageModelsRow = [
     ),
     
     InfoPacket(
+        title: "FLUX.1 Kontext [pro]",
+        cost: 0.08,
+        
         imageName: "fluxkontextpro",
         imageNameOriginal: "yourphoto",
         
-        title: "FLUX.1 Kontext [pro]",
-        cost: 0.08,
         description: "",
         prompt: "",
         type: "AI Image Model",
@@ -118,11 +123,12 @@ let imageModelsRow = [
     ),
 
     InfoPacket(
+        title: "FLUX.1 Kontext [max]",
+        cost: 0.12,
+        
         imageName: "fluxkontextmax",
         imageNameOriginal: "yourphoto",
         
-        title: "FLUX.1 Kontext [max]",
-        cost: 0.12,
         description: "",
         prompt: "",
         type: "AI Image Model",

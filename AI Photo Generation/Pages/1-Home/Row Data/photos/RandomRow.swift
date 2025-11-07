@@ -7,10 +7,12 @@
 
 let randomItems = [
     InfoPacket(
-        imageName: "felt3dpolaroid1",
-        imageNameOriginal: "felt3dpolaroid",
         title: "Felt 3D Polaroid",
         cost: 0.04,
+        
+        imageName: "felt3dpolaroid1",
+        imageNameOriginal: "felt3dpolaroid",
+
         description: "Felt-3D-Polaroid is an image effect model that transforms photos into textured 3D-style Polaroid visuals with a soft felt-like finish, combining nostalgic instant photography with tactile depth.",
         prompt: "",
         modelName: "",
@@ -19,10 +21,12 @@ let randomItems = [
         exampleImages: ["felt3dpolaroid2", "felt3dpolaroid3", "felt3dpolaroid4", "felt3dpolaroid5", "felt3dpolaroid6", "felt3dpolaroid7"]
     ),
     InfoPacket(
-        imageName: "glassball1",
-        imageNameOriginal: "glassball",
         title: "Snow Globe",
         cost: 0.04,
+        
+        imageName: "glassball1",
+        imageNameOriginal: "glassball",
+
         description: "Glass-Ball is an image effect model that transforms photos into stylized images as if viewed through a crystal-clear glass sphere, creating a captivating lens distortion and reflective effect.",
         prompt: "",
         modelName: "",

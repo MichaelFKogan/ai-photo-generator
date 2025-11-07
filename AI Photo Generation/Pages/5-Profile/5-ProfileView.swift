@@ -26,7 +26,7 @@ struct ProfileView: View {
                         }
                         Task {
 //                            print("🔄 Profile appeared, fetching images for user: \(user.id.uuidString)")
-                            await viewModel.fetchUserImages(forceRefresh: true)
+                            await viewModel.fetchUserImages(forceRefresh: false)
 //                            print("📸 Fetched \(viewModel.images.count) images")
                         }
                     }
@@ -135,12 +135,6 @@ struct ProfileViewContent: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .ignoresSafeArea()
-                .onDisappear {
-                    // Refresh the image list when the sheet is dismissed
-                    Task {
-                        await viewModel.fetchUserImages(forceRefresh: true)
-                    }
-                }
             }
         }
     }
@@ -326,9 +320,7 @@ struct FullScreenImageView: View {
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
     @State private var isDownloading = false
-    @State private var showDownloadConfirmation = false
-    @State private var showDownloadResultAlert = false
-    @State private var downloadAlertMessage = ""
+    @State private var showDownloadSuccess = false
     @State private var player: AVPlayer?
     
     var mediaURL: URL? {
@@ -402,26 +394,34 @@ struct FullScreenImageView: View {
                             HStack(spacing: 8) {
                                 // Download button
                                 Button(action: {
-                                    showDownloadConfirmation = true
+                                    Task {
+                                        await downloadImage()
+                                    }
                                 }) {
                                     HStack(spacing: 4) {
                                         if isDownloading {
                                             ProgressView()
                                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                                 .scaleEffect(0.8)
+                                        } else if showDownloadSuccess {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.green)
+                                            Text("Saved to your photos")
+                                                .font(.subheadline)
+                                                .foregroundColor(.green)
                                         } else {
                                             Image(systemName: "arrow.down.circle")
                                             Text("Download")
                                                 .font(.subheadline)
                                         }
                                     }
-                                    .foregroundColor(.white)
+                                    .foregroundColor(showDownloadSuccess ? .green : .white)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
-                                    .background(Color.blue.opacity(0.3))
+                                    .background(showDownloadSuccess ? Color.green.opacity(0.15) : Color.blue.opacity(0.3))
                                     .cornerRadius(8)
                                 }
-                                .disabled(isDeleting || isDownloading)
+                                .disabled(isDeleting || isDownloading || showDownloadSuccess)
                             }
                         }
                         
@@ -649,30 +649,11 @@ struct FullScreenImageView: View {
         } message: {
             Text("This will permanently delete this \(isVideo ? "video" : "image"). This action cannot be undone.")
         }
-        .alert("Save to Photos?", isPresented: $showDownloadConfirmation) {
-            Button("Cancel", role: .cancel) { }
-            Button("Save") {
-                Task {
-                    await downloadImage()
-                }
-            }
-        } message: {
-            Text("Do you want to save this \(isVideo ? "video" : "image") to your photo library?")
-        }
-        .alert("Download", isPresented: $showDownloadResultAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(downloadAlertMessage)
-        }
     }
     
     // MARK: - Download Media (Image or Video)
     private func downloadImage() async {
         guard let url = mediaURL else {
-            await MainActor.run {
-                downloadAlertMessage = "Invalid image URL"
-                showDownloadResultAlert = true
-            }
             return
         }
         
@@ -690,8 +671,6 @@ struct FullScreenImageView: View {
             guard status == .authorized || status == .limited else {
                 await MainActor.run {
                     isDownloading = false
-                    downloadAlertMessage = "Photo library access is required to save media. Please enable it in Settings."
-                    showDownloadResultAlert = true
                 }
                 return
             }
@@ -729,16 +708,19 @@ struct FullScreenImageView: View {
             
             await MainActor.run {
                 isDownloading = false
-                downloadAlertMessage = isVideo ? "Video saved to your photo library!" : "Image saved to your photo library!"
-                showDownloadResultAlert = true
+                showDownloadSuccess = true
+                
+                // Reset success state after 5 seconds
+                Task {
+                    try? await Task.sleep(nanoseconds: 3_000_000_000)
+                    showDownloadSuccess = false
+                }
             }
             
         } catch {
             print("❌ Failed to download media: \(error)")
             await MainActor.run {
                 isDownloading = false
-                downloadAlertMessage = "Failed to save \(isVideo ? "video" : "image"): \(error.localizedDescription)"
-                showDownloadResultAlert = true
             }
         }
     }

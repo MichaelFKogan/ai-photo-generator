@@ -8,9 +8,11 @@
 // AI Videos category items
 let texttovideoItems = [
     InfoPacket(
-        imageName: "yetivlog",
         title: "Yeti Vlog",
         cost: 0.80,
+        
+        imageName: "yetivlog",
+
         description: "",
         prompt: "Smooth AI-generated animation, fluid motion, cinematic quality, professional video production",
         modelName: "Veo 3",
@@ -19,9 +21,11 @@ let texttovideoItems = [
         exampleImages: ["video1_1", "video1_2", "video1_3", "video1_4", "video1_5", "video1_6"]
     ),
     InfoPacket(
-        imageName: "animevlog",
         title: "Anime Vlogger",
         cost: 0.80,
+        
+        imageName: "animevlog",
+  
         description: "",
         prompt: "Dynamic motion graphics, animated transitions, modern style, vibrant colors, professional editing",
         modelName: "Sora 2",

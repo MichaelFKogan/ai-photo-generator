@@ -76,7 +76,7 @@ class ProfileViewModel: ObservableObject {
     @Published var isLoading = false
     
     private let client = SupabaseManager.shared.client
-    private var hasLoadedOnce = false
+    private var hasFetchedFromDatabase = false
     var userId: String? = nil
     
     // ✅ Cache user images persistently between launches
@@ -95,7 +95,6 @@ class ProfileViewModel: ObservableObject {
     private func loadCachedImages() {
         if let decoded = try? JSONDecoder().decode([UserImage].self, from: cachedUserImagesData) {
             userImages = decoded
-            hasLoadedOnce = true
 //            print("📦 Loaded cached user images (\(userImages.count))")
         }
     }
@@ -108,9 +107,16 @@ class ProfileViewModel: ObservableObject {
     
     func fetchUserImages(forceRefresh: Bool = false) async {
         guard let userId = userId else { return }
-        guard !hasLoadedOnce || forceRefresh else { return } // ✅ Don't re-fetch unnecessarily
         
-        isLoading = true
+        // If we've already fetched this session and it's not a forced refresh, skip
+        guard !hasFetchedFromDatabase || forceRefresh else { return }
+        
+        // Only show loading state if we don't have any cached images to display
+        let shouldShowLoading = userImages.isEmpty
+        
+        if shouldShowLoading {
+            isLoading = true
+        }
         
         do {
             let response: PostgrestResponse<[UserImage]> = try await client.database
@@ -122,13 +128,15 @@ class ProfileViewModel: ObservableObject {
             
             userImages = response.value ?? []
             saveCachedImages()   // ✅ Store new images locally
-            hasLoadedOnce = true
+            hasFetchedFromDatabase = true
 //            print("✅ Fetched and cached \(userImages.count) images from Supabase")
             
         } catch {
             print("❌ Failed to fetch user images: \(error)")
         }
         
-        isLoading = false
+        if shouldShowLoading {
+            isLoading = false
+        }
     }
 }

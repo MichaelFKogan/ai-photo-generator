@@ -8,11 +8,12 @@
 let nanoBananaTwo = [
 
     InfoPacket(
+        title: "Neon-lit Portrait",
+        cost: 0.05,
+        
         imageName: "neonlitportrait",
         imageNameOriginal: "yourphoto",
         
-        title: "Neon-lit Portrait",
-        cost: 0.05,
         description: "",
         prompt: "A futuristic, neon-lit portrait of [SUBJECT_DESCRIPTION], crouching confidently in a moody, [COLOR]-toned room. They hold a large, glowing [NEON_OBJECT_SHAPE] that cuts through the center of the image, casting bright [COLOR] reflections across their skin, outfit, and surroundings. They wear [OUTFIT_DESCRIPTION], blending [STYLE_REFERENCE] with cyberpunk aesthetics. The entire scene is bathed in electric [PRIMARY_COLOR] and deep [SECONDARY_COLOR] lighting, creating a high-contrast, edgy, and surreal atmosphere with a sci-fi fashion vibe.",
         type: "Photo Filter",
@@ -30,11 +31,12 @@ let nanoBananaTwo = [
     ),
     
     InfoPacket(
+        title: "Crystal Hybrid",
+        cost: 0.05,
+        
         imageName: "black",
         imageNameOriginal: "yourphoto",
         
-        title: "Crystal Hybrid",
-        cost: 0.05,
         description: "",
         prompt: """
         
@@ -85,11 +87,12 @@ let nanoBananaTwo = [
     ),
     
     InfoPacket(
+        title: "Cartoon Drip",
+        cost: 0.05,
+        
         imageName: "black",
         imageNameOriginal: "yourphoto",
         
-        title: "Cartoon Drip",
-        cost: 0.05,
         description: "",
         prompt: """
         
@@ -138,11 +141,12 @@ let nanoBananaTwo = [
         enableBase64Output: false
     ),
     InfoPacket(
+        title: "Origami",
+        cost: 0.05,
+        
         imageName: "origami1",
         imageNameOriginal: "yourphoto",
         
-        title: "Origami",
-        cost: 0.05,
         description: "",
         prompt: "A detailed origami figure of [CHARACTER] made from brown kraft paper, positioned at a 45-degree angle to the camera in a sitting pose. The figure features clean geometric folding with moderate creases and dimensional layering - not overly complex but showing skilled craftsmanship. Sharp, well-defined edges with some visible fold lines that add structure without appearing wrinkled. The character's eyes are open, large and black with small white highlights for a friendly expression. The paper work shows thoughtful geometric segmentation on the body parts with precise but not excessive folding detail. Warm, soft lighting creates gentle shadows that emphasize the three-dimensional form. Warm brown blurred background, professional photography, 1080x1080 square format, artisanal craft photography style, hyperrealistic detail.",
         type: "Photo Filter",
@@ -159,11 +163,12 @@ let nanoBananaTwo = [
         enableBase64Output: false
     ),
     InfoPacket(
+        title: "Origami",
+        cost: 0.05,
+        
         imageName: "origami2",
         imageNameOriginal: "yourphoto",
         
-        title: "Origami",
-        cost: 0.05,
         description: "",
         prompt: """
 
@@ -190,13 +195,14 @@ let nanoBananaTwo = [
         enableBase64Output: false
     ),
     InfoPacket(
+        title: "Colored Pencil Drawing",
+        cost: 0.05,
+        
         imageName: "coloredpencildrawing",
         imageNameOriginal: "yourphoto",
         
-        title: "Colored Pencil Drawing",
-        cost: 0.05,
         description: "",
-        prompt: "Convert the image to a colored pencil drawing of on brown kraft paper, using soft layering and paper tone for natural midtones, with vibrant highlights and subtle texture.",
+        prompt: "Convert the image to a colored pencil drawing on a page of a brown kraft paper notebook, showing the textured paper and a few colored pencils resting nearby. Use soft layering and the paper's tone for natural midtones, with vibrant highlights and subtle texture in the drawing itself.",
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",

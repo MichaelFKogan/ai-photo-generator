@@ -8,11 +8,12 @@
 let videoModelsRow = [
 
     InfoPacket(
+        title: "Sora 2",
+        cost: 0.80,
+        
         imageName: "sora2",
         imageNameOriginal: "yourphoto",
         
-        title: "Sora 2",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Video Model",
@@ -30,11 +31,12 @@ let videoModelsRow = [
     ),
 
     InfoPacket(
+        title: "Google Veo 3",
+        cost: 0.80,
+        
         imageName: "veo3",
         imageNameOriginal: "yourphoto",
         
-        title: "Google Veo 3",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Video Model",
@@ -52,11 +54,12 @@ let videoModelsRow = [
     ),
     
     InfoPacket(
+        title: "Kling AI",
+        cost: 0.80,
+        
         imageName: "klingai",
         imageNameOriginal: "yourphoto",
         
-        title: "Kling AI",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Video Model",
@@ -74,11 +77,12 @@ let videoModelsRow = [
     ),
 
     InfoPacket(
+        title: "Wan",
+        cost: 0.80,
+        
         imageName: "wan",
         imageNameOriginal: "yourphoto",
         
-        title: "Wan",
-        cost: 0.80,
         description: "",
         prompt: "",
         type: "AI Video Model",

@@ -8,9 +8,11 @@
 // Pranks category items
 let prankItems = [
     InfoPacket(
-        imageName: "trending3",
         title: "Homeless Man Prank",
         cost: 0.04,
+        
+        imageName: "trending3",
+
         description: "",
         prompt: "Cyberpunk neon lights, futuristic cityscape, vibrant purple and blue colors, night scene, cinematic lighting",
         modelName: "Stable Diffusion XL",
@@ -19,9 +21,11 @@ let prankItems = [
         exampleImages: []
     ),
     InfoPacket(
-        imageName: "trending4",
         title: "Shirtless Plumber Prank",
         cost: 0.04,
+        
+        imageName: "trending4",
+
         description: "",
         prompt: "Astronaut in space, cosmic background, stars and galaxies, cinematic composition, ultra detailed, 8k quality",
         modelName: "DALL-E 3",

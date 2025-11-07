@@ -7,11 +7,12 @@
 
 let streetPhotography = [
     InfoPacket(
+        title: "Urban Motion",
+        cost: 0.05,
+        
         imageName: "urbanmotion",
         imageNameOriginal: "yourphoto",
         
-        title: "Urban Motion",
-        cost: 0.05,
         description: "",
         prompt: """
         

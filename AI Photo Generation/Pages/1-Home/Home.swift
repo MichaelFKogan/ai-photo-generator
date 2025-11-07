@@ -10,11 +10,12 @@ import AVKit
 
 struct InfoPacket: Identifiable {
     let id = UUID()
+    let title: String
+    let cost: Double
+    
     let imageName: String
     let imageNameOriginal: String?
     
-    let title: String
-    let cost: Double
     let description: String
     let prompt: String
     let type: String?
@@ -32,11 +33,12 @@ struct InfoPacket: Identifiable {
 
     // ✅ Default values for flexibility
     init(
+        title: String = "",
+        cost: Double = 0.0,
+        
         imageName: String,
         imageNameOriginal: String? = nil,
         
-        title: String = "",
-        cost: Double = 0.0,
         description: String = "",
         prompt: String = "",
         type: String? = nil,
@@ -52,11 +54,12 @@ struct InfoPacket: Identifiable {
         enableSyncMode: Bool = true,
         enableBase64Output: Bool = false
     ) {
+        self.title = title
+        self.cost = cost
+        
         self.imageName = imageName
         self.imageNameOriginal = imageNameOriginal
         
-        self.title = title
-        self.cost = cost
         self.description = description
         self.prompt = prompt
         self.type = type
@@ -125,6 +128,9 @@ struct Home: View {
                     
                     HomeRowSplit(title: "📸 Photo Filters", items: allPhotoFilters, diffAnimation: .scanHorizontal)
                     HomeRowVideo(title: "📹 Video Filters", items: allVideoFilters)
+                    
+                    HomeRowSingle(title: "3D Caricature", items: Caricature)
+                    HomeRowSingle(title: "Photobooth", items: photobooth)
                     
                     HomeRowSingle(title: "🍌 Nano Banana", items: nanoBanana)
                     

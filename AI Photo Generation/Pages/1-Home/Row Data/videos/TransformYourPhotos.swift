@@ -8,10 +8,12 @@
 // AI Videos category items
 let transformyourphotosItems = [
     InfoPacket(
-        imageName: "squeeze",
-        imageNameOriginal: "squeeze",
         title: "Squish Effect",
         cost: 0.30,
+        
+        imageName: "squeeze",
+        imageNameOriginal: "squeeze",
+
         description: "",
         prompt: "",
         modelName: "",
@@ -20,10 +22,12 @@ let transformyourphotosItems = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
-        imageName: "kissing",
-        imageNameOriginal: "kissing",
         title: "Kissing",
         cost: 0.20,
+        
+        imageName: "kissing",
+        imageNameOriginal: "kissing",
+
         description: "",
         prompt: "",
         modelName: "",
@@ -32,10 +36,12 @@ let transformyourphotosItems = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
-        imageName: "labubu",
-        imageNameOriginal: "labubu",
         title: "Labubu",
         cost: 0.20,
+        
+        imageName: "labubu",
+        imageNameOriginal: "labubu",
+
         description: "",
         prompt: "",
         modelName: "",
@@ -44,10 +50,12 @@ let transformyourphotosItems = [
         exampleImages: ["video2_1", "video2_2", "video2_3", "video2_4", "video2_5", "video2_6"]
     ),
     InfoPacket(
-        imageName: "helicopterpilot",
-        imageNameOriginal: "helicopterpilot",
         title: "Helicopter Pilot",
         cost: 0.30,
+        
+        imageName: "helicopterpilot",
+        imageNameOriginal: "helicopterpilot",
+
         description: "",
         prompt: "",
         modelName: "",
@@ -56,10 +64,12 @@ let transformyourphotosItems = [
         exampleImages: ["video3_1", "video3_2", "video3_3", "video3_4", "video3_5", "video3_6"]
     ),
     InfoPacket(
-        imageName: "photostolife",
-        imageNameOriginal: "photostolife",
         title: "Photos To Life",
         cost: 0.30,
+        
+        imageName: "photostolife",
+        imageNameOriginal: "photostolife",
+
         description: "",
         prompt: "",
         modelName: "",
