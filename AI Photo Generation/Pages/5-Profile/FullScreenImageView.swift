@@ -1,0 +1,615 @@
+//
+//  FullScreenImageView.swift
+//  AI Photo Generation
+//
+//  Created by Mike K on 11/8/25.
+//
+
+import SwiftUI
+import Kingfisher
+import Photos
+import AVKit
+
+// MARK: - Full Screen Image View
+struct FullScreenImageView: View {
+    let userImage: UserImage
+    @Binding var isPresented: Bool
+    @State private var zoom: CGFloat = 1.0
+    @State private var lastZoom: CGFloat = 1.0
+    @State private var showDeleteAlert = false
+    @State private var isDeleting = false
+    @State private var isDownloading = false
+    @State private var showDownloadSuccess = false
+    @State private var showDeleteError = false
+    @State private var deleteErrorMessage = ""
+    @State private var player: AVPlayer?
+    
+    var mediaURL: URL? {
+        URL(string: userImage.image_url)
+    }
+    
+    var thumbnailURL: URL? {
+        if let thumbnail = userImage.thumbnail_url {
+            return URL(string: thumbnail)
+        }
+        return nil
+    }
+    
+    var isVideo: Bool {
+        userImage.isVideo
+    }
+    
+    var isPhotoFilter: Bool {
+        userImage.type == "Photo Filter"
+    }
+    
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            
+            ScrollView{
+                VStack(spacing: 0) {
+                    // Media section (image or video)
+                    if isVideo {
+                        // Video player
+                        if let url = mediaURL {
+                             VideoPlayer(player: player)
+                                 .aspectRatio(contentMode: .fit)
+                                 .frame(maxWidth: .infinity)
+                                 .onAppear {
+                                     player = AVPlayer(url: url)
+                                     player?.play()
+                                 }
+                                 .onDisappear {
+                                     player?.pause()
+                                     player = nil
+                                 }
+                         }
+                    } else {
+                        // Image viewer
+                        if let url = mediaURL {
+                           KFImage(url)
+                               .resizable()
+                               .aspectRatio(contentMode: .fill)
+                               .frame(maxWidth: .infinity)
+                               .clipped()
+                               .scaleEffect(zoom)
+                               .gesture(
+                                   MagnificationGesture()
+                                       .onChanged { value in
+                                           zoom = lastZoom * value
+                                       }
+                                       .onEnded { value in
+                                           lastZoom = zoom
+                                           // Limit zoom range
+                                           if lastZoom < 1.0 {
+                                               withAnimation {
+                                                   lastZoom = 1.0
+                                                   zoom = 1.0
+                                               }
+                                           } else if lastZoom > 5.0 {
+                                               withAnimation {
+                                                   lastZoom = 5.0
+                                                   zoom = 5.0
+                                               }
+                                           }
+                                       }
+                               )
+                               .onTapGesture(count: 2) {
+                                   // Double-tap to reset zoom
+                                   withAnimation(.spring()) {
+                                       zoom = 1.0
+                                       lastZoom = 1.0
+                                   }
+                               }
+                       }
+                    }
+                    
+                    // Info section below image
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Header with action buttons
+                        HStack {
+                            Text("Generation Details")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            
+                            Spacer()
+                            
+                            HStack(spacing: 8) {
+                                // Download button
+                                Button(action: {
+                                    Task {
+                                        await downloadImage()
+                                    }
+                                }) {
+                                    HStack(spacing: 4) {
+                                        if isDownloading {
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                                .scaleEffect(0.8)
+                                        } else if showDownloadSuccess {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.green)
+                                            Text("Saved to your photos")
+                                                .font(.subheadline)
+                                                .foregroundColor(.green)
+                                        } else {
+                                            Image(systemName: "arrow.down.circle")
+                                            Text("Download")
+                                                .font(.subheadline)
+                                        }
+                                    }
+                                    .foregroundColor(showDownloadSuccess ? .green : .white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(showDownloadSuccess ? Color.green.opacity(0.15) : Color.blue.opacity(0.3))
+                                    .cornerRadius(8)
+                                }
+                                .disabled(isDeleting || isDownloading || showDownloadSuccess)
+                            }
+                        }
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                        
+                        // Display media type badge
+                        HStack {
+                            HStack(spacing: 4) {
+                                Image(systemName: isVideo ? "video.fill" : "photo.fill")
+                                    .font(.caption)
+                                Text(isVideo ? "Video" : "Image")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(
+                                Capsule()
+                                    .fill(isVideo ? Color.purple.opacity(0.3) : Color.blue.opacity(0.3))
+                            )
+                            
+                            if let ext = userImage.file_extension {
+                                Text(ext.uppercased())
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(.bottom, 8)
+                        
+                        // Display Photo Filter specific information
+                        if isPhotoFilter {
+                            // Filter Name (left) and Cost (right)
+                            HStack(alignment: .top) {
+                                if let title = userImage.title, !title.isEmpty {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack {
+                                            Image(systemName: "paintbrush.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Filter Name")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Text(title)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                
+                                Spacer()
+                                
+                                if let cost = userImage.cost {
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        Text("Cost")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text("$\(String(format: "%.2f", cost))")
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                            
+                            // Type (left) and Model (right)
+                            HStack(alignment: .top) {
+                                if let type = userImage.type {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Type")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text(type)
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                
+                                Spacer()
+                                
+                                if let model = userImage.model, !model.isEmpty {
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        Text("Model")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text(model)
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                        } else {
+                            // For non-Photo Filter types, show generic info
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Image(systemName: "sparkles")
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [.blue, .purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .font(.caption)
+                                    Text("AI Generated")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                }
+                                
+                                if let model = userImage.model, !model.isEmpty {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Model")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text(model)
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        VStack{
+                            
+                            //                        // Animate button
+                            //                        HStack(spacing: 4) {
+                            //                            Image(systemName: "video.fill")
+                            //                            Text("Animate This Image")
+                            //                                .fontWeight(.semibold)
+                            //                        }
+                            //                        .font(.subheadline)
+                            //                        .foregroundColor(.white)
+                            //                        .frame(maxWidth: .infinity)
+                            //                        .padding(.vertical, 12)
+                            //                        .background(Color.green.opacity(0.3))
+                            //                        .cornerRadius(10)
+                            //
+                            //
+                            //                        // Reuse Model Button (only for Photo Filters)
+                            //                        if isPhotoFilter {
+                            //                            Button(action: {
+                            //                                // TODO: Load this model/preset and navigate to generation view
+                            ////                                isPresented = false
+                            //                                // You'll need to pass the model parameters back to your generation view
+                            //                            }) {
+                            //                                HStack {
+                            //                                    Image(systemName: "arrow.clockwise")
+                            //                                    Text("Use This Filter")
+                            //                                        .fontWeight(.semibold)
+                            //                                }
+                            //                                .font(.subheadline)
+                            //                                .foregroundColor(.white)
+                            //                                .frame(maxWidth: .infinity)
+                            //                                .padding(.vertical, 12)
+                            //                                .background(
+                            //                                    LinearGradient(
+                            //                                        colors: [.blue, .purple],
+                            //                                        startPoint: .leading,
+                            //                                        endPoint: .trailing
+                            //                                    )
+                            //                                )
+                            //                                .cornerRadius(10)
+                            //                            }
+                            //                        }
+                            
+                            // Share button
+                            if let url = mediaURL {
+                                ShareLink(item: url) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "square.and.arrow.up")
+                                        Text("Share")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                                    .background(Color.purple.opacity(0.3))
+                                    .cornerRadius(10)
+                                }
+                                .disabled(isDeleting || isDownloading)
+                            }
+                            
+                            // Delete button
+                            Button(action: {
+                                showDeleteAlert = true
+                            }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "trash.fill")
+                                    Text("Delete")
+                                        .fontWeight(.semibold)
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color.red.opacity(0.3))
+                                .cornerRadius(10)
+                            }
+                            .disabled(isDeleting)
+                        }
+                        .padding(.bottom, 40)
+                        
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.black.opacity(0.8))
+                    
+                    Spacer()
+                }
+            }
+        }
+        .alert("Delete Image?", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                Task {
+                    await deleteImage()
+                }
+            }
+        } message: {
+            Text("This will permanently delete this \(isVideo ? "video" : "image"). This action cannot be undone.")
+        }
+        .alert("Delete Failed", isPresented: $showDeleteError) {
+            Button("OK", role: .cancel) { }
+            Button("Retry") {
+                Task {
+                    await deleteImage()
+                }
+            }
+        } message: {
+            Text(deleteErrorMessage)
+        }
+    }
+    
+    // MARK: - Download Media (Image or Video)
+    private func downloadImage() async {
+        guard let url = mediaURL else {
+            return
+        }
+        
+        await MainActor.run {
+            isDownloading = true
+        }
+        
+        do {
+            // Download the media data
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            // Request photo library permission and save
+            let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+            
+            guard status == .authorized || status == .limited else {
+                await MainActor.run {
+                    isDownloading = false
+                }
+                return
+            }
+            
+            if isVideo {
+                // Save video to photo library
+                // Write to temporary file first
+                let tempURL = FileManager.default.temporaryDirectory
+                    .appendingPathComponent(UUID().uuidString)
+                    .appendingPathExtension(userImage.file_extension ?? "mp4")
+                
+                try data.write(to: tempURL)
+                
+                // Save to photo library
+                try await PHPhotoLibrary.shared().performChanges {
+                    PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: tempURL)
+                }
+                
+                // Clean up temp file
+                try? FileManager.default.removeItem(at: tempURL)
+                
+                print("✅ Video saved to photo library successfully")
+            } else {
+                // Save image to photo library
+                guard let image = UIImage(data: data) else {
+                    throw NSError(domain: "DownloadError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create image from data"])
+                }
+                
+                try await PHPhotoLibrary.shared().performChanges {
+                    PHAssetCreationRequest.creationRequestForAsset(from: image)
+                }
+                
+                print("✅ Image saved to photo library successfully")
+            }
+            
+            await MainActor.run {
+                isDownloading = false
+                showDownloadSuccess = true
+                
+                // Reset success state after 5 seconds
+                Task {
+                    try? await Task.sleep(nanoseconds: 3_000_000_000)
+                    showDownloadSuccess = false
+                }
+            }
+            
+        } catch {
+            print("❌ Failed to download media: \(error)")
+            await MainActor.run {
+                isDownloading = false
+            }
+        }
+    }
+    
+    // MARK: - Delete Image with Retry
+    private func deleteImage() async {
+        await MainActor.run {
+            isDeleting = true
+        }
+        
+        let maxRetries = 3
+        var lastError: Error?
+        
+        for attempt in 1...maxRetries {
+            do {
+                let imageUrl = userImage.image_url
+                print("🔍 Deletion attempt \(attempt)/\(maxRetries) - Full image URL: \(imageUrl)")
+                
+                // Delete from database first (with retry)
+                try await retryOperation(maxAttempts: 2) {
+                    try await SupabaseManager.shared.client.database
+                        .from("user_media")
+                        .delete()
+                        .eq("id", value: userImage.id)
+                        .execute()
+                }
+                
+                print("✅ Image record deleted from database")
+                
+                // Determine which storage bucket to use
+                let bucketName = isVideo ? "user-generated-videos" : "user-generated-images"
+                let bucketPath = isVideo ? "/user-generated-videos/" : "/user-generated-images/"
+                
+                // Extract the storage path from the URL
+                var storagePath: String?
+                
+                // Method 1: Look for bucket path
+                if let bucketIndex = imageUrl.range(of: bucketPath) {
+                    storagePath = String(imageUrl[bucketIndex.upperBound...])
+                }
+                // Method 2: Look for /public/bucket/
+                else if let publicIndex = imageUrl.range(of: "/public\(bucketPath)") {
+                    storagePath = String(imageUrl[publicIndex.upperBound...])
+                }
+                // Method 3: Parse URL components
+                else if let url = URL(string: imageUrl) {
+                    print("🔍 URL components: \(url.pathComponents)")
+                    let bucketComponent = isVideo ? "user-generated-videos" : "user-generated-images"
+                    if let bucketIdx = url.pathComponents.firstIndex(of: bucketComponent) {
+                        let pathAfterBucket = url.pathComponents.dropFirst(bucketIdx + 1)
+                        storagePath = pathAfterBucket.joined(separator: "/")
+                    }
+                }
+                
+                // Delete thumbnail if it's a video (non-critical, don't fail if this fails)
+                if isVideo, let thumbnailUrl = userImage.thumbnail_url {
+                    print("🗑️ Also deleting video thumbnail: \(thumbnailUrl)")
+                    
+                    var thumbnailPath: String?
+                    if let bucketIndex = thumbnailUrl.range(of: "/user-generated-images/") {
+                        thumbnailPath = String(thumbnailUrl[bucketIndex.upperBound...])
+                    }
+                    
+                    if let thumbnailPath = thumbnailPath {
+                        do {
+                            try await retryOperation(maxAttempts: 2) {
+                                _ = try await SupabaseManager.shared.client.storage
+                                    .from("user-generated-images")
+                                    .remove(paths: [thumbnailPath])
+                            }
+                            print("✅ Thumbnail deleted successfully")
+                        } catch {
+                            print("⚠️ Thumbnail deletion failed (non-critical): \(error)")
+                        }
+                    }
+                }
+                
+                // Delete main storage file (with retry)
+                if let storagePath = storagePath {
+                    print("🗑️ Extracted storage path: '\(storagePath)' from bucket: \(bucketName)")
+                    
+                    do {
+                        try await retryOperation(maxAttempts: 2) {
+                            _ = try await SupabaseManager.shared.client.storage
+                                .from(bucketName)
+                                .remove(paths: [storagePath])
+                        }
+                        print("✅ \(isVideo ? "Video" : "Image") file deleted from storage successfully")
+                    } catch {
+                        print("⚠️ Storage deletion failed (non-critical): \(error)")
+                    }
+                } else {
+                    print("⚠️ Could not extract storage path from URL: \(imageUrl)")
+                }
+                
+                // Success - close the view
+                print("✅ Deletion completed successfully")
+                await MainActor.run {
+                    isDeleting = false
+                    isPresented = false
+                }
+                return
+                
+            } catch {
+                lastError = error
+                print("❌ Deletion attempt \(attempt) failed: \(error.localizedDescription)")
+                
+                if attempt < maxRetries {
+                    // Wait before retrying (exponential backoff)
+                    let delaySeconds = Double(attempt) * 0.5
+                    print("⏳ Retrying in \(delaySeconds) seconds...")
+                    try? await Task.sleep(nanoseconds: UInt64(delaySeconds * 1_000_000_000))
+                }
+            }
+        }
+        
+        // All retries failed
+        await MainActor.run {
+            isDeleting = false
+            if let error = lastError as NSError? {
+                if error.domain == NSURLErrorDomain {
+                    deleteErrorMessage = "Network connection lost. Please check your internet connection and try again."
+                } else {
+                    deleteErrorMessage = "Failed to delete: \(error.localizedDescription)"
+                }
+            } else {
+                deleteErrorMessage = "Failed to delete. Please try again."
+            }
+            showDeleteError = true
+        }
+    }
+    
+    // MARK: - Retry Helper
+    private func retryOperation<T>(maxAttempts: Int, operation: () async throws -> T) async throws -> T {
+        var lastError: Error?
+        
+        for attempt in 1...maxAttempts {
+            do {
+                return try await operation()
+            } catch {
+                lastError = error
+                if attempt < maxAttempts {
+                    let delay = 0.3 * Double(attempt)
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                }
+            }
+        }
+        
+        throw lastError ?? NSError(domain: "RetryError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Operation failed after \(maxAttempts) attempts"])
+    }
+}
+

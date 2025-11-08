@@ -130,10 +130,12 @@ struct Home: View {
                     HomeRowVideo(title: "📹 Video Filters", items: allVideoFilters)
                     
                     HomeRowSingle(title: "3D Caricature", items: Caricature)
-                    HomeRowSingle(title: "Photobooth", items: photobooth)
+                    HomeRowSingle(title: "📸 Photobooth", items: photobooth)
+                    HomeRowSingle(title: "🎨 Artist", items: artist)
+                    HomeRowSingle(title: "💎 Luxury", items: luxury)
+                    HomeRowSingle(title: "🎮 Video Games", items: videogamesItems)
                     
                     HomeRowSingle(title: "🍌 Nano Banana", items: nanoBanana)
-                    
                     HomeRowSingle(title: "🍌 Nano Banana Two", items: nanoBananaTwo)
                     
                     HomeRowSingle(title: "🌳 Outdoor Photography", items: outdoorsPhotography)
@@ -141,6 +143,7 @@ struct Home: View {
                     HomeRowSingle(title: "📷 Street Photography", items: streetPhotography)
                     
                     HomeRowSingle(title: "👔 Professional Headshots", items: linkedInHeadshots)
+                    
                     
 //                    LinkedIn Headshots
                     
@@ -184,8 +187,7 @@ struct Home: View {
 //                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
 //                    HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
-//                    
-//                    HomeRowSplit(title: "🎮 Video Game Photos", items: videogamesItems, diffAnimation: .scanHorizontal)
+//
 ////                  HomeRowVideo(title: "Trending", items: trendingItem, diffAnimation: .scanHorizontal)
 //                    
 //                    

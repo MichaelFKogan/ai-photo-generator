@@ -194,26 +194,4 @@ let nanoBananaTwo = [
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
     ),
-    InfoPacket(
-        title: "Colored Pencil Drawing",
-        cost: 0.05,
-        
-        imageName: "coloredpencildrawing",
-        imageNameOriginal: "yourphoto",
-        
-        description: "",
-        prompt: "Convert the image to a colored pencil drawing on a page of a brown kraft paper notebook, showing the textured paper and a few colored pencils resting nearby. Use soft layering and the paper's tone for natural midtones, with vibrant highlights and subtle texture in the drawing itself.",
-        type: "Photo Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Nano Banana",
-        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
-        exampleImages: [],  // Add example images here when available
-        
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
-        outputFormat: "jpeg",
-        enableSyncMode: false,  // nano-banana uses async mode with polling
-        enableBase64Output: false
-    ),
 ]

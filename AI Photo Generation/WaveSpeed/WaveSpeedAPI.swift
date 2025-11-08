@@ -94,10 +94,20 @@ func sendImageToWaveSpeed(
         let base64String = jpegData.base64EncodedString()
         let dataURL = "data:image/jpeg;base64,\(base64String)"
         
-        body["image"] = dataURL
+//        body["image"] = dataURL
+        if endpoint.contains("/bytedance/") {
+            // For Bytedance (e.g., seedream-v4)
+            print("[WaveSpeed] Using Bytedance-compatible format (images array, raw base64).")
+            body["images"] = [base64String] // raw base64, no data:image/jpeg prefix
+        } else {
+            // Default for Google or other endpoints
+            body["image"] = "data:image/jpeg;base64,\(base64String)"
+        }
+
         body["output_format"] = outputFormat
         body["enable_sync_mode"] = enableSyncMode
         body["enable_base64_output"] = enableBase64Output
+
     }
     
     // Only include prompt if it's not empty
