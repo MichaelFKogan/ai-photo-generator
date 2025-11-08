@@ -134,6 +134,8 @@ struct Home: View {
                     HomeRowSingle(title: "🎨 Artist", items: artist)
                     HomeRowSingle(title: "💎 Luxury", items: luxury)
                     HomeRowSingle(title: "🎮 Video Games", items: videogamesItems)
+                    HomeRowAIModels(title: "📹 Video Models", items: videoModelsRow)
+                    HomeRowAIModels(title: "📸 Image Models", items: imageModelsRow)
                     
                     HomeRowSingle(title: "🍌 Nano Banana", items: nanoBanana)
                     HomeRowSingle(title: "🍌 Nano Banana Two", items: nanoBananaTwo)
@@ -159,18 +161,7 @@ struct Home: View {
 //                    Photobooth
 //                    Polaroid Photo
                     
-                        .padding(.bottom, 200)
-                    
-                    
-////                    Text To Video
-//                    HomeRowAIModels(title: "📹 Video Models", items: videoModelsRow)
-//                    
-//                    HomeRowAIModels(title: "📸 Image Models", items: imageModelsRow)
-//                    
-////                    Image To Image
-////                    Text To Image
-//                    
-//                    
+       
 //                    HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
 //                    HomeRowVideo(title: "💯 Popular", items: funItems)
 //                    
@@ -205,6 +196,8 @@ struct Home: View {
 ////                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
 ////                    HomeRowSplit(title: "🧑‍🧑‍🧒 Family", items: familyItems, diffAnimation: .crossfade)
 
+                    
+                        .padding(.bottom, 200)
                 }
             }
 //            .navigationTitle("Home")

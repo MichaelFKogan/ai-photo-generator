@@ -19,9 +19,9 @@ let videoModelsRow = [
         type: "AI Video Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
-        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelName: "Sora 2",
+        modelDescription: "OpenAI's next-generation video & audio generation model, delivering more accurate physics than previous generation model, with synchronized dialogue and high-fidelity visuals.",
+        modelImageName: "sora2",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint

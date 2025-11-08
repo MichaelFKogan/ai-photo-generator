@@ -41,7 +41,18 @@ let photobooth = [
         imageNameOriginal: "90spolaroid",
         
         description: "",
-        prompt: "Transform the given image into a vertical strip of four distinct photobooth-style snapshots. Each individual frame should be a slightly different, spontaneous take on the original image, as if taken seconds apart. Introduce subtle variations in facial expression (if applicable), head tilt, or minor shifts in pose between the four frames. The lighting for each frame should be a slightly harsh, direct flash, creating subtle highlights and shadows. The entire strip should be presented against a neutral, plain background, with a classic, thin white border around each individual photo and a consistent, slightly aged, warm color cast across all four. Each photo background should mimic a photobooth.",
+        prompt: """
+            ransform the given image into a vertical strip of four distinct photobooth-style snapshots. Each individual frame should be a slightly different, spontaneous take on the original image, as if taken seconds apart.
+
+            Introduce subtle variations in facial expression (if applicable), head tilt, or minor shifts in pose between the four frames.
+
+            The background within each frame should be a plain, uniform white color, typical of an old-school photobooth.
+
+            The lighting for each frame should be a slightly harsh, direct flash, creating subtle highlights and shadows.
+
+            The entire strip should be presented against a neutral, plain background, with a classic, thin white border around each individual photo and a consistent, slightly aged, warm color cast across all four.
+            """,
+        
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",

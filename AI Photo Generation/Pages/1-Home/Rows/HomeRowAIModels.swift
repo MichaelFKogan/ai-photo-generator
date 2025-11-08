@@ -20,7 +20,7 @@ struct HomeRowAIModels: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
-                        NavigationLink(destination: ImageDetailView(item: item)) {
+                        NavigationLink(destination: AIVideoDetailView(item: item)) {
                             VStack(spacing: 8) {
                                 Image(item.imageName)
                                     .resizable()

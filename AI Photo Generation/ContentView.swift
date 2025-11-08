@@ -30,21 +30,21 @@ struct ContentView: View {
 //                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
 //                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
 //                        ))
-//                case 2:
-////                    ModelsView()
-//                    PlaygroundView()
-//                        .transition(.asymmetric(
-//                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
-//                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
-//                        ))
                 case 2:
+//                    ModelsView()
+                    PlaygroundView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                        ))
+                case 3:
                     ProfileView()
                         .environmentObject(authViewModel)
                         .transition(.asymmetric(
                             insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
                             removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
                         ))
-                 case 3:
+                 case 4:
                      SettingsView()
                          .transition(.asymmetric(
                              insertion: .opacity.combined(with: .move(edge: .trailing)),
@@ -74,11 +74,11 @@ struct ContentView: View {
                     tabButton(icon: "photo.on.rectangle.angled", title: "Photo Filters", index: 1)
                     
 //                    tabButton(icon: "plus.circle.fill", title: "Create", index: 2)
-//                    tabButton(icon: "wrench.and.screwdriver", title: "Playground", index: 2)
+                    tabButton(icon: "wrench.and.screwdriver", title: "Playground", index: 2)
                     
                     // tabButton(icon: "cpu", title: "AI Models", index: 3)
-                    tabButton(icon: "person.fill", title: "My Photos", index: 2)
-                     tabButton(icon: "gearshape.fill", title: "Settings", index: 3)
+                    tabButton(icon: "person.fill", title: "My Photos", index: 3)
+                     tabButton(icon: "gearshape.fill", title: "Settings", index: 4)
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
