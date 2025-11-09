@@ -1,21 +1,25 @@
 //
-//  NanoBanana.swift
+//  StreetPhotography.swift
 //  AI Photo Generation
 //
 //  Created by Mike K on 11/4/25.
 //
 
-
-let nanoBanana = [
+let streetPhotography = [
     InfoPacket(
-        title: "Cinematic Fusion",
+        title: "Urban Motion",
         cost: 0.05,
         
-        imageName: "cinematicfusion",
+        imageName: "urbanmotion",
         imageNameOriginal: "yourphoto",
         
-        description: "Transform your photo into a cinematic masterpiece with dramatic lighting and epic atmosphere.",
-        prompt: "A [subject] blending cultural influences, adorned in symbolic armor with engraved patterns, standing in a dramatic setting beneath a moody sky. Cinematic composition, chiaroscuro lighting, sweeping camera angle, authentic film stock color palette, grainy 35mm texture, hyper-detailed, epic atmosphere, captured in a vintage cinematic style.",
+        description: "",
+        prompt: """
+        
+        CINEMATIC STREET PHOTOGRAPHY, STYLISH YOUNG WOMAN IN MOTION, URBAN ENVIRONMENT, MOTION BLUR EFFECT. BLURRED PEDESTRIANS PASSING BY, SHALLOW DEPTH OF FIELD, NATURAL OVERCAST LIGHTING, SOFT PASTEL TONES, EDITORIAL FASHION PHOTOGRAPHY, CANDID MOMENT, DYNAMIC MOVEMENT, FILM AESTHETIC, MUTED COLORS
+            
+        """,
+        
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -30,4 +34,3 @@ let nanoBanana = [
         enableBase64Output: false
     ),
 ]
-

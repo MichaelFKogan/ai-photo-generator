@@ -1,13 +1,13 @@
 //
-//  HomeRowAIModels.swift
+//  HomeRowAIImageModels.swift
 //  AI Photo Generation
 //
-//  Created by Mike K on 11/4/25.
+//  Created by Mike K on 11/8/25.
 //
 
 import SwiftUI
 
-struct HomeRowAIModels: View {
+struct HomeRowAIImageModels: View {
     let title: String
     let items: [InfoPacket]
 
@@ -20,7 +20,7 @@ struct HomeRowAIModels: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
-                        NavigationLink(destination: AIVideoDetailView(item: item)) {
+                        NavigationLink(destination: AIImageDetailView(item: item)) {
                             VStack(spacing: 8) {
                                 Image(item.imageName)
                                     .resizable()

@@ -1,8 +1,12 @@
 import SwiftUI
+import UIKit
 
 struct HomeRowSingle: View {
     let title: String
     let items: [InfoPacket]
+
+    @State private var lastOffset: CGFloat = 0
+    private let feedback = UISelectionFeedbackGenerator()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -10,6 +14,7 @@ struct HomeRowSingle: View {
                 print("Tapped See All for \(title)")
             }
 
+            // ✅ Outer ScrollView must wrap content naturally
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
@@ -35,19 +40,15 @@ struct HomeRowSingle: View {
                                             .clipShape(Capsule())
                                             .padding(.bottom, 6)
                                     }
-                                    // ✅ Top-right overlay (Price)
                                     .overlay(alignment: .topTrailing) {
-    //                                        if let price = item.price {
-    //                                            Text("$\(price, specifier: "%.2f")")
                                         Text("$\(item.cost, specifier: "%.2f")")
-                                                .font(.custom("Nunito-Bold", size: 11))
-                                                .foregroundColor(.white)
-                                                .padding(.horizontal, 6)
-                                                .padding(.vertical, 3)
-                                                .background(Color.black.opacity(0.8))
-                                                .clipShape(Capsule())
-                                                .padding(6)
-    //                                        }
+                                            .font(.custom("Nunito-Bold", size: 11))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 3)
+                                            .background(Color.black.opacity(0.8))
+                                            .clipShape(Capsule())
+                                            .padding(6)
                                     }
 
                                 Text(item.title)
@@ -60,7 +61,40 @@ struct HomeRowSingle: View {
                     }
                 }
                 .padding(.horizontal)
+                // ✅ Add offset tracking *outside* of GeometryReader
+                .background(ScrollOffsetReader { newOffset in
+                    handleScrollFeedback(newOffset: newOffset)
+                })
             }
+            .frame(height: 220)
         }
+    }
+
+    private func handleScrollFeedback(newOffset: CGFloat) {
+        let delta = abs(newOffset - lastOffset)
+        if delta > 40 {
+            feedback.selectionChanged()
+            lastOffset = newOffset
+        }
+    }
+}
+
+// MARK: - Helper View to detect horizontal scroll offset
+private struct ScrollOffsetReader: View {
+    var onChange: (CGFloat) -> Void
+
+    var body: some View {
+        GeometryReader { geo in
+            Color.clear
+                .preference(key: ScrollOffsetKey.self, value: geo.frame(in: .global).minX)
+        }
+        .onPreferenceChange(ScrollOffsetKey.self, perform: onChange)
+    }
+}
+
+private struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }

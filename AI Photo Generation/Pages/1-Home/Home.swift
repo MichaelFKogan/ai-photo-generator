@@ -131,18 +131,25 @@ struct Home: View {
                     
                     HomeRowSingle(title: "3D Caricature", items: Caricature)
                     HomeRowSingle(title: "📸 Photobooth", items: photobooth)
+                    HomeRowSingle(title: "👻 Halloween", items: halloween)
                     HomeRowSingle(title: "🎨 Artist", items: artist)
                     HomeRowSingle(title: "💎 Luxury", items: luxury)
                     HomeRowSingle(title: "🎮 Video Games", items: videogamesItems)
-                    HomeRowAIModels(title: "📹 Video Models", items: videoModelsRow)
-                    HomeRowAIModels(title: "📸 Image Models", items: imageModelsRow)
                     
-                    HomeRowSingle(title: "🍌 Nano Banana", items: nanoBanana)
+//                    HomeRowAIVideoModels(title: "📹 Video Models", items: videoModelsRow)
+//                    HomeRowAIImageModels(title: "📸 Image Models", items: imageModelsRow)
+                    
+                    HomeRowSingle(title: "Chibi", items: chibi)
+                    HomeRowSingle(title: "Cute", items: cute)
                     HomeRowSingle(title: "🍌 Nano Banana Two", items: nanoBananaTwo)
                     
                     HomeRowSingle(title: "🌳 Outdoor Photography", items: outdoorsPhotography)
-                    
                     HomeRowSingle(title: "📷 Street Photography", items: streetPhotography)
+                    
+                    HomeRowSingle(title: "Fashion", items: fashion)
+                    
+                    HomeRowSingle(title: "Men's Fashion", items: mensfashion)
+//                    HomeRowSingle(title: "📷 Themed Portraits", items: themedPortraits)
                     
                     HomeRowSingle(title: "👔 Professional Headshots", items: linkedInHeadshots)
                     

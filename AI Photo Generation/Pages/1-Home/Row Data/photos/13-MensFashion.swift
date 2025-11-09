@@ -1,21 +1,25 @@
 //
-//  4-Luxury.swift
+//  MensFashion.swift
 //  AI Photo Generation
 //
-//  Created by Mike K on 11/7/25.
+//  Created by Mike K on 11/9/25.
 //
 
-let luxury = [
+let mensfashion = [
     
     InfoPacket(
-        title: "Private Jet",
+        title: "Cinematic Street Portrait",
         cost: 0.05,
         
-        imageName: "privatejet1",
+        imageName: "yourphoto",
         imageNameOriginal: "yourphoto",
         
         description: "",
-        prompt: "Place the subject from the provided image sitting comfortably on a plush, cream-colored leather seat inside the opulent cabin of a private jet. The subject should be looking confident and relaxed, perhaps holding a glass of sparkling water or looking out at a dramatic sunset. Ensure the lighting is cinematic and luxurious, emphasizing the high-end travel atmosphere.",
+        prompt: """
+        
+        Ultra-realistic cinematic street portrait in a narrow European city street, tall stone buildings, blurred storefronts, pedestrians as soft silhouettes. Subject standing in middle of street, slightly angled, confident gaze. Wearing black overcoat + black scarf, minimal stylish vibe. Lighting: overcast daylight, smooth shadows, balanced contrast. Color grading: cinematic teal-orange, soft desaturated background, natural skin tones. Camera: DSLR 85mm lens, f/1.8, medium waist-up shot, vertical 4:5. Style: cinematic editorial, modern, confident, timeless magazine look.
+        
+        """,
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -31,14 +35,18 @@ let luxury = [
     ),
     
     InfoPacket(
-        title: "Private Jet",
+        title: "Billionaire Vibe Car Shot",
         cost: 0.05,
         
-        imageName: "privatejet2",
+        imageName: "yourphoto",
         imageNameOriginal: "yourphoto",
         
         description: "",
-        prompt: "Place the subject from the provided image sitting comfortably on a plush, cream-colored leather seat inside the opulent cabin of a private jet. The subject should be looking confident and relaxed, perhaps holding a glass of sparkling water or looking out at a dramatic sunset. Ensure the lighting is cinematic and luxurious, emphasizing the high-end travel atmosphere.",
+        prompt: """
+        
+        Make my photo overhead high angle 3:4 full-body shot of a man (preserve face 100%) standing relaxed on the hood of a white Lamborghini Urus in a dim basement garage. Wearing a crisp white open collar shirt, brown trousers, polished shoes, and a leather strap watch. Soft sunbeam lighting with natural reflections on car, cinematic warm color grading, shallow depth of field, creamy bokeh, hyper-realistic 8K detail, billionaire vibe.
+        
+        """,
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -54,14 +62,18 @@ let luxury = [
     ),
     
     InfoPacket(
-        title: "Yacht Deck",
+        title: "Black and White Mysterious Portrait",
         cost: 0.05,
         
-        imageName: "yacht",
+        imageName: "yourphoto",
         imageNameOriginal: "yourphoto",
         
         description: "",
-        prompt: "Place the subject from the provided image standing elegantly on the polished teak deck of a luxury yacht. They should be looking at the camera, behind them a stunning, sun-drenched ocean horizon, with crystal-clear blue water and perhaps distant exotic islands. In front of them on the yacht deck are couches, and a table with champagne and a glass. Ensure the scene conveys a sense of serene opulence and freedom, with gentle sea breezes and a clear sky.",
+        prompt: """
+        
+        A hyper-realistic and minimalist black-and-white portrait of a man (based on the uploaded reference), partially covering his face with his hand. The expression is intense and mysterious. Dramatic lighting creates strong shadows with Photorealistic cinematic vertical portrait (9:16).
+        
+        """,
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -77,14 +89,18 @@ let luxury = [
     ),
     
     InfoPacket(
-        title: "Infinity Pool",
+        title: "Black and White Editorial Portrait",
         cost: 0.05,
         
-        imageName: "infinitypool",
+        imageName: "yourphoto",
         imageNameOriginal: "yourphoto",
         
         description: "",
-        prompt: "Place the subject from the provided image relaxing in the shimmering waters of a luxurious infinity pool. The pool should overlook a spectacular [e.g., sunset over a vibrant city skyline / majestic snow-capped mountain range / pristine tropical beach]. Emphasize the tranquil and exclusive atmosphere, with soft, ambient lighting and high-end resort architecture in the background.",
+        prompt: """
+        
+        Black and white artistic portrait of a man, with a fashionable model dressed in a sophisticated suit, black socks and shoes. He is sitting with a slightly hunched posture, looking down as if lost in thought. His facial features are the same as the original photo, like her hairstyle. It features minimalist accessories that highlight the elegant and editorial tone. The studio's clean lighting enhances textures and depth, creating an elegant, couture feel. Use the uploaded picture as reference for the face. Aspect ration: 4:5 vertical.
+        
+        """,
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -98,6 +114,5 @@ let luxury = [
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
     ),
-    
-]
 
+]

@@ -50,7 +50,7 @@ let videogamesItems = [
         imageNameOriginal: "yourphoto",
         
         description: "",
-        prompt: "Create a 9-frame comic book sequence featuring this couple as superheroes. Frame 1: they discover their powers. Frame 2-4: training montage. Frame 5: battle with villain in a futuristic city. Frame 6: dramatic mid-air fight. Frame 7: saving civilians. Frame 8: victory pose. Frame 9: close-up of their hands holding. Style: Marvel comic book, bold colors, inked outlines.",
+        prompt: "Create a 9-frame comic book sequence featuring the person in this image as the superhero. Frame 1: they discover their powers. Frame 2-4: training montage. Frame 5: battle with villain in a futuristic city. Frame 6: dramatic mid-air fight. Frame 7: saving civilians. Frame 8: victory pose. Frame 9: close-up of their hands holding. Style: Marvel comic book, bold colors, inked outlines. Text: If you add text, make sure it's reaaaadable aand in English",
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -64,6 +64,30 @@ let videogamesItems = [
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
     ),
+    
+    InfoPacket(
+        title: "Comic Book",
+        cost: 0.05,
+        
+        imageName: "comicsequence",
+        imageNameOriginal: "yourphoto",
+        
+        description: "",
+        prompt: "    Based on the uploaded image, make a comic book strip, add text, write a compelling story. I want a superhero comic book.",
+        type: "Photo Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
+        modelName: "Nano Banana",
+        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
+        modelImageName: "",
+        exampleImages: [],  // Add example images here when available
+        
+        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        outputFormat: "jpeg",
+        enableSyncMode: false,  // nano-banana uses async mode with polling
+        enableBase64Output: false
+    ),
+    
     InfoPacket(
         title: "The Sims",
         cost: 0.05,
@@ -122,4 +146,38 @@ let videogamesItems = [
         modelImageName: "",
         exampleImages: ["cyberpunk2", "cyberpunk3", "cyberpunk4", "cyberpunk5", "cyberpunk6", "cyberpunk7"]
     ),
+    
+    InfoPacket(
+        title: "Manga Comic",
+        cost: 0.04,
+        
+        imageName: "twopanelmanga",
+        imageNameOriginal: "yourphotto",
+
+        description: "",
+        
+        prompt: """
+        
+        Use the provided image to create a two-panel vertical manga in a cute Japanese anime style.
+
+        **Character Transformation:**
+        
+        Transform the person in the uploaded image into a cute, moe-style anime character. Preserve all **key visual details** from the photo, including the outfit, hairstyle, and facial features, ensuring the resulting character is an undeniable anime version of the person in the photo.
+
+        **⚠️ IMPORTANT NARRATIVE INSTRUCTION:** The content of **Panel 2 must logically follow and react** to the expression, action, and dialogue established in Panel 1 to form a single, coherent mini-story or narrative beat.
+
+        **Stylistic Notes:**
+        - Use a cute, casual **handwritten font** for all text.
+        - Maintain a full and expressive composition with adequate space for dialogue.
+        - **Aspect ratio: 2:3** (vertical manga format)
+        - The overall visual tone should be **colorful, energetic, and distinctly cartoony**.
+        
+        """,
+        
+        modelName: "",
+        modelDescription: "",
+        modelImageName: "",
+        exampleImages: []
+    ),
+
 ]

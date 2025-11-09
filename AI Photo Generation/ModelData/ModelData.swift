@@ -211,7 +211,7 @@ let imageModels = [
     Model(
         name: "Gemini Flash Image 2.5 (Nano Banana)",
         imageName: "geminiflashimage25",
-        description: "Built for complex visual tasks, it handles multi-image generation with coherent character identity while drawing on strong world understanding to guide edits and completions.",
+        description: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelId: "google:4@1",
         price: 0.40,
         type: .image,

@@ -68,5 +68,31 @@ let outdoorsPhotography = [
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
     ),
-
+    InfoPacket(
+        title: "Night Shot Outside",
+        cost: 0.05,
+        
+        imageName: "nightshot",
+        imageNameOriginal: "yourphoto",
+        
+        description: "",
+        prompt: """
+        
+        Convert this photo into a night time shot. The subject is wearing a grey AX sweatshirt, unbuttoned at the top, and black wash baggy jeans. His hands are casually in his pockets, and he faces slightly towards the left with a relaxed posture. The camera is at eye level, capturing a medium shot that includes his full figure and some of the surroundings. In the background, there are blurred green bushes and out-of-focus lights, suggesting an urban or park setting after dusk. Above him,
+            
+        """,
+        
+        type: "Photo Filter",
+        
+        endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
+        modelName: "Nano Banana",
+        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
+        modelImageName: "",
+        exampleImages: [],  // Add example images here when available
+        
+        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        outputFormat: "jpeg",
+        enableSyncMode: false,  // nano-banana uses async mode with polling
+        enableBase64Output: false
+    ),
 ]

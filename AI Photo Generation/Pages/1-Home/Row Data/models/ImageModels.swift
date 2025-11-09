@@ -9,7 +9,7 @@ let imageModelsRow = [
 
     InfoPacket(
         title: "Google Nano Banana",
-        cost: 0.80,
+        cost: 0.05,
         
         imageName: "geminiflashimage25",
         imageNameOriginal: "yourphoto",
@@ -19,9 +19,9 @@ let imageModelsRow = [
         type: "AI Image Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
+        modelName: "Google Gemini Flash 2.5 / Nano Banana",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelImageName: "geminiflashimage25",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
@@ -32,7 +32,7 @@ let imageModelsRow = [
 
     InfoPacket(
         title: "GPT Image 1",
-        cost: 0.80,
+        cost: 0.15,
         
         imageName: "gptimage1",
         imageNameOriginal: "yourphoto",
@@ -42,9 +42,9 @@ let imageModelsRow = [
         type: "AI Image Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
+        modelName: "GPT Image 1",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelImageName: "gptimage1",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
@@ -55,7 +55,7 @@ let imageModelsRow = [
     
     InfoPacket(
         title: "Seedream 4.0",
-        cost: 0.80,
+        cost: 0.04,
         
         imageName: "seedream40",
         imageNameOriginal: "yourphoto",
@@ -65,9 +65,9 @@ let imageModelsRow = [
         type: "AI Image Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
+        modelName: "Seedream 4.0",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelImageName: "seedream40",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
@@ -88,9 +88,9 @@ let imageModelsRow = [
         type: "AI Image Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
-        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelName: "FLUX.1 Kontext [dev]",
+        modelDescription: "",
+        modelImageName: "fluxkontextdev",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
@@ -111,9 +111,9 @@ let imageModelsRow = [
         type: "AI Image Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
-        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelName: "FLUX.1 Kontext [pro]",
+        modelDescription: "",
+        modelImageName: "fluxkontextpro",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
@@ -134,9 +134,9 @@ let imageModelsRow = [
         type: "AI Image Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
+        modelName: "FLUX.1 Kontext [max]",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelImageName: "fluxkontextmax",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint

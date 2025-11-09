@@ -65,9 +65,9 @@ let videoModelsRow = [
         type: "AI Video Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
+        modelName: "Kling AI",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelImageName: "klingai",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
@@ -77,8 +77,8 @@ let videoModelsRow = [
     ),
 
     InfoPacket(
-        title: "Wan",
-        cost: 0.80,
+        title: "Wan 2.5",
+        cost: 1.00,
         
         imageName: "wan",
         imageNameOriginal: "yourphoto",
@@ -88,9 +88,9 @@ let videoModelsRow = [
         type: "AI Video Model",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "nano-banana",
+        modelName: "Wan 2.5",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
+        modelImageName: "wan",
         exampleImages: [],  // Add example images here when available
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint

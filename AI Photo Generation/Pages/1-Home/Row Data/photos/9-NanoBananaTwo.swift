@@ -30,61 +30,61 @@ let nanoBananaTwo = [
         enableBase64Output: false
     ),
     
-    InfoPacket(
-        title: "Crystal Hybrid",
-        cost: 0.05,
-        
-        imageName: "black",
-        imageNameOriginal: "yourphoto",
-        
-        description: "",
-        prompt: """
-        
-        Create a “Crystal-Slime Hybrid Chibi” version of the person in the uploaded photo, while clearly preserving their real identity.
-
-        Identity Preservation
-            Maintain the person's actual face shape, nose, eyes, lips, jawline, hair style, and skin tone cues
-            Use stylization only for material and chibi proportions — do not replace the person with a creature
-            Eyes should remain recognizable to the real person (style them, do not invent new eyes)
-            Preserve overall likeness, expression, and unique traits
-
-        Chibi / Material Style
-            Cute chibi body with slightly oversized head (not extreme)
-            Semi-transparent crystal-glass outer shell with glowing slime core
-            Glossy refractive surface with soft rainbow diffraction
-            Glitter particles + micro-bubbles inside slime
-            Crystal accents integrated naturally (e.g., hair ornament, cheeks, shoulders), not horns unless person already wears something similar
-            Emissive aura, soft magical glow
-
-        Color & Accessories
-            Use colors inspired by the person's clothing or personal style in the photo
-            If they have any accessory (earrings, glasses, hat), reinterpret it in crystal form
-
-        Rendering & Camera
-            Soft studio lighting with rim highlights
-            Volumetric glow inside body
-            Shallow DOF, tack-sharp focus on eyes
-            Macro detail, photorealistic PBR materials
-
-        Rules
-            Do NOT transform the face into a non-human character
-            Do NOT add fantasy horns/spikes unless they resemble accessories in the photo
-            Keep pose similar to the photo unless instructed otherwise
-        
-        """,
-        type: "Photo Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Nano Banana",
-        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
-        exampleImages: [],  // Add example images here when available
-        
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
-        outputFormat: "jpeg",
-        enableSyncMode: false,  // nano-banana uses async mode with polling
-        enableBase64Output: false
-    ),
+//    InfoPacket(
+//        title: "Crystal Hybrid",
+//        cost: 0.05,
+//        
+//        imageName: "black",
+//        imageNameOriginal: "yourphoto",
+//        
+//        description: "",
+//        prompt: """
+//        
+//        Create a “Crystal-Slime Hybrid Chibi” version of the person in the uploaded photo, while clearly preserving their real identity.
+//
+//        Identity Preservation
+//            Maintain the person's actual face shape, nose, eyes, lips, jawline, hair style, and skin tone cues
+//            Use stylization only for material and chibi proportions — do not replace the person with a creature
+//            Eyes should remain recognizable to the real person (style them, do not invent new eyes)
+//            Preserve overall likeness, expression, and unique traits
+//
+//        Chibi / Material Style
+//            Cute chibi body with slightly oversized head (not extreme)
+//            Semi-transparent crystal-glass outer shell with glowing slime core
+//            Glossy refractive surface with soft rainbow diffraction
+//            Glitter particles + micro-bubbles inside slime
+//            Crystal accents integrated naturally (e.g., hair ornament, cheeks, shoulders), not horns unless person already wears something similar
+//            Emissive aura, soft magical glow
+//
+//        Color & Accessories
+//            Use colors inspired by the person's clothing or personal style in the photo
+//            If they have any accessory (earrings, glasses, hat), reinterpret it in crystal form
+//
+//        Rendering & Camera
+//            Soft studio lighting with rim highlights
+//            Volumetric glow inside body
+//            Shallow DOF, tack-sharp focus on eyes
+//            Macro detail, photorealistic PBR materials
+//
+//        Rules
+//            Do NOT transform the face into a non-human character
+//            Do NOT add fantasy horns/spikes unless they resemble accessories in the photo
+//            Keep pose similar to the photo unless instructed otherwise
+//        
+//        """,
+//        type: "Photo Filter",
+//        
+//        endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
+//        modelName: "Nano Banana",
+//        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
+//        modelImageName: "",
+//        exampleImages: [],  // Add example images here when available
+//        
+//        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+//        outputFormat: "jpeg",
+//        enableSyncMode: false,  // nano-banana uses async mode with polling
+//        enableBase64Output: false
+//    ),
     
     InfoPacket(
         title: "Cartoon Drip",
@@ -96,9 +96,9 @@ let nanoBananaTwo = [
         description: "",
         prompt: """
         
-        Analyze the uploaded image and identify the main subject before transforming it.
+        Analyze the uploaded image and identify the main object before transforming it.
         
-        Transform the main subject in the uploaded photo into a bold, colorful cartoon illustration style, while keeping the rest of the photo realistic and untouched.
+        Transform the main object in the uploaded photo into a bold, colorful cartoon illustration style, while keeping the rest of the photo realistic and untouched.
 
         Main subject rules:
 
@@ -148,7 +148,17 @@ let nanoBananaTwo = [
         imageNameOriginal: "yourphoto",
         
         description: "",
-        prompt: "A detailed origami figure of [CHARACTER] made from brown kraft paper, positioned at a 45-degree angle to the camera in a sitting pose. The figure features clean geometric folding with moderate creases and dimensional layering - not overly complex but showing skilled craftsmanship. Sharp, well-defined edges with some visible fold lines that add structure without appearing wrinkled. The character's eyes are open, large and black with small white highlights for a friendly expression. The paper work shows thoughtful geometric segmentation on the body parts with precise but not excessive folding detail. Warm, soft lighting creates gentle shadows that emphasize the three-dimensional form. Warm brown blurred background, professional photography, 1080x1080 square format, artisanal craft photography style, hyperrealistic detail.",
+        prompt: """
+        
+        Convert the main character or chracters in this picture into a detailed origami figure made from brown kraft paper, positioned at a 45-degree angle to the camera in a sitting pose. 
+        
+        The figure features clean geometric folding with moderate creases and dimensional layering - not overly complex but showing skilled craftsmanship. Sharp, well-defined edges with some visible fold lines that add structure without appearing wrinkled. 
+        
+        The character's eyes are open, large and black with small white highlights for a friendly expression. The paper work shows thoughtful geometric segmentation on the body parts with precise but not excessive folding detail. 
+        
+        Warm, soft lighting creates gentle shadows that emphasize the three-dimensional form. Warm brown blurred background, professional photography, artisanal craft photography style, hyperrealistic detail.
+        
+        """,
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
@@ -172,13 +182,13 @@ let nanoBananaTwo = [
         description: "",
         prompt: """
 
-        A detailed origami figure of [CHARACTER] made from brown kraft paper, positioned at a 45-degree angle to the camera in a sitting pose. 
+        Convert the main character or chracters in this picture into a detailed origami figure made from brown kraft paper, positioned at a 45-degree angle to the camera in a sitting pose. 
         
         The figure features clean geometric folding with moderate creases and dimensional layering - not overly complex but showing skilled craftsmanship. Sharp, well-defined edges with some visible fold lines that add structure without appearing wrinkled. 
         
         The character's eyes are open, large and black with small white highlights for a friendly expression. The paper work shows thoughtful geometric segmentation on the body parts with precise but not excessive folding detail. 
         
-        Warm, soft lighting creates gentle shadows that emphasize the three-dimensional form. Warm brown blurred background, professional photography, 1080x1080 square format, artisanal craft photography style, hyperrealistic detail.
+        Warm, soft lighting creates gentle shadows that emphasize the three-dimensional form. Warm brown blurred background, professional photography, artisanal craft photography style, hyperrealistic detail.
 
         """,
         type: "Photo Filter",

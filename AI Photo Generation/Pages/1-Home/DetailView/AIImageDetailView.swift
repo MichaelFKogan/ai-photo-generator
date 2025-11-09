@@ -1,5 +1,5 @@
 //
-//  AIVideoDetailView.swift
+//  AIImageDetailView.swift
 //  AI Photo Generation
 //
 //  Created by Mike K on 11/8/25.
@@ -8,23 +8,28 @@
 import SwiftUI
 import PhotosUI
 
-struct AIVideoDetailView: View {
+struct AIImageDetailView: View {
     let item: InfoPacket
     
     @State private var prompt: String = ""
+    @State private var negativePrompt: String = ""
     @State private var isGenerating: Bool = false
     @State private var referenceImages: [UIImage] = []
     @State private var selectedPhotoItems: [PhotosPickerItem] = []
-    @State private var videoDurationIndex: Int = 1 // default to 8s
-    @State private var videoAspectIndex: Int = 0 // default to 9:16
+    @State private var selectedAspectIndex: Int = 0 // default to 1:1
+    @State private var numImages: Int = 1
+    @State private var guidance: Double = 7.5
+    @State private var steps: Int = 30
+    @State private var isAdvancedOptionsExpanded: Bool = false
     @Environment(\.dismiss) private var dismiss
     
-    private let videoDurations: [String] = ["5s", "8s", "12s"]
-    private let videoAspects: [String] = ["9:16", "16:9", "1:1"]
-    private let videoAspectOptions: [AspectRatioOption] = [
-        AspectRatioOption(id: "9:16", label: "9:16", width: 9, height: 16, platforms: ["TikTok", "Shorts", "Reels"]),
-        AspectRatioOption(id: "16:9", label: "16:9", width: 16, height: 9, platforms: ["YouTube"]),
-        AspectRatioOption(id: "1:1", label: "1:1", width: 1, height: 1, platforms: ["Instagram"])
+    private let imageAspects: [String] = ["1:1", "3:4", "4:3", "9:16", "16:9"]
+    private let imageAspectOptions: [AspectRatioOption] = [
+        AspectRatioOption(id: "1:1", label: "1:1", width: 1, height: 1, platforms: ["Instagram"]),
+        AspectRatioOption(id: "3:4", label: "3:4", width: 3, height: 4, platforms: ["Portrait"]),
+        AspectRatioOption(id: "4:3", label: "4:3", width: 4, height: 3, platforms: ["Photo Prints"]),
+        AspectRatioOption(id: "9:16", label: "9:16", width: 9, height: 16, platforms: ["TikTok", "Reels"]),
+        AspectRatioOption(id: "16:9", label: "16:9", width: 16, height: 9, platforms: ["YouTube"])
     ]
     
     var body: some View {
@@ -55,7 +60,7 @@ struct AIVideoDetailView: View {
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
                                 
-                                Text("AI Video Model")
+                                Text("AI Image Model")
                                     .font(.caption)
                                     .foregroundColor(.white.opacity(0.9))
                             }
@@ -71,7 +76,7 @@ struct AIVideoDetailView: View {
                                     .background(Color.black.opacity(0.7))
                                     .cornerRadius(6)
                                 
-                                Text("per 8s video")
+                                Text("per image")
                                     .font(.caption2)
                                     .foregroundColor(.white.opacity(0.9))
                             }
@@ -144,7 +149,7 @@ struct AIVideoDetailView: View {
                     }
                 }
                 
-                // Video Prompt
+                // Prompt
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 6) {
                         Image(systemName: "text.alignleft")
@@ -166,7 +171,7 @@ struct AIVideoDetailView: View {
                         )
                         .overlay(alignment: .topLeading) {
                             if prompt.isEmpty {
-                                Text("Describe the video you want to generate...")
+                                Text("Describe the image you want to generate...")
                                     .font(.system(size: 14))
                                     .foregroundColor(.gray.opacity(0.5))
                                     .padding(.horizontal, 12)
@@ -177,42 +182,108 @@ struct AIVideoDetailView: View {
                 }
                 .padding(.horizontal)
                 
+//                // Negative Prompt
+//                VStack(alignment: .leading, spacing: 8) {
+//                    HStack(spacing: 6) {
+//                        Image(systemName: "text.badge.minus")
+//                            .foregroundColor(.secondary)
+//                        Text("Negative Prompt (Optional)")
+//                            .font(.headline)
+//                            .foregroundColor(.secondary)
+//                    }
+//                    
+//                    TextEditor(text: $negativePrompt)
+//                        .font(.system(size: 14)).opacity(0.8)
+//                        .frame(minHeight: 60)
+//                        .padding(8)
+//                        .background(Color.gray.opacity(0.1))
+//                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 12)
+//                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+//                        )
+//                        .overlay(alignment: .topLeading) {
+//                            if negativePrompt.isEmpty {
+//                                Text("What to avoid in the image...")
+//                                    .font(.system(size: 14))
+//                                    .foregroundColor(.gray.opacity(0.5))
+//                                    .padding(.horizontal, 12)
+//                                    .padding(.vertical, 16)
+//                                    .allowsHitTesting(false)
+//                            }
+//                        }
+//                }
+//                .padding(.horizontal)
+                
                 // Reference Images (Optional) - multi-image picker and grid
                 ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
                     .padding(.horizontal)
                 
-                // Simple Video Options
+                // Core Image Options
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 6) {
                         Image(systemName: "slider.horizontal.3")
                             .foregroundColor(.secondary)
-                        Text("Video Options")
+                        Text("Image Options")
                             .font(.headline)
                             .foregroundColor(.secondary)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Duration")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Picker("Duration", selection: $videoDurationIndex) {
-                            ForEach(0..<videoDurations.count, id: \.self) { idx in
-                                Text(videoDurations[idx])
-                            }
-                        }
-                        .pickerStyle(.segmented)
                     }
                     
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Aspect Ratio")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        AspectRatioSelector(options: videoAspectOptions, selectedIndex: $videoAspectIndex)
+                        AspectRatioSelector(options: imageAspectOptions, selectedIndex: $selectedAspectIndex)
                     }
                 }
                 .padding(.horizontal)
                 
-                // Generate Video button
+                // Advanced Options (dropdown)
+                DisclosureGroup("Advanced Options", isExpanded: $isAdvancedOptionsExpanded) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Image Count: \(numImages)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                            Slider(
+                                value: Binding(get: { Double(numImages) }, set: { numImages = Int($0) }),
+                                in: 1...4,
+                                step: 1
+                            )
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Guidance: \(String(format: "%.1f", guidance))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                            Slider(value: $guidance, in: 0...20, step: 0.5)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Steps: \(steps)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                            Slider(
+                                value: Binding(get: { Double(steps) }, set: { steps = Int($0) }),
+                                in: 10...60,
+                                step: 1
+                            )
+                        }
+                    }
+                    .padding(.top, 8)
+                }
+                .padding(.horizontal)
+                
+                // Generate button
                 Button(action: generate) {
                     HStack {
                         if isGenerating {
@@ -220,9 +291,9 @@ struct AIVideoDetailView: View {
                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                 .scaleEffect(0.8)
                         } else {
-                            Image(systemName: "film")
+                            Image(systemName: "photo.on.rectangle")
                         }
-                        Text(isGenerating ? "Generating Video..." : "Generate Video")
+                        Text(isGenerating ? "Generating..." : "Generate Image")
                             .fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity)
@@ -285,88 +356,11 @@ struct AIVideoDetailView: View {
     
     private func generate() {
         isGenerating = true
-        // Simulate video generation
+        // Simulate image generation
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isGenerating = false
             // This is where you'd actually call the API
         }
-    }
-}
-
-// MARK: - AI Model Section Component
-struct AIModelSectionTwo: View {
-    let modelName: String
-    let modelDescription: String
-    let modelImageName: String
-    let price: Double
-    let priceCaption: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(modelImageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 80, height: 80)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-            
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(alignment: .top) {
-                    Text(modelName)
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 2) {
-                        Text(String(format: "$%.2f", price))
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.black)
-                            .cornerRadius(6)
-                        
-                        Text(priceCaption)
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                Text(modelDescription)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-            }
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .cornerRadius(12)
-    }
-}
-
-// MARK: - Tab Header Button Component
-struct TabHeaderButtonTwo<Label: View>: View {
-    let title: String
-    let isSelected: Bool
-    let action: () -> Void
-    @ViewBuilder let label: () -> Label
-    
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                label()
-                    .font(.subheadline)
-                    .foregroundColor(isSelected ? .blue : .secondary)
-                Rectangle()
-                    .fill(isSelected ? Color.blue : Color.clear)
-                    .frame(height: 2)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-        }
-        .buttonStyle(.plain)
     }
 }
 
