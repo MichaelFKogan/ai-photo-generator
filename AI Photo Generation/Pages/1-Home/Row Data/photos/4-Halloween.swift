@@ -16,7 +16,15 @@ let halloween = [
         description: "",
         prompt: """
         
-        Transform the image into a cinematic Y2K photo: A woman lies on a red satin bed, clutching a black, 1990s-era corded telephone, her expression intense and pensive. A small gold butterfly clip adorns her long hair. She wears layered gold necklaces and a large gold ring. The warm glow of a desk lamp softly illuminates a corner of the room, decorated with retro 1990s rock posters. Beside her are popcorn and vintage magazines. Behind her, in the doorway of a dark corridor, a figure wearing a ghostly mask stands silently, their silhouette partially hidden in shadow, evoking a sense of suspense and fear. The photo has the grainy, low-light look of 1990s film, with warm highlights intertwined with deep shadows to create an eerie, dreamlike atmosphere.
+        Transform the image into a cinematic Y2K photo: A woman lies on a red satin bed, clutching a black, 1990s-era corded telephone, her expression intense and pensive. 
+        
+        A small gold butterfly clip adorns her long hair. She wears layered gold necklaces and a large gold ring. 
+        
+        The warm glow of a desk lamp softly illuminates a corner of the room, decorated with retro 1990s rock posters. 
+        
+        Beside her are popcorn and vintage magazines. 
+        
+        Behind her, in the doorway of a dark corridor, a figure wearing a ghost face costume stands silently, their silhouette partially hidden in shadow, evoking a sense of suspense and fear. The photo has the grainy, low-light look of 1990s film, with warm highlights intertwined with deep shadows to create an eerie, dreamlike atmosphere.
         
         """,
         
@@ -26,7 +34,7 @@ let halloween = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -42,7 +50,15 @@ let halloween = [
         prompt: """
         
         
-                Take a dreamy Y2K photo: I'm lying on a pink satin bed, clutching a '90s-style corded telephone. A gold butterfly hairpin accents my flowing hair. She accessorizes with delicate gold necklaces and accessories, including a large gold ring. The room behind her is girly, filled with '90s-style posters, creating a dreamy atmosphere. Her makeup is simple and elegant, with brown lipstick and lip liner. The photo has a grainy '90s feel, and the light source simulates a table lamp in a dimly lit room at night. Next to her is a bowl of popcorn and some '90s-style magazines. A figure in a ghost face costume stands behind her, staring at her. His silhouette is dimly lit, standing in the doorway of a dark hallway. The overall dark tone of the image creates an eerie feeling.
+            Convert the imaage into a dreamy Y2K photo. The subject is lying on a pink satin bed, clutching a '90s-style corded telephone. 
+        
+            A gold butterfly hairpin accents her flowing hair. She accessorizes with delicate gold necklaces and accessories, including a large gold ring. 
+        
+            The room behind her is girly, filled with '90s-style posters, creating a dreamy atmosphere. Her makeup is simple and elegant, with brown lipstick and lip liner. 
+        
+            The photo has a grainy '90s feel, and the light source simulates a table lamp in a dimly lit room at night. Next to her is a bowl of popcorn and some '90s-style magazines. 
+        
+            A figure in a ghost face costume stands behind her, staring at her. His silhouette is dimly lit, standing in the doorway of a dark hallway. The overall dark tone of the image creates an eerie feeling.
         
         """,
         
@@ -52,7 +68,7 @@ let halloween = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -77,7 +93,7 @@ let halloween = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -86,7 +102,7 @@ let halloween = [
         title: "Camp Crystal Lake",
         cost: 0.05,
         
-        imageName: "ghostfacepolaroid",
+        imageName: "campcrystallake",
         imageNameOriginal: "yourphoto",
         
         description: "",
@@ -102,7 +118,7 @@ let halloween = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false

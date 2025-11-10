@@ -22,16 +22,13 @@ let futuristicItems = [
     ),
     InfoPacket(
         title: "Cyberpunk",
-        cost: 0.04,
+        cost: 0.05,
         
         imageName: "cyberpunk1",
         imageNameOriginal: "cyberpunk",
 
-        description: "Cyberpunk is an image effect model that transforms photos into futuristic, neon-lit scenes inspired by cyberpunk aesthetics, featuring vibrant colors, glowing lights, and high-tech urban vibes.",
-        prompt: "",
-        modelName: "",
-        modelDescription: "",
-        modelImageName: "",
+        type: "Photo Filter",
+        endpoint: "https://api.wavespeed.ai/api/v3/image-effects/cyberpunk",
         exampleImages: ["cyberpunk2", "cyberpunk3", "cyberpunk4", "cyberpunk5", "cyberpunk6", "cyberpunk7"]
     ),
 ]

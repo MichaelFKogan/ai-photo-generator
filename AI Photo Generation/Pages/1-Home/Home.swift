@@ -131,7 +131,7 @@ struct Home: View {
                     
                     HomeRowSingle(title: "3D Caricature", items: Caricature)
                     HomeRowSingle(title: "📸 Photobooth", items: photobooth)
-                    HomeRowSingle(title: "👻 Halloween", items: halloween)
+                    HomeRowSingle(title: "👻 Spooky", items: halloween)
                     HomeRowSingle(title: "🎨 Artist", items: artist)
                     HomeRowSingle(title: "💎 Luxury", items: luxury)
                     HomeRowSingle(title: "🎮 Video Games", items: videogamesItems)

@@ -23,7 +23,7 @@ let linkedInHeadshots = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -45,7 +45,7 @@ let linkedInHeadshots = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -72,7 +72,7 @@ let linkedInHeadshots = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -99,7 +99,7 @@ let linkedInHeadshots = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -126,7 +126,7 @@ let linkedInHeadshots = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
@@ -153,7 +153,7 @@ let linkedInHeadshots = [
         modelImageName: "",
         exampleImages: [],  // Add example images here when available
         
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
+        aspectRatio: "3:4",  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
