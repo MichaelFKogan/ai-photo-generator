@@ -24,7 +24,9 @@ let halloween = [
         
         Beside her are popcorn and vintage magazines. 
         
-        Behind her, in the doorway of a dark corridor, a figure wearing a ghost face costume stands silently, their silhouette partially hidden in shadow, evoking a sense of suspense and fear. The photo has the grainy, low-light look of 1990s film, with warm highlights intertwined with deep shadows to create an eerie, dreamlike atmosphere.
+        Behind her, in the doorway of a dark corridor, a figure wearing a ghost face costume stands silently, their silhouette partially hidden in shadow, evoking a sense of suspense and fear. 
+        
+        The photo has the grainy, low-light look of 1990s film, with warm highlights intertwined with deep shadows to create an eerie, dreamlike atmosphere.
         
         """,
         

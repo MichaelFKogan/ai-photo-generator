@@ -133,6 +133,7 @@ struct Home: View {
                     HomeRowSingle(title: "📸 Photobooth", items: photobooth)
                     HomeRowSingle(title: "👻 Spooky", items: halloween)
                     HomeRowSingle(title: "🎨 Artist", items: artist)
+                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     HomeRowSingle(title: "💎 Luxury", items: luxury)
                     HomeRowSingle(title: "🎮 Video Games", items: videogamesItems)
                     
@@ -180,9 +181,6 @@ struct Home: View {
                     
 //                    HomeRowVideo(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
 //                    HomeRowVideo(title: "Family", items: fortheguysItems)
-                    
-                    
-//                    HomeRowVideo(title: "🧜‍♀️ Mermaid", items: mermaidVideosItems)
                     
 //                    HomeRowVideo(title: "🎮 Video Game Videos", items: videogamesVideosItems)
 //

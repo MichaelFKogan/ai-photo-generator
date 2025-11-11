@@ -10,7 +10,7 @@ let fashion = [
         title: "Magazine Cover",
         cost: 0.05,
         
-        imageName: "magazonecover",
+        imageName: "magazinecover",
         imageNameOriginal: "yourphoto",
         
         description: "",
@@ -43,7 +43,7 @@ let fashion = [
         title: "Flower Field Portrait",
         cost: 0.05,
         
-        imageName: "yourphoto",
+        imageName: "flowerfieldportrait",
         imageNameOriginal: "yourphoto",
         
         description: "",
@@ -71,10 +71,10 @@ let fashion = [
         enableBase64Output: false
     ),
     InfoPacket(
-        title: "Celebratory Balloon & Cake Shot",
+        title: "10K Followers",
         cost: 0.05,
         
-        imageName: "yourphoto",
+        imageName: "10kfollowerspink",
         imageNameOriginal: "yourphoto",
         
         description: "",
@@ -98,10 +98,10 @@ let fashion = [
         enableBase64Output: false
     ),
     InfoPacket(
-        title: "Indie Aesthetic Fridge Shot",
+        title: "Indie Aesthetic",
         cost: 0.05,
         
-        imageName: "yourphoto",
+        imageName: "aestheticfridgeshot",
         imageNameOriginal: "yourphoto",
         
         description: "",
