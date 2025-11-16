@@ -6,13 +6,14 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var previousTab = 0
     @State private var currentTransitionEdge: Edge = .trailing
+    @State private var homeResetTrigger = UUID()
 
     var body: some View {
         ZStack {
             Group {
                 switch selectedTab {
                 case 0:
-                    Home()
+                    Home(resetTrigger: homeResetTrigger)
                         .transition(.asymmetric(
                             insertion: .opacity.combined(with: .move(edge: .leading)),
                             removal: .opacity.combined(with: .move(edge: .leading))
@@ -39,18 +40,25 @@ struct ContentView: View {
                             removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
                         ))
                 case 3:
+//                    ModelsView()
+                    PlaygroundView()
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+                        ))
+                case 4:
                     ProfileView()
                         .environmentObject(authViewModel)
                         .transition(.asymmetric(
                             insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
                             removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
                         ))
-                 case 4:
-                     SettingsView()
-                         .transition(.asymmetric(
-                             insertion: .opacity.combined(with: .move(edge: .trailing)),
-                             removal: .opacity.combined(with: .move(edge: .trailing))
-                         ))
+//                 case 4:
+//                     SettingsView()
+//                         .transition(.asymmetric(
+//                             insertion: .opacity.combined(with: .move(edge: .trailing)),
+//                             removal: .opacity.combined(with: .move(edge: .trailing))
+//                         ))
                     
                 default:
                     EmptyView()
@@ -76,10 +84,11 @@ struct ContentView: View {
                     
 //                    tabButton(icon: "plus.circle.fill", title: "Create", index: 2)
                     tabButton(icon: "wrench.and.screwdriver", title: "Playground", index: 2)
+                    tabButton(icon: "wrench.and.screwdriver", title: "Playground", index: 3)
                     
                     // tabButton(icon: "cpu", title: "AI Models", index: 3)
-                    tabButton(icon: "person.fill", title: "My Photos", index: 3)
-                     tabButton(icon: "gearshape.fill", title: "Settings", index: 4)
+                    tabButton(icon: "person.fill", title: "My Photos", index: 4)
+//                     tabButton(icon: "gearshape.fill", title: "Settings", index: 4)
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
@@ -116,6 +125,11 @@ struct ContentView: View {
     // Tab button helper
     private func tabButton(icon: String, title: String, index: Int) -> some View {
         TabBarButton(icon: icon, title: title, isSelected: selectedTab == index) {
+            // If tapping Home tab while already on Home, reset navigation to root
+            if index == 0 && selectedTab == 0 {
+                homeResetTrigger = UUID()
+            }
+            
             let edge: Edge = index < selectedTab ? .leading : .trailing
             currentTransitionEdge = edge
             previousTab = selectedTab

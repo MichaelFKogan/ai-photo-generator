@@ -95,27 +95,5 @@ let artist = [
         enableSyncMode: false,  // nano-banana uses async mode with polling
         enableBase64Output: false
     ),
-    InfoPacket(
-        title: "Mona Lisa",
-        cost: 0.05,
-        
-        imageName: "yourphoto",
-        imageNameOriginal: "yourphoto",
-        
-        description: "",
-        prompt: "Swap the face of the person in the uploaded image and put their face into the mona lisa.",
-        type: "Photo Filter",
-        
-        endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Nano Banana",
-        modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
-        modelImageName: "",
-        exampleImages: [],  // Add example images here when available
-        
-        aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
-        outputFormat: "jpeg",
-        enableSyncMode: false,  // nano-banana uses async mode with polling
-        enableBase64Output: false
-    ),
 ]
 

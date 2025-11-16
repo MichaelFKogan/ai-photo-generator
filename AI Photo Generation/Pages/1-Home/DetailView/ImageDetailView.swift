@@ -19,6 +19,10 @@ struct ImageDetailView: View {
     @State private var showPhotoPicker: Bool = false // <-- new state
     @State private var createArrowMove: Bool = false
     @State private var navigateToConfirmation: Bool = false
+    
+    func allMoreStyles(for packet: InfoPacket) -> [InfoPacket] {
+        packet.moreStyles.flatMap { $0 }
+    }
 
     var body: some View {
         ScrollView {
@@ -94,6 +98,30 @@ struct ImageDetailView: View {
                     if !item.exampleImages.isEmpty {
                         ExampleImagesSection(images: item.exampleImages)
                     }
+                    
+                    // MARK: - More Styles
+                    if !item.moreStyles.isEmpty {
+                        VStack{
+                            HStack {
+                                Image(systemName: "paintbrush")
+                                    .foregroundColor(.blue)
+                                Text("More Styles")
+                                    .font(.custom("Nunito-Bold", size: 22))
+                                Spacer()
+                            }
+                            
+                            HStack {
+                                Text("See what's possible with this image style")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                        }
+                        
+                        MoreStylesImageSection(items: allMoreStyles(for: item))
+
+                    }
+                    
                 }
             }
             .padding(.horizontal, 24)
@@ -576,6 +604,40 @@ struct FullScreenImageViewer: View {
                     .padding()
                 }
                 Spacer()
+            }
+        }
+    }
+}
+
+// MARK: - More Styles Image Section
+struct MoreStylesImageSection: View {
+    let items: [InfoPacket]   // InfoPacket-driven version for images
+
+    // 2x2 grid
+    private let gridColumns = [
+        GridItem(.flexible(), spacing: 6),
+        GridItem(.flexible(), spacing: 6)
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+
+            // MARK: - 2x2 Image Grid
+            LazyVGrid(columns: gridColumns, spacing: 6) {
+                ForEach(items) { item in
+                    NavigationLink(destination: ImageDetailView(item: item)) {
+                        GeometryReader { geo in
+                            Image(item.imageName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geo.size.width, height: 260)
+                                .clipped()
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        }
+                        .frame(height: 260)
+                    }
+                }
             }
         }
     }

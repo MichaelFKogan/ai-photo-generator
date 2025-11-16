@@ -33,7 +33,7 @@ let Caricature = [
         modelName: "Nano Banana",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
-        exampleImages: [],  // Add example images here when available
+        exampleImages: ["caricature1", "caricature2", "caricature3", "caricature4",],
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
@@ -67,7 +67,7 @@ let Caricature = [
         modelName: "Nano Banana",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
-        exampleImages: [],  // Add example images here when available
+        exampleImages: ["3dcaricature", "caricature2", "caricature3", "caricature4",],
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
@@ -101,7 +101,7 @@ let Caricature = [
         modelName: "Nano Banana",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
-        exampleImages: [],  // Add example images here when available
+        exampleImages: ["caricature1", "3dcaricature", "caricature3", "caricature4",],
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
@@ -135,7 +135,7 @@ let Caricature = [
         modelName: "Nano Banana",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
-        exampleImages: [],  // Add example images here when available
+        exampleImages: ["caricature1", "caricature2", "3dcaricature", "caricature4",],
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",
@@ -169,7 +169,7 @@ let Caricature = [
         modelName: "Nano Banana",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
-        exampleImages: [],  // Add example images here when available
+        exampleImages: ["caricature1", "caricature2", "caricature3", "3dcaricature",],
         
         aspectRatio: nil,  // Don't include aspect_ratio for this endpoint
         outputFormat: "jpeg",

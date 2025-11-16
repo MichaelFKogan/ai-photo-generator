@@ -10,78 +10,38 @@ import AVKit
 
 struct InfoPacket: Identifiable {
     let id = UUID()
-    let title: String
-    let cost: Double
-    
-    let imageName: String
-    let imageNameOriginal: String?
-    
-    let description: String
-    let prompt: String
-    let type: String?
-    
-    let endpoint: String
-    let modelName: String
-    let modelDescription: String
-    let modelImageName: String
-    let exampleImages: [String]
-    
-    let aspectRatio: String?
-    let outputFormat: String
-    let enableSyncMode: Bool
-    let enableBase64Output: Bool
 
-    // ✅ Default values for flexibility
-    init(
-        title: String = "",
-        cost: Double = 0.0,
-        
-        imageName: String,
-        imageNameOriginal: String? = nil,
-        
-        description: String = "",
-        prompt: String = "",
-        type: String? = nil,
-        
-        endpoint: String = "",
-        modelName: String = "",
-        modelDescription: String = "",
-        modelImageName: String = "",
-        exampleImages: [String] = [],
-        
-        aspectRatio: String? = nil,
-        outputFormat: String = "jpeg",
-        enableSyncMode: Bool = true,
-        enableBase64Output: Bool = false
-    ) {
-        self.title = title
-        self.cost = cost
-        
-        self.imageName = imageName
-        self.imageNameOriginal = imageNameOriginal
-        
-        self.description = description
-        self.prompt = prompt
-        self.type = type
-        
-        self.endpoint = endpoint
-        self.modelName = modelName
-        self.modelDescription = modelDescription
-        self.modelImageName = modelImageName
-        self.exampleImages = exampleImages
-        
-        self.aspectRatio = aspectRatio
-        self.outputFormat = outputFormat
-        self.enableSyncMode = enableSyncMode
-        self.enableBase64Output = enableBase64Output
-    }
+    var title: String = ""
+    var cost: Double = 0.0
+
+    var imageName: String = ""
+    var imageNameOriginal: String? = nil
+
+    var description: String = ""
+    var prompt: String = ""
+    var type: String? = nil
+
+    var endpoint: String = ""
+    var modelName: String = ""
+    var modelDescription: String = ""
+    var modelImageName: String = ""
+    var exampleImages: [String] = []
+
+    var moreStyles: [[InfoPacket]] = []
+
+    var aspectRatio: String? = nil
+    var outputFormat: String = "jpeg"
+    var enableSyncMode: Bool = true
+    var enableBase64Output: Bool = false
 }
+
 
 
 
 
 struct Home: View {
     @EnvironmentObject var themeManager: ThemeManager
+    let resetTrigger: UUID
     
     var body: some View {
         NavigationView {
@@ -154,20 +114,9 @@ struct Home: View {
                     
                     HomeRowSingle(title: "👔 Professional Headshots", items: linkedInHeadshots)
                     
+                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+                    HomeRowVideo(title: "❤️ Relationships", items: relationshipVideosItems)
                     
-//                    LinkedIn Headshots
-                    
-//                    Aesthetic Photoshoot - men's photos - rain
-//                    Aesthetic Photoshoot - women's
-                    
-                    
-                    
-//                    Studio Photoshoot
-//                    Street Photography
-                    
-//                    Spotlight Portraits
-//                    Photobooth
-//                    Polaroid Photo
                     
        
 //                    HomeRowVideo(title: "📈 Trending", items: transformyourphotosItems)
@@ -251,5 +200,6 @@ struct Home: View {
 //                }
 //            }
         }
+        .id(resetTrigger) // Reset navigation stack when resetTrigger changes
     }
 }

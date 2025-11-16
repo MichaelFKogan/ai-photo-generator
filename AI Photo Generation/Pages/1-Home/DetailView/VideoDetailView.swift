@@ -73,7 +73,7 @@ struct VideoDetailView: View {
 //                    ExampleVideosSection(videos: item.exampleImages)
 //                }
                 
-                
+                // MARK: - More Styles
                 VStack{
                     HStack {
                         Image(systemName: "play.rectangle.fill")
@@ -262,7 +262,7 @@ struct ExampleVideosSection: View {
                 }
                 
                 HStack{
-                    Text("See what’s possible with this video style")
+                    Text("Try a different video style")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()
