@@ -39,6 +39,7 @@ struct PlaygroundView: View {
                         withAnimation { selectedTab = 0 }
                     } label: {
                         Label("Video", systemImage: "video.fill")
+                            .foregroundColor(.purple)
                     }
 
                     TabHeaderButton(title: "Image", isSelected: selectedTab == 1) {
@@ -99,60 +100,60 @@ struct PlaygroundView: View {
 //                    }
 //                }
 //            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Playground")
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 12) {
-                        // Credits Display
-                        HStack(spacing: 6) {
-                            Image(systemName: "diamond.fill")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .font(.system(size: 8))
-                            
-//                            Text("\(userCredits)")
-                            Text("$5.00")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.primary)
-                            Text("credits left")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.secondary.opacity(0.1))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-//                                .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                        )
-                    }
-                }
-            }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarLeading) {
+//                    Text("Playground")
+//                        .font(.system(size: 28, weight: .bold, design: .rounded))
+//                        .foregroundStyle(
+//                            LinearGradient(
+//                                colors: [.blue, .purple],
+//                                startPoint: .leading,
+//                                endPoint: .trailing
+//                            )
+//                        )
+//                }
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    HStack(spacing: 12) {
+//                        // Credits Display
+//                        HStack(spacing: 6) {
+//                            Image(systemName: "diamond.fill")
+//                                .foregroundStyle(
+//                                    LinearGradient(
+//                                        colors: [.blue, .purple],
+//                                        startPoint: .topLeading,
+//                                        endPoint: .bottomTrailing
+//                                    )
+//                                )
+//                                .font(.system(size: 8))
+//                            
+////                            Text("\(userCredits)")
+//                            Text("$5.00")
+//                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+//                                .foregroundColor(.primary)
+//                            Text("credits left")
+//                                .font(.caption2)
+//                                .foregroundColor(.secondary)
+//                        }
+//                        .padding(.horizontal, 12)
+//                        .padding(.vertical, 6)
+//                        .background(
+//                            RoundedRectangle(cornerRadius: 20)
+//                                .fill(Color.secondary.opacity(0.1))
+//                        )
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 20)
+////                                .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
+//                                .strokeBorder(
+//                                    LinearGradient(
+//                                        colors: [.blue, .purple],
+//                                        startPoint: .leading,
+//                                        endPoint: .trailing
+//                                    )
+//                                )
+//                        )
+//                    }
+//                }
+//            }
             
         }
     }
@@ -494,9 +495,9 @@ struct VideoPlaygroundTab: View {
                 }
                 .padding(.horizontal)
                 
-                // Reference Images (Optional) - multi-image picker and grid
-                ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
-                    .padding(.horizontal)
+//                // Reference Images (Optional) - multi-image picker and grid
+//                ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
+//                    .padding(.horizontal)
 
                 // Simple Video Options
                 VStack(alignment: .leading, spacing: 12) {
@@ -684,39 +685,41 @@ struct ImagePlaygroundTab: View {
                 }
                 .padding(.horizontal)
 
-                // Negative Prompt
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 6){
-                        Image(systemName: "text.badge.minus")
-                            .foregroundColor(.secondary)
-                        Text("Negative Prompt (Optional)")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                    }
+//                // Negative Prompt
+//                VStack(alignment: .leading, spacing: 8) {
+//                    HStack(spacing: 6){
+//                        Image(systemName: "text.badge.minus")
+//                            .foregroundColor(.secondary)
+//                        Text("Negative Prompt (Optional)")
+//                            .font(.headline)
+//                            .foregroundColor(.secondary)
+//                    }
+//
+//                    TextEditor(text: $negativePrompt)
+//                        .font(.system(size: 14)).opacity(0.8)
+//                        .frame(minHeight: 40)
+//                        .padding(8)
+//                        .background(Color.gray.opacity(0.1))
+//                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 12)
+//                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+//                        )
+//                    
+//                }
+//                .padding(.horizontal)
 
-                    TextEditor(text: $negativePrompt)
-                        .font(.system(size: 14)).opacity(0.8)
-                        .frame(minHeight: 40)
-                        .padding(8)
-                        .background(Color.gray.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                        )
-                }
-                .padding(.horizontal)
-
-                // Reference Images (Optional) - multi-image picker and grid
-                ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
-                    .padding(.horizontal)
+//                // Reference Images (Optional) - multi-image picker and grid
+//                ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
+//                    .padding(.horizontal)
 
                 // Core Image Options
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 6) {
                         Image(systemName: "slider.horizontal.3")
                             .foregroundColor(.secondary)
-                        Text("Image Options")
+//                        Text("Image Options")
+                        Text("Aspect Ratio")
                             .font(.headline)
                             .foregroundColor(.secondary)
                     }
@@ -729,58 +732,58 @@ struct ImagePlaygroundTab: View {
 //                    }
 
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Aspect Ratio")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+//                        Text("Aspect Ratio")
+//                            .font(.caption)
+//                            .foregroundColor(.secondary)
                         AspectRatioSelector(options: imageAspectOptions, selectedIndex: $selectedAspectIndex)
                     }
                 }
                 .padding(.horizontal)
 
-                // Advanced Options (dropdown)
-                DisclosureGroup("Advanced Options", isExpanded: $isAdvancedOptionsExpanded) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Image Count: \(numImages)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                            }
-                            Slider(
-                                value: Binding(get: { Double(numImages) }, set: { numImages = Int($0) }),
-                                in: 1...4,
-                                step: 1
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Guidance: \(String(format: "%.1f", guidance))")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                            }
-                            Slider(value: $guidance, in: 0...20, step: 0.5)
-                        }
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Steps: \(steps)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                            }
-                            Slider(
-                                value: Binding(get: { Double(steps) }, set: { steps = Int($0) }),
-                                in: 10...60,
-                                step: 1
-                            )
-                        }
-                    }
-                    .padding(.top, 8)
-                }
-                .padding(.horizontal)
+//                // Advanced Options (dropdown)
+//                DisclosureGroup("Advanced Options", isExpanded: $isAdvancedOptionsExpanded) {
+//                    VStack(alignment: .leading, spacing: 12) {
+//                        VStack(alignment: .leading, spacing: 8) {
+//                            HStack {
+//                                Text("Image Count: \(numImages)")
+//                                    .font(.caption)
+//                                    .foregroundColor(.secondary)
+//                                Spacer()
+//                            }
+//                            Slider(
+//                                value: Binding(get: { Double(numImages) }, set: { numImages = Int($0) }),
+//                                in: 1...4,
+//                                step: 1
+//                            )
+//                        }
+//
+//                        VStack(alignment: .leading, spacing: 8) {
+//                            HStack {
+//                                Text("Guidance: \(String(format: "%.1f", guidance))")
+//                                    .font(.caption)
+//                                    .foregroundColor(.secondary)
+//                                Spacer()
+//                            }
+//                            Slider(value: $guidance, in: 0...20, step: 0.5)
+//                        }
+//
+//                        VStack(alignment: .leading, spacing: 8) {
+//                            HStack {
+//                                Text("Steps: \(steps)")
+//                                    .font(.caption)
+//                                    .foregroundColor(.secondary)
+//                                Spacer()
+//                            }
+//                            Slider(
+//                                value: Binding(get: { Double(steps) }, set: { steps = Int($0) }),
+//                                in: 10...60,
+//                                step: 1
+//                            )
+//                        }
+//                    }
+//                    .padding(.top, 8)
+//                }
+//                .padding(.horizontal)
 
                 // Generate button (no model count dependency)
                 Button(action: generateAction) {
@@ -1016,7 +1019,7 @@ struct ModelPickerView: View {
                                         }
 
                                         Text(model.description)
-                                            .font(.subheadline)
+                                            .font(.caption)
                                             .foregroundColor(.secondary)
                                             .lineLimit(3)
                                             .fixedSize(horizontal: false, vertical: true)
@@ -1105,7 +1108,7 @@ struct ModelPickerView: View {
                                         }
 
                                         Text(model.description)
-                                            .font(.subheadline)
+                                            .font(.caption)
                                             .foregroundColor(.secondary)
                                             .lineLimit(3)
                                             .fixedSize(horizontal: false, vertical: true)

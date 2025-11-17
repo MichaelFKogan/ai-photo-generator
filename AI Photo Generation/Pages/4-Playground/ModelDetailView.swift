@@ -394,7 +394,7 @@ struct AIModelSection: View {
                     }
 
                     Text(modelDescription)
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(3)
                         .fixedSize(horizontal: false, vertical: true)
