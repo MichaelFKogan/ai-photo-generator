@@ -19,7 +19,7 @@ let imageModelsRow = [
 
         description: "",
         prompt: "",
-        type: "AI Image Model",
+        type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "Google Gemini Flash 2.5 / Nano Banana",
@@ -46,7 +46,7 @@ let imageModelsRow = [
 
         description: "",
         prompt: "",
-        type: "AI Image Model",
+        type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "GPT Image 1",
@@ -73,7 +73,7 @@ let imageModelsRow = [
 
         description: "",
         prompt: "",
-        type: "AI Image Model",
+        type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "Seedream 4.0",
@@ -100,7 +100,7 @@ let imageModelsRow = [
 
         description: "",
         prompt: "",
-        type: "AI Image Model",
+        type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "FLUX.1 Kontext [dev]",
@@ -127,7 +127,7 @@ let imageModelsRow = [
 
         description: "",
         prompt: "",
-        type: "AI Image Model",
+        type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "FLUX.1 Kontext [pro]",
@@ -154,7 +154,7 @@ let imageModelsRow = [
 
         description: "",
         prompt: "",
-        type: "AI Image Model",
+        type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "FLUX.1 Kontext [max]",

@@ -42,6 +42,18 @@ struct FullScreenImageView: View {
     var isPhotoFilter: Bool {
         userImage.type == "Photo Filter"
     }
+
+     var isVideoFilter: Bool {
+        userImage.type == "Video Filter"
+    }
+
+    var isImageModel: Bool {
+        userImage.type == "Image Model"
+    }
+
+     var isVideoModel: Bool {
+        userImage.type == "Video Model"
+    }
     
     var body: some View {
         ZStack {
@@ -107,48 +119,6 @@ struct FullScreenImageView: View {
                     
                     // Info section below image
                     VStack(alignment: .leading, spacing: 16) {
-                        // Header with action buttons
-                        HStack {
-                            Text("Generation Details")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                            
-                            Spacer()
-                            
-                            HStack(spacing: 8) {
-                                // Download button
-                                Button(action: {
-                                    Task {
-                                        await downloadImage()
-                                    }
-                                }) {
-                                    HStack(spacing: 4) {
-                                        if isDownloading {
-                                            ProgressView()
-                                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                                .scaleEffect(0.8)
-                                        } else if showDownloadSuccess {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(.green)
-                                            Text("Saved to your photos")
-                                                .font(.subheadline)
-                                                .foregroundColor(.green)
-                                        } else {
-                                            Image(systemName: "arrow.down.circle")
-                                            Text("Download")
-                                                .font(.subheadline)
-                                        }
-                                    }
-                                    .foregroundColor(showDownloadSuccess ? .green : .white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
-                                    .background(showDownloadSuccess ? Color.green.opacity(0.15) : Color.blue.opacity(0.3))
-                                    .cornerRadius(8)
-                                }
-                                .disabled(isDeleting || isDownloading || showDownloadSuccess)
-                            }
-                        }
-                        
                         Divider()
                             .background(Color.gray.opacity(0.3))
                         
@@ -180,7 +150,7 @@ struct FullScreenImageView: View {
                         .padding(.bottom, 8)
                         
                         // Display Photo Filter specific information
-                        if isPhotoFilter {
+                        if isPhotoFilter || isVideoFilter {
                             // Filter Name (left) and Cost (right)
                             HStack(alignment: .top) {
                                 if let title = userImage.title, !title.isEmpty {
@@ -210,9 +180,121 @@ struct FullScreenImageView: View {
                                 
                                 if let cost = userImage.cost {
                                     VStack(alignment: .trailing, spacing: 4) {
-                                        Text("Cost")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
+                                        HStack {
+                                            Image(systemName: "dollarsign.circle.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Cost")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Text("$\(String(format: "%.2f", cost))")
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                            
+                            // Type (left) and Aspect Ratio (right)
+                            HStack(alignment: .top) {
+                                if let type = userImage.type {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack {
+                                            Image(systemName: "tag.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Type")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Text(type)
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                
+                                Spacer()
+                                
+                                if let aspectRatio = userImage.aspect_ratio, !aspectRatio.isEmpty {
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        HStack {
+                                            Image(systemName: "aspectratio")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Aspect Ratio")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Text(aspectRatio)
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                        } 
+                        
+                        else if isImageModel || isVideoModel {
+                              // Filter Name (left) and Cost (right)
+                            HStack(alignment: .top) {
+                                if let title = userImage.title, !title.isEmpty {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack {
+                                            Image(systemName: "paintbrush.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Filter Name")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Text(title)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                
+                                Spacer()
+                                
+                                if let cost = userImage.cost {
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        HStack {
+                                            Image(systemName: "dollarsign.circle.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Cost")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
                                         Text("$\(String(format: "%.2f", cost))")
                                             .font(.subheadline)
                                             .foregroundColor(.white)
@@ -224,9 +306,20 @@ struct FullScreenImageView: View {
                             HStack(alignment: .top) {
                                 if let type = userImage.type {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Type")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
+                                        HStack {
+                                            Image(systemName: "tag.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Type")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
                                         Text(type)
                                             .font(.subheadline)
                                             .foregroundColor(.white)
@@ -237,16 +330,81 @@ struct FullScreenImageView: View {
                                 
                                 if let model = userImage.model, !model.isEmpty {
                                     VStack(alignment: .trailing, spacing: 4) {
-                                        Text("Model")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
+                                        HStack {
+                                            Image(systemName: "cpu.fill")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Model")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
                                         Text(model)
                                             .font(.subheadline)
                                             .foregroundColor(.white)
                                     }
                                 }
                             }
-                        } else {
+                            
+                            // Aspect Ratio (if exists) - aligned to the right
+                            if let aspectRatio = userImage.aspect_ratio, !aspectRatio.isEmpty {
+                                HStack {
+                                    Spacer()
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        HStack {
+                                            Image(systemName: "aspectratio")
+                                                .foregroundStyle(
+                                                    LinearGradient(
+                                                        colors: [.blue, .purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                )
+                                                .font(.caption)
+                                            Text("Aspect Ratio")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Text(aspectRatio)
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                .padding(.top, 8)
+                            }
+                            
+                            // Prompt (if exists)
+                            if let prompt = userImage.prompt, !prompt.isEmpty {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Image(systemName: "text.alignleft")
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    colors: [.blue, .purple],
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                )
+                                            )
+                                            .font(.caption)
+                                        Text("Prompt")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    Text(prompt)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                                .padding(.top, 8)
+                            }
+                        } 
+
+                        else {
                             // For non-Photo Filter types, show generic info
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
@@ -321,6 +479,37 @@ struct FullScreenImageView: View {
                             //                                .cornerRadius(10)
                             //                            }
                             //                        }
+                            
+                            // Download button
+                            Button(action: {
+                                Task {
+                                    await downloadImage()
+                                }
+                            }) {
+                                HStack(spacing: 4) {
+                                    if isDownloading {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .scaleEffect(0.8)
+                                    } else if showDownloadSuccess {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                        Text("Saved to your photos")
+                                            .fontWeight(.semibold)
+                                    } else {
+                                        Image(systemName: "arrow.down.circle")
+                                        Text("Download")
+                                            .fontWeight(.semibold)
+                                    }
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(showDownloadSuccess ? .green : .white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(showDownloadSuccess ? Color.green.opacity(0.15) : Color.blue.opacity(0.3))
+                                .cornerRadius(10)
+                            }
+                            .disabled(isDeleting || isDownloading || showDownloadSuccess)
                             
                             // Share button
                             if let url = mediaURL {

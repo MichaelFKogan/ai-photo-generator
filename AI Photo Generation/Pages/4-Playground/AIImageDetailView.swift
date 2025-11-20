@@ -61,7 +61,7 @@ struct AIImageDetailView: View {
                                             .fontWeight(.bold)
                                             .foregroundColor(.white)
                                         
-                                        Text("AI Image Model")
+                                        Text("Image Model")
                                             .font(.caption)
                                             .foregroundColor(.white.opacity(0.9))
                                     }

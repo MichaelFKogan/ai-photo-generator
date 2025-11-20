@@ -15,6 +15,8 @@ struct UserImage: Codable, Identifiable {
     let media_type: String? // "image" or "video"
     let file_extension: String? // e.g., "jpg", "mp4", "webm"
     let thumbnail_url: String? // Thumbnail for videos
+    let prompt: String? // Prompt used for generation
+    let aspect_ratio: String? // Aspect ratio used for generation
     
     // Computed property for convenience
     var isVideo: Bool {
@@ -38,6 +40,8 @@ struct UserImage: Codable, Identifiable {
         case media_type
         case file_extension
         case thumbnail_url
+        case prompt
+        case aspect_ratio
     }
     
     // Custom decoder to handle id as either Int or String
@@ -65,6 +69,8 @@ struct UserImage: Codable, Identifiable {
         self.media_type = try? container.decode(String.self, forKey: .media_type)
         self.file_extension = try? container.decode(String.self, forKey: .file_extension)
         self.thumbnail_url = try? container.decode(String.self, forKey: .thumbnail_url)
+        self.prompt = try? container.decode(String.self, forKey: .prompt)
+        self.aspect_ratio = try? container.decode(String.self, forKey: .aspect_ratio)
     }
 }
 

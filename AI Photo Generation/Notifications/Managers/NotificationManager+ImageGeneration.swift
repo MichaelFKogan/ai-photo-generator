@@ -118,7 +118,9 @@ extension NotificationManager {
                         title: item.title.isEmpty ? nil : item.title,
                         cost: item.cost > 0 ? item.cost : nil,
                         type: item.type?.isEmpty == false ? item.type : nil,
-                        endpoint: item.endpoint.isEmpty ? nil : item.endpoint
+                        endpoint: item.endpoint.isEmpty ? nil : item.endpoint,
+                        prompt: item.prompt.isEmpty ? nil : item.prompt,
+                        aspectRatio: item.aspectRatio
                     )
                     
                     print("📝 Saving metadata: title=\(metadata.title ?? "none"), cost=\(metadata.cost ?? 0), type=\(metadata.type ?? "none")")

@@ -158,7 +158,9 @@ extension NotificationManager {
                         cost: item.cost > 0 ? item.cost : nil,
                         type: item.type?.isEmpty == false ? item.type : nil,
                         endpoint: item.endpoint.isEmpty ? nil : item.endpoint,
-                        fileExtension: fileExtension
+                        fileExtension: fileExtension,
+                        prompt: item.prompt.isEmpty ? nil : item.prompt,
+                        aspectRatio: item.aspectRatio
                     )
                     
                     print("📝 Saving video metadata: title=\(metadata.title ?? "none"), cost=\(metadata.cost ?? 0), type=\(metadata.type ?? "none"), extension=\(fileExtension)")
