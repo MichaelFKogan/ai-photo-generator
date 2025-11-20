@@ -1,0 +1,48 @@
+Generate Image Flow
+====================
+
+Scope: Describes the full path a request follows from tapping `Generate Image` inside `AIImageDetailView` to seeing the finished media inside the Profile tab.
+
+1. User action (`AIImageDetailView.swift`)
+   - The `generate()` method (lines ~370–406) is wired to the “Generate Image” button.
+   - It guards against concurrent work via the `isGenerating` state, builds a placeholder `UIImage` (WaveSpeed always expects an `image` parameter), derives the selected aspect ratio, and injects the user’s free-form prompt into a mutable `InfoPacket`.
+   - The method requests the authenticated user id from `AuthViewModel` and hands everything to `NotificationManager.startBackgroundGeneration(...)`. All subsequent progress happens outside of the view lifecycle while SwiftUI shows the async notification overlay.
+
+2. Background orchestration (`NotificationManager.swift`)
+   - `startBackgroundGeneration` immediately shows a UI notification (`showNotification`) and stores bookkeeping inside `generationTasks`.
+   - A detached `Task` drives the pipeline so it survives view changes. Inside the task the manager:
+     * Updates the notification progress (`updateProgress`, `updateMessage`).
+     * Wraps the remote call inside `withTimeout` (see `TimeoutHelper.swift`) to guard against runaway jobs.
+     * Calls `sendImageToWaveSpeed(...)` passing the modified `InfoPacket` fields (prompt, aspect ratio, model endpoint, sync/base64 flags, etc.).
+   - On success it downloads the returned media URL, converts it into a `UIImage`, uploads it to Supabase Storage, saves metadata in the `user_media` table, caches the bitmap in `generationTasks[taskId].generatedImage`, and finally marks/dismisses the notification. All failures (timeouts, network errors, API errors) surface through `markAsFailed` plus cleanup via `cleanupTask`.
+
+3. Calling the WaveSpeed API (`WaveSpeedAPI.swift`)
+   - `sendImageToWaveSpeed` builds the POST body. For normal endpoints it base64-encodes the placeholder upload; for cases like nano-banana/Google it first uploads to Supabase Storage to obtain a public URL.
+   - Optional prompt/aspect ratio fields are only attached when non-empty to avoid API rejections.
+   - After issuing the POST request it either receives a synchronous “completed” payload or an async “created” payload. In async mode it polls `fetchWaveSpeedJobStatus` up to `maxPollingAttempts`, waiting 5 seconds between polls (total 5–10 minutes depending on the model type).
+   - The function bubbles up errors, enabling `NotificationManager` to show meaningful failure copy.
+
+4. Persisting media (`SupabaseManager.swift`)
+   - `uploadImage` converts the bitmap to JPEG, writes it into the `user-generated-images` bucket under `<userId>/<timestamp>_<model>.jpg`, and returns a public URL. Exponential backoff ensures transient upload issues are retried.
+   - Once the final Supabase URL is obtained, `NotificationManager` builds an `ImageMetadata` value and inserts it into `user_media` via the shared `SupabaseClient`, guaranteeing the Profile tab can discover it later. (Videos follow a similar path via `uploadVideo`, omitted here.)
+
+5. Profile retrieval (`ProfileView.swift`, `ProfileViewModel.swift`)
+   - When the Profile tab appears, `ProfileView` hands the signed-in user id to `ProfileViewModel`.
+   - `ProfileViewModel.fetchUserImages` (called on appear and swipe-to-refresh) queries `user_media` for the user id, ordered by `created_at DESC`. Results are cached locally (`@AppStorage cachedUserImagesV2`) so previously generated items render instantly even before the network finishes.
+   - The resulting `[UserImage]` drives `ImageGridView`, which renders each `image_url` or `thumbnail_url` via `Kingfisher` and opens `FullScreenImageView` on tap. That means the moment `NotificationManager` writes a new record to Supabase, a subsequent fetch (manual refresh or automatic on the next visit) pulls it into the grid.
+
+6. End-to-end timeline
+   - `AIImageDetailView.generate()` → packages prompt + aspect ratio + placeholder image → `NotificationManager.startBackgroundGeneration`.
+   - Notification pipeline issues API call (`sendImageToWaveSpeed`), polls until completion, downloads and uploads final media, writes metadata to Supabase.
+   - Profile view model fetches the Supabase `user_media` rows; grid displays them with remote image loading.
+   - Users therefore see the generated asset in `ProfileView` after either staying on the tab long enough for the next refresh or by pulling to refresh manually; no manual wiring is needed because both the storage upload and database insert happen inside the background task as part of the core flow.
+
+Key Files & Functions
+---------------------
+- `Pages/4-Playground/AIImageDetailView.swift`: UI entry point; `generate()` prepares request data.
+- `Notifications/Managers/NotificationManager.swift`: Orchestrates async generation, progress UI, storage upload, metadata persistence.
+- `Notifications/Helpers/TimeoutHelper.swift`: `withTimeout` utility protecting long-running work.
+- `API/WaveSpeed/WaveSpeedAPI.swift`: Low-level HTTP integration & polling logic.
+- `API/Supabase/SupabaseManager.swift`: Storage + database helpers used both for API prerequisites (URL-based endpoints) and final persistence.
+- `Pages/5-Profile/ProfileViewModel.swift` & `Pages/5-Profile/5-ProfileView.swift`: Fetch and show generated media in the Profile tab.
+

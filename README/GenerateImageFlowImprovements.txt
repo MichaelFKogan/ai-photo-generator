@@ -1,0 +1,53 @@
+Generate Image Flow – Improvement Plan
+=====================================
+
+Objective: Identify pragmatic enhancements a senior iOS/backend engineer would prioritize to make the “Generate → Notify → Persist → Profile” pipeline more resilient, scalable, and user friendly.
+
+1. User Experience & State Handling
+   • Decouple UI state from the background task by persisting `taskId` and `isGenerating` flags in a lightweight store (e.g., `AppStorage` or `Observation` in `AuthViewModel`). This prevents duplicate submissions when the view is recreated.
+   • Surface richer inline feedback (remaining credits, ETA, retry CTA) inside `AIImageDetailView` instead of fully relying on transient notifications.
+   • Record the prompt/aspect selection in a draft model so users can tweak and resubmit quickly if generation fails.
+
+2. Task Management & Queueing
+   • Centralize work in an explicit queue object (e.g., `GenerationTaskStore`) that enforces per-user concurrency limits, prioritisation, and resuming pending jobs after app relaunch.
+   • Persist the queue using `FileManager` or CoreData so detached `Task`s can be recovered; upon app launch, inspect unfinished jobs and reattach progress observers.
+   • Provide cancelation hooks that propagate to WaveSpeed (if supported) and to Supabase uploads.
+
+3. Networking & API Reliability
+   • Move the WaveSpeed API key out of source and into secure storage (XCConfig + Secrets Manager). Inject via dependency container for testability.
+   • Replace ad-hoc `Task.detached` with structured concurrency plus `AsyncThrowingStream` that yields progress updates; this improves cancellation propagation and makes the API layer unit-testable.
+   • Introduce automatic retries/backoff at the HTTP layer (e.g., for status codes 429/5xx) before giving up and marking the notification as failed.
+   • Validate prompt/aspect inputs against server-supported values before dispatch to minimize immediate API failures.
+
+4. Storage & Database
+   • Uploads: stream data using `URLSessionUploadTask` to lower memory footprint, especially once reference images or higher-res outputs are supported.
+   • Metadata writes: wrap Supabase inserts in a small repository object that can batch multiple records, conduct conflict detection, and abstract schema changes from the UI layer.
+   • Store additional metadata (`prompt`, `aspect_ratio`, `task_id`) to let the Profile tab filter/sort and to correlate failures with later replays.
+
+5. Observability & Metrics
+   • Add unified logging (e.g., OSLog categories for UI, API, Storage) and trace ids so failures can be followed across layers.
+   • Emit analytics events (success, fail, cancel, duration buckets) for product feedback and to detect regressions.
+   • Attach diagnostic context to notifications (tap to view logs / retry), improving support tooling.
+
+6. Profile Refresh Strategy
+   • After a successful database insert, send a notification (Combine publisher or async sequence) that `ProfileViewModel` subscribes to, allowing instant insertion without waiting for the next fetch/refresh gesture.
+   • Debounce Supabase queries and add pagination so the profile grid stays performant as the creation history grows.
+   • Cache thumbnails separately to reduce bandwidth and speed up grid rendering.
+
+7. Testing & Tooling
+   • Build mocked versions of WaveSpeed and Supabase clients so the entire flow can be exercised in UI tests without hitting production services.
+   • Cover edge cases: timeouts, malformed responses, storage quota errors, double taps on Generate, app going to background mid-upload.
+   • Add smoke tests that generate a small image nightly, verifying both storage and database writes still succeed.
+
+8. Security & Compliance
+   • Encrypt any temporary files (placeholder uploads, downloaded images) or store them in the app’s protected container with automatic cleanup.
+   • Validate user authentication before every Supabase interaction and handle token refresh centrally, reducing the chance of silent failures.
+   • Scrub prompt content if logging (PII considerations) and respect regional data residency requirements if applicable.
+
+Implementation Notes
+--------------------
+• Start by extracting `GenerationService` protocol that owns `startGeneration`, `cancel`, `observe(taskId)`. Inject it into both `AIImageDetailView` and `NotificationManager`.
+• Replace global singletons with dependency injection for easier testing.
+• Add a lightweight `GenerationRecord` persisted locally so the Profile tab can optimistic-insert while Supabase writes complete, reconciling after the backend confirms.
+• Iterate incrementally: first secure secrets + improve error surfacing, then tackle queue persistence, then add analytics/testing.
+

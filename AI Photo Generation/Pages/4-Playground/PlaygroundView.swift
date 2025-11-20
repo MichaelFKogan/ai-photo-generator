@@ -178,7 +178,7 @@ struct ReferenceImagesSection: View {
             HStack(spacing: 6) {
                 Image(systemName: "photo.on.rectangle")
                     .foregroundColor(.secondary)
-                Text("Reference Images (Optional)")
+                Text("Reference Image(s) (Optional)")
                     .font(.headline)
                     .foregroundColor(.secondary)
             }
