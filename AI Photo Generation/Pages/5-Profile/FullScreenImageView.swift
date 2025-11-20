@@ -23,6 +23,7 @@ struct FullScreenImageView: View {
     @State private var showDeleteError = false
     @State private var deleteErrorMessage = ""
     @State private var player: AVPlayer?
+    @State private var showCopySuccess = false
     
     var mediaURL: URL? {
         URL(string: userImage.image_url)
@@ -394,6 +395,23 @@ struct FullScreenImageView: View {
                                         Text("Prompt")
                                             .font(.caption)
                                             .foregroundColor(.gray)
+                                        
+                                        Spacer()
+                                        
+                                        Button(action: {
+                                            copyPromptToClipboard(prompt)
+                                        }) {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: showCopySuccess ? "checkmark.circle.fill" : "doc.on.doc")
+                                                    .foregroundColor(showCopySuccess ? .green : .gray)
+                                                    .font(.caption)
+                                                if showCopySuccess {
+                                                    Text("Copied")
+                                                        .font(.caption)
+                                                        .foregroundColor(.green)
+                                                }
+                                            }
+                                        }
                                     }
                                     Text(prompt)
                                         .font(.subheadline)
@@ -779,6 +797,20 @@ struct FullScreenImageView: View {
                 deleteErrorMessage = "Failed to delete. Please try again."
             }
             showDeleteError = true
+        }
+    }
+    
+    // MARK: - Copy Prompt to Clipboard
+    private func copyPromptToClipboard(_ prompt: String) {
+        UIPasteboard.general.string = prompt
+        showCopySuccess = true
+        
+        // Reset success state after 2 seconds
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            await MainActor.run {
+                showCopySuccess = false
+            }
         }
     }
     
