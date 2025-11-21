@@ -33,7 +33,7 @@ let videoModelsRow = [
         enableSyncMode: false,
         enableBase64Output: false,
         
-        capabilities: ["Text to Video", "Audio"]
+        capabilities: ["Text to Video", "Image to Video", "Audio"]
     ),
 
     // ---------------------------------------------------------
@@ -41,7 +41,7 @@ let videoModelsRow = [
     // ---------------------------------------------------------
     InfoPacket(
         title: "Google Veo 3",
-        cost: 0.80,
+        cost: 1.20,
 
         imageName: "veo3",
         imageNameOriginal: "yourphoto",
@@ -62,7 +62,7 @@ let videoModelsRow = [
         enableSyncMode: false,
         enableBase64Output: false,
         
-        capabilities: ["Image to Video"]
+        capabilities: ["Text to Video", "Image to Video", "Audio"]
     ),
 
     // ---------------------------------------------------------
