@@ -32,6 +32,8 @@ struct AIVideoDetailView: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 0) {
+
+// MARK: - Banner Image Section                        
                     // Banner Image at top - extends behind navigation bar
                     ZStack(alignment: .bottom) {
                         Image(item.modelImageName)
@@ -46,15 +48,25 @@ struct AIVideoDetailView: View {
                             
                             VStack {
                                 HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
+                                    VStack(alignment: .leading, spacing: 6) {
                                         Text(item.modelName)
                                             .font(.title2)
                                             .fontWeight(.bold)
                                             .foregroundColor(.white)
                                         
-                                        Text("AI Video Model")
-                                            .font(.caption)
-                                            .foregroundColor(.white.opacity(0.9))
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "video.fill")
+                                                .font(.caption)
+                                            Text("Video Generation Model")
+                                                .font(.caption)
+                                        }
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(
+                                            Capsule()
+                                                .fill(Color.purple.opacity(0.8))
+                                        )
                                     }
                                     
                                     Spacer()
@@ -108,12 +120,13 @@ struct AIVideoDetailView: View {
 //                            .padding(.horizontal)
 //                            .padding(.top, 8)
                         
+// MARK: - Example Images Section                        
                         // Example Images Section
                         if !item.exampleImages.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack(spacing: 6) {
                                     Image(systemName: "photo.stack")
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(.purple)
                                     Text("Example Results")
                                         .font(.headline)
                                         .foregroundColor(.secondary)
@@ -140,11 +153,12 @@ struct AIVideoDetailView: View {
                             }
                         }
                         
+// MARK: - Prompt                        
                         // Video Prompt
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 6) {
                                 Image(systemName: "text.alignleft")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.purple)
                                 Text("Prompt")
                                     .font(.headline)
                                     .foregroundColor(.secondary)
@@ -174,15 +188,17 @@ struct AIVideoDetailView: View {
                         }
                         .padding(.horizontal)
                         
+// MARK: - Reference Images                        
                         // Reference Images (Optional) - multi-image picker and grid
-                        ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
+                        ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems, color: .purple)
                             .padding(.horizontal)
                         
+// MARK: - Video Options                        
                         // Simple Video Options
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 6) {
                                 Image(systemName: "slider.horizontal.3")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.purple)
                                 Text("Video Options")
                                     .font(.headline)
                                     .foregroundColor(.secondary)
@@ -200,15 +216,55 @@ struct AIVideoDetailView: View {
                                 .pickerStyle(.segmented)
                             }
                             
+// MARK: - Aspect Ratio                        
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Aspect Ratio")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
-                                AspectRatioSelector(options: videoAspectOptions, selectedIndex: $videoAspectIndex)
+                                AspectRatioSelector(options: videoAspectOptions, selectedIndex: $videoAspectIndex, color: .purple)
                             }
                         }
                         .padding(.horizontal)
                         
+// MARK: - Cost Summary Card                        
+                        // Cost Summary Card
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Generation Cost")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                HStack(spacing: 4) {
+                                    Text("1 video (\(videoDurations[videoDurationIndex]))")
+                                        .font(.subheadline)
+                                        .foregroundColor(.primary)
+                                    Text("×")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Text(String(format: "$%.2f", item.cost))
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.purple)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            Text(String(format: "$%.2f", item.cost))
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.purple)
+                        }
+                        .padding()
+                        .background(Color.purple.opacity(0.08))
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.purple.opacity(0.2), lineWidth: 1)
+                        )
+                        .padding(.horizontal)
+                        .padding(.bottom, 12)
+                        
+// MARK: - Generate Button                        
                         // Generate Video button
                         Button(action: generate) {
                             HStack {
@@ -224,9 +280,18 @@ struct AIVideoDetailView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background((isGenerating || prompt.isEmpty) ? Color.gray : Color.blue)
+                            .background(
+                                (isGenerating || prompt.isEmpty) ? 
+                                AnyShapeStyle(Color.gray) : 
+                                AnyShapeStyle(LinearGradient(
+                                    colors: [Color.purple.opacity(0.8), Color.purple],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                            )
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: (isGenerating || prompt.isEmpty) ? Color.clear : Color.purple.opacity(0.4), radius: 8, x: 0, y: 4)
                         }
                         .disabled(isGenerating || prompt.isEmpty)
                         .padding(.horizontal)
@@ -237,6 +302,7 @@ struct AIVideoDetailView: View {
             }
             .scrollDismissesKeyboard(.interactively)
         }
+// MARK: - Navigation Bar
         .contentShape(Rectangle())
         .onTapGesture {
             isPromptFocused = false
@@ -299,81 +365,3 @@ struct AIVideoDetailView: View {
         }
     }
 }
-
-// MARK: - AI Model Section Component
-struct AIModelSectionTwo: View {
-    let modelName: String
-    let modelDescription: String
-    let modelImageName: String
-    let price: Double
-    let priceCaption: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(modelImageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 80, height: 80)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-            
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(alignment: .top) {
-                    Text(modelName)
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 2) {
-                        Text(String(format: "$%.2f", price))
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.black)
-                            .cornerRadius(6)
-                        
-                        Text(priceCaption)
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                Text(modelDescription)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-            }
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .cornerRadius(12)
-    }
-}
-
-// MARK: - Tab Header Button Component
-struct TabHeaderButtonTwo<Label: View>: View {
-    let title: String
-    let isSelected: Bool
-    let action: () -> Void
-    @ViewBuilder let label: () -> Label
-    
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                label()
-                    .font(.subheadline)
-                    .foregroundColor(isSelected ? .blue : .secondary)
-                Rectangle()
-                    .fill(isSelected ? Color.blue : Color.clear)
-                    .frame(height: 2)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-        }
-        .buttonStyle(.plain)
-    }
-}
-

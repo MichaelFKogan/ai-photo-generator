@@ -197,10 +197,10 @@ struct VideoPlayerContainer: UIViewRepresentable {
     func updateUIView(_ uiView: VideoPlayerUIView, context: Context) { }
 }
 
-// MARK: - UIView holding AVQueuePlayer and looper
 class VideoPlayerUIView: UIView {
     private var playerLayer: AVPlayerLayer?
     private var player: AVQueuePlayer?
+    private var statusObserver: NSKeyValueObservation?
 
     func configure(url: URL) {
         player = VideoPlayerManager.shared.player(for: url)
@@ -215,18 +215,29 @@ class VideoPlayerUIView: UIView {
         self.layer.addSublayer(layer)
         playerLayer = layer
 
+        // ADD THIS: Wait for player to be ready
+        if let currentItem = player?.currentItem {
+            statusObserver = currentItem.observe(\.status, options: [.new]) { [weak self] item, _ in
+                if item.status == .readyToPlay {
+                    DispatchQueue.main.async {
+                        self?.player?.play()
+                    }
+                }
+            }
+        }
+
         // Observe app coming to foreground
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(appWillEnterForeground),
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
-
-        // Start playback
-        player?.play()
     }
     
     @objc private func appWillEnterForeground() {
-        player?.play()
+        // ADD THIS: Check if ready before playing
+        if player?.currentItem?.status == .readyToPlay {
+            player?.play()
+        }
     }
     
     override func layoutSubviews() {
@@ -235,6 +246,7 @@ class VideoPlayerUIView: UIView {
     }
     
     deinit {
+        statusObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
 }

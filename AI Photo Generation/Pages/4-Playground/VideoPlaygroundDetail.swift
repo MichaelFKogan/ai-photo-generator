@@ -136,7 +136,7 @@ struct VideoPlaygroundDetail: View {
                         Text("Aspect Ratio")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        AspectRatioSelector(options: videoAspectOptions, selectedIndex: $videoAspectIndex)
+                        AspectRatioSelector(options: videoAspectOptions, selectedIndex: $videoAspectIndex, color: .blue)
                     }
                 }
                 .padding(.horizontal)

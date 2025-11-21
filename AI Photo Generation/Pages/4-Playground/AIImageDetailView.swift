@@ -40,12 +40,14 @@ struct AIImageDetailView: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 0) {
+
+// MARK: - Banner Image Section                        
                     // Banner Image at top - extends behind navigation bar
                     ZStack(alignment: .bottom) {
                         Image(item.modelImageName)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(height: 320)
+                            .frame(height: geometry.size.height * 0.35)
                             .clipped()
                         
                         
@@ -55,15 +57,25 @@ struct AIImageDetailView: View {
                             
                             VStack {
                                 HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
+                                    VStack(alignment: .leading, spacing: 6) {
                                         Text(item.modelName)
                                             .font(.title2)
                                             .fontWeight(.bold)
                                             .foregroundColor(.white)
                                         
-                                        Text("Image Model")
-                                            .font(.caption)
-                                            .foregroundColor(.white.opacity(0.9))
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "photo.on.rectangle.angled")
+                                                .font(.caption)
+                                            Text("Image Generation Model")
+                                                .font(.caption)
+                                        }
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(
+                                            Capsule()
+                                                .fill(Color.blue.opacity(0.8))
+                                        )
                                     }
                                     
                                     Spacer()
@@ -74,7 +86,7 @@ struct AIImageDetailView: View {
                                             .foregroundColor(.white)
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 4)
-                                            .background(Color.black.opacity(0.7))
+                                            .background(Color.black.opacity(0.8))
                                             .cornerRadius(6)
                                         
                                         Text("per image")
@@ -99,14 +111,14 @@ struct AIImageDetailView: View {
                             .padding(.bottom, 12)
                             .background(
                                 LinearGradient(
-                                    colors: [Color.black.opacity(0.8), Color.black.opacity(0.1)],
+                                    colors: [Color.black.opacity(0.6), Color.black.opacity(0.05)],
                                     startPoint: .bottom,
                                     endPoint: .top
                                 )
                             )
                         }
                     }
-                    .frame(height: 320)
+                    .frame(height: geometry.size.height * 0.35)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal)
                     .padding(.bottom, 16)
@@ -116,15 +128,17 @@ struct AIImageDetailView: View {
 //                        Divider()
 //                            .padding(.horizontal)
 //                            .padding(.top, 8)
-                        
+
+// MARK: - Example Images Section                        
                         // Example Images Section
                         if !item.exampleImages.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack(spacing: 6) {
                                     Image(systemName: "photo.stack")
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(.blue)
                                     Text("Example Results")
-                                        .font(.headline)
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
                                         .foregroundColor(.secondary)
                                 }
                                 .padding(.horizontal)
@@ -135,39 +149,43 @@ struct AIImageDetailView: View {
                                             Image(imageName)
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fill)
-                                                .frame(width: 140, height: 196)
+                                                .frame(width: 160, height: 224)
                                                 .clipped()
                                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 12)
                                                         .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                                 )
+                                                .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                                                .accessibilityLabel("Example image generated by \(item.modelName)")
                                         }
                                     }
                                     .padding(.horizontal)
                                 }
                             }
                         }
-                        
+
+// MARK: - Prompt                        
                         // Prompt
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 6) {
                                 Image(systemName: "text.alignleft")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.blue)
                                 Text("Prompt")
-                                    .font(.headline)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                                     .foregroundColor(.secondary)
                             }
                             
                             TextEditor(text: $prompt)
                                 .font(.system(size: 14)).opacity(0.8)
-                                .frame(minHeight: 120)
+                                .frame(minHeight: 140)
                                 .padding(8)
                                 .background(Color.gray.opacity(0.1))
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                        .stroke(isPromptFocused ? Color.blue.opacity(0.5) : Color.gray.opacity(0.3), lineWidth: isPromptFocused ? 2 : 1)
                                 )
                                 .overlay(alignment: .topLeading) {
                                     if prompt.isEmpty {
@@ -179,7 +197,10 @@ struct AIImageDetailView: View {
                                             .allowsHitTesting(false)
                                     }
                                 }
+                                .animation(.easeInOut(duration: 0.2), value: isPromptFocused)
                                 .focused($isPromptFocused)
+                                .accessibilityLabel("Image generation prompt")
+                                .accessibilityHint("Enter a description of the image you want to create")
                         }
                         .padding(.horizontal)
                         
@@ -215,18 +236,22 @@ struct AIImageDetailView: View {
                         //                        }
                         //                }
                         //                .padding(.horizontal)
+
+
+// MARK: - Reference Images                        
+                       // Reference Images (Optional) - multi-image picker and grid
+                       ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems, color: .blue)
+                           .padding(.horizontal)
                         
-//                        // Reference Images (Optional) - multi-image picker and grid
-//                        ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems)
-//                            .padding(.horizontal)
-                        
+// MARK: - Aspect Ratio                        
                         // Core Image Options
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 6) {
                                 Image(systemName: "slider.horizontal.3")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.blue)
                                 Text("Aspect Ratio")
-                                    .font(.headline)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                                     .foregroundColor(.secondary)
                             }
                             
@@ -234,7 +259,7 @@ struct AIImageDetailView: View {
 //                                Text("Aspect Ratio")
 //                                    .font(.caption)
 //                                    .foregroundColor(.secondary)
-                                AspectRatioSelector(options: imageAspectOptions, selectedIndex: $selectedAspectIndex)
+                                AspectRatioSelector(options: imageAspectOptions, selectedIndex: $selectedAspectIndex, color: .blue)
                             }
                         }
                         .padding(.horizontal)
@@ -283,7 +308,46 @@ struct AIImageDetailView: View {
 //                            .padding(.top, 8)
 //                        }
 //                        .padding(.horizontal)
+
+// MARK: - Cost Summary Card                        
+                        // Cost Summary Card
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Generation Cost")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                HStack(spacing: 4) {
+                                    Text("1 image")
+                                        .font(.subheadline)
+                                        .foregroundColor(.primary)
+                                    Text("×")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Text(String(format: "$%.2f", item.cost))
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            Text(String(format: "$%.2f", item.cost))
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.blue)
+                        }
+                        .padding()
+                        .background(Color.blue.opacity(0.08))
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                        )
+                        .padding(.horizontal)
+                        .padding(.bottom, 12)
                         
+// MARK: - Generate Button                        
                         // Generate button
                         Button(action: generate) {
                             HStack {
@@ -299,15 +363,28 @@ struct AIImageDetailView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background((isGenerating || prompt.isEmpty) ? Color.gray : Color.blue)
+                            .background(
+                                (isGenerating || prompt.isEmpty) ? 
+                                AnyShapeStyle(Color.gray) : 
+                                AnyShapeStyle(LinearGradient(
+                                    colors: [Color.blue.opacity(0.8), Color.blue],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                            )
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: (isGenerating || prompt.isEmpty) ? Color.clear : Color.blue.opacity(0.4), radius: 8, x: 0, y: 4)
                         }
+                        .scaleEffect(isGenerating ? 0.98 : 1.0)
+                        .animation(.easeInOut(duration: 0.2), value: isGenerating)
                         .disabled(isGenerating || prompt.isEmpty)
+                        .accessibilityLabel(prompt.isEmpty ? "Enter a prompt to generate image" : "Generate image with prompt: \(prompt)")
+                        .accessibilityHint(prompt.isEmpty ? "" : "Double tap to start generation")
                         .padding(.horizontal)
                         .padding(.bottom, 40)
                     }
-                    .padding(.bottom, 200)
+                    .padding(.bottom, 80)
                 }
             }
             .scrollDismissesKeyboard(.interactively)

@@ -12,7 +12,7 @@ let imageModelsRow = [
     // ---------------------------------------------------------
     InfoPacket(
         title: "Google Gemini Flash 2.5 (Nano Banana)",
-        cost: 0.05,
+        cost: 0.04,
 
         imageName: "geminiflashimage25",
         imageNameOriginal: "yourphoto",

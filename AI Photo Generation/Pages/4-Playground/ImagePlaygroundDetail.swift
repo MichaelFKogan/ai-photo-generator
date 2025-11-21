@@ -178,7 +178,7 @@ struct ImagePlaygroundDetail: View {
                         Text("Aspect Ratio")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        AspectRatioSelector(options: imageAspectOptions, selectedIndex: $selectedAspectIndex)
+                        AspectRatioSelector(options: imageAspectOptions, selectedIndex: $selectedAspectIndex, color: .blue)
                     }
                 }
                 .padding(.horizontal)

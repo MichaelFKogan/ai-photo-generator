@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 struct AIModelsView: View {
     // MARK: - State
@@ -74,69 +75,69 @@ struct AIModelsView: View {
                     // MARK: - Filter Pills Section
                     VStack(spacing: 10) {
                         // Video Filters
-                        HStack(spacing: 8) {
-                            Text("Video:")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.secondary)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 6) {
-                                    CompactFilterPill(title: "All", isSelected: videoFilterIndex == 0, color: .purple) {
-                                        withAnimation { videoFilterIndex = 0 }
-                                    }
-                                    CompactFilterPill(title: "Text to Video", isSelected: videoFilterIndex == 1, color: .purple) {
-                                        withAnimation { videoFilterIndex = 1 }
-                                    }
-                                    CompactFilterPill(title: "Image to Video", isSelected: videoFilterIndex == 2, color: .purple) {
-                                        withAnimation { videoFilterIndex = 2 }
-                                    }
-                                    CompactFilterPill(title: "Audio", isSelected: videoFilterIndex == 3, color: .purple) {
-                                        withAnimation { videoFilterIndex = 3 }
-                                    }
-                                }
-                                .padding(.vertical, 2)
-                            }
-                            
-                            // Clear Filters Button
-                            if hasActiveFilters {
-                                Button(action: clearAllFilters) {
-                                    Text("Clear")
-                                        .font(.caption)
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.blue)
-                                }
-                            }
-                        }
+//                        HStack(spacing: 8) {
+//                            Text("Video:")
+//                                .font(.caption)
+//                                .fontWeight(.semibold)
+//                                .foregroundColor(.secondary)
+//                            
+//                            ScrollView(.horizontal, showsIndicators: false) {
+//                                HStack(spacing: 6) {
+//                                    CompactFilterPill(title: "All", isSelected: videoFilterIndex == 0, color: .purple) {
+//                                        withAnimation { videoFilterIndex = 0 }
+//                                    }
+//                                    CompactFilterPill(title: "Text to Video", isSelected: videoFilterIndex == 1, color: .purple) {
+//                                        withAnimation { videoFilterIndex = 1 }
+//                                    }
+//                                    CompactFilterPill(title: "Image to Video", isSelected: videoFilterIndex == 2, color: .purple) {
+//                                        withAnimation { videoFilterIndex = 2 }
+//                                    }
+//                                    CompactFilterPill(title: "Audio", isSelected: videoFilterIndex == 3, color: .purple) {
+//                                        withAnimation { videoFilterIndex = 3 }
+//                                    }
+//                                }
+//                                .padding(.vertical, 2)
+//                            }
+//                            
+//                            // Clear Filters Button
+//                            if hasActiveFilters {
+//                                Button(action: clearAllFilters) {
+//                                    Text("Clear")
+//                                        .font(.caption)
+//                                        .fontWeight(.medium)
+//                                        .foregroundColor(.blue)
+//                                }
+//                            }
+//                        }
                         
-                        // Image Filters
-                        HStack(spacing: 8) {
-                            Text("Image:")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.secondary)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 6) {
-                                    CompactFilterPill(title: "All", isSelected: imageFilterIndex == 0, color: .blue) {
-                                        withAnimation { imageFilterIndex = 0 }
-                                    }
-                                    CompactFilterPill(title: "Text to Image", isSelected: imageFilterIndex == 1, color: .blue) {
-                                        withAnimation { imageFilterIndex = 1 }
-                                    }
-                                    CompactFilterPill(title: "Image to Image", isSelected: imageFilterIndex == 2, color: .blue) {
-                                        withAnimation { imageFilterIndex = 2 }
-                                    }
-                                    .padding(.vertical, 2)
-                                }
-                            }
-                        }
+//                        // Image Filters
+//                        HStack(spacing: 8) {
+//                            Text("Image:")
+//                                .font(.caption)
+//                                .fontWeight(.semibold)
+//                                .foregroundColor(.secondary)
+//                            
+//                            ScrollView(.horizontal, showsIndicators: false) {
+//                                HStack(spacing: 6) {
+//                                    CompactFilterPill(title: "All", isSelected: imageFilterIndex == 0, color: .blue) {
+//                                        withAnimation { imageFilterIndex = 0 }
+//                                    }
+//                                    CompactFilterPill(title: "Text to Image", isSelected: imageFilterIndex == 1, color: .blue) {
+//                                        withAnimation { imageFilterIndex = 1 }
+//                                    }
+//                                    CompactFilterPill(title: "Image to Image", isSelected: imageFilterIndex == 2, color: .blue) {
+//                                        withAnimation { imageFilterIndex = 2 }
+//                                    }
+//                                    .padding(.vertical, 2)
+//                                }
+//                            }
+//                        }
                     }
                     .padding(.horizontal)
                     
-                    // MARK: - Main Grid (Enhanced)
+
                     HStack(alignment: .top, spacing: 16) {
-                        // LEFT COLUMN — Video Models
+// MARK:LEFT COLUMN — Video Models
                         VStack(alignment: .leading, spacing: 16) {
                             SectionHeader(
                                 icon: "video.fill",
@@ -164,7 +165,7 @@ struct AIModelsView: View {
                         }
                         .frame(maxWidth: .infinity)
                         
-                        // RIGHT COLUMN — Image Models
+// MARK: RIGHT COLUMN — Image Models
                         VStack(alignment: .leading, spacing: 16) {
                             SectionHeader(
                                 icon: "photo.on.rectangle",
@@ -196,6 +197,7 @@ struct AIModelsView: View {
                 }
                 .padding(.vertical)
             }
+// MARK: - Navigation Bar
             .navigationTitle("")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -283,7 +285,6 @@ struct AIModelsView: View {
 }
 
 // MARK: - Supporting Views
-
 struct EnhancedModelCard: View {
     let item: InfoPacket
     let capabilities: [String]
@@ -328,36 +329,36 @@ struct EnhancedModelCard: View {
                 .frame(height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                // Capability pills at bottom
-                HStack(spacing: 4) {
-                    ForEach(capabilities.prefix(2), id: \.self) { cap in
-                        Text(cap)
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 3)
-                            .background(mediaType.color.opacity(0.9))
-                            .clipShape(Capsule())
-                    }
-                    if capabilities.count > 2 {
-                        Text("+\(capabilities.count - 2)")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 3)
-                            .background(Color.secondary.opacity(0.9))
-                            .clipShape(Capsule())
-                    }
-                    Spacer()
-                }
-                .padding(8)
+//                // Capability pills at bottom
+//                HStack(spacing: 4) {
+//                    ForEach(capabilities.prefix(2), id: \.self) { cap in
+//                        Text(cap)
+//                            .font(.system(size: 9, weight: .medium))
+//                            .foregroundColor(.white)
+//                            .padding(.horizontal, 6)
+//                            .padding(.vertical, 3)
+//                            .background(mediaType.color.opacity(0.9))
+//                            .clipShape(Capsule())
+//                    }
+//                    if capabilities.count > 2 {
+//                        Text("+\(capabilities.count - 2)")
+//                            .font(.system(size: 9, weight: .medium))
+//                            .foregroundColor(.white)
+//                            .padding(.horizontal, 6)
+//                            .padding(.vertical, 3)
+//                            .background(Color.secondary.opacity(0.9))
+//                            .clipShape(Capsule())
+//                    }
+//                    Spacer()
+//                }
+//                .padding(8)
             }
             .overlay(alignment: .topLeading) {
                 HStack(spacing: 4) {
                     Image(systemName: mediaType.icon)
                         .font(.caption)
                 }
-                .foregroundColor(.white)
+                .foregroundColor(.white).opacity(0.8)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(Capsule().fill(mediaType.color.opacity(0.8)))
@@ -388,6 +389,7 @@ struct EnhancedModelCard: View {
     }
 }
 
+// MARK: - Section Header                        
 struct SectionHeader: View {
     let icon: String
     let title: String
@@ -407,13 +409,14 @@ struct SectionHeader: View {
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color.secondary.opacity(0.1))
+                .background(Color.secondary.opacity(0.2))
                 .clipShape(Capsule())
         }
         .foregroundColor(color)
     }
 }
 
+// MARK: - Filter Pill Button                        
 struct FilterPillButton: View {
     let title: String
     var count: Int? = nil
@@ -449,6 +452,7 @@ struct FilterPillButton: View {
     }
 }
 
+// MARK: - Stat Card                        
 struct StatCard: View {
     let icon: String
     let title: String
@@ -477,6 +481,7 @@ struct StatCard: View {
     }
 }
 
+// MARK: - Empty State View                        
 struct EmptyStateView: View {
     let icon: String
     let message: String
@@ -495,6 +500,7 @@ struct EmptyStateView: View {
     }
 }
 
+// MARK: - Compact Filter Pill                        
 struct CompactFilterPill: View {
     let title: String
     let isSelected: Bool
@@ -517,5 +523,247 @@ struct CompactFilterPill: View {
                 )
         }
         .buttonStyle(.plain)
+    }
+}
+
+
+// MARK: - Reference Images Section (Multi-select)
+struct ReferenceImagesSection: View {
+    @Binding var referenceImages: [UIImage]
+    @Binding var selectedPhotoItems: [PhotosPickerItem]
+    let color: Color // Add color parameter
+
+    private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "photo.on.rectangle")
+                    .foregroundColor(color) // Use the color parameter
+                Text("Image(s) (Optional)")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+            }
+            
+            Text("Upload an image to transform it, or use as reference with your prompt")
+                .font(.caption)
+                .foregroundColor(.secondary.opacity(0.8))
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.bottom, 4)
+
+            LazyVGrid(columns: columns, spacing: 12) {
+                // Existing selected reference images
+                ForEach(referenceImages.indices, id: \.self) { index in
+                    ZStack(alignment: .topTrailing) {
+                        Image(uiImage: referenceImages[index])
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fill)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(color.opacity(0.6), lineWidth: 1) // Use the color parameter
+                            )
+
+                        Button(action: { referenceImages.remove(at: index) }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(.white)
+                                .background(Circle().fill(Color.red))
+                        }
+                        .padding(6)
+                    }
+                }
+
+                // Add images tile
+                PhotosPicker(selection: $selectedPhotoItems, maxSelectionCount: 10, matching: .images) {
+                    VStack(spacing: 12) {
+                        ZStack(alignment: .bottomTrailing) {
+                            Image(systemName: "photo.on.rectangle")
+                                .font(.system(size: 28))
+                                .foregroundColor(.gray.opacity(0.5))
+                        }
+                        VStack(spacing: 4) {
+                            Text("Add Images")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(.gray)
+                            Text("Up to 10")
+                                .font(.caption2)
+                                .foregroundColor(.gray.opacity(0.7))
+                        }
+                    }
+                    .frame(height: 100)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray.opacity(0.03))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(style: StrokeStyle(lineWidth: 3.5, dash: [6, 4]))
+                            .foregroundColor(.gray.opacity(0.4))
+                    )
+                }
+                .onChange(of: selectedPhotoItems) { newItems in
+                    Task {
+                        var newlyAdded: [UIImage] = []
+                        for item in newItems {
+                            if let data = try? await item.loadTransferable(type: Data.self),
+                               let image = UIImage(data: data) {
+                                newlyAdded.append(image)
+                            }
+                        }
+                        referenceImages.append(contentsOf: newlyAdded)
+                        selectedPhotoItems.removeAll()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Visual Selectors (Aspect Ratio & Size)
+struct AspectRatioOption: Identifiable {
+    let id: String
+    let label: String
+    let width: CGFloat
+    let height: CGFloat
+    let platforms: [String]
+}
+
+struct SizeOption: Identifiable {
+    let id: String
+    let label: String
+    let widthPx: Int
+    let heightPx: Int
+}
+
+// MARK: - Aspect Ratio Selector                        
+struct AspectRatioSelector: View {
+    let options: [AspectRatioOption]
+    @Binding var selectedIndex: Int
+    let color: Color // Add color parameter
+
+    private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 8), count: 4)
+
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 8) {
+            ForEach(options.indices, id: \.self) { idx in
+                let option = options[idx]
+                let isSelected = idx == selectedIndex
+                Button {
+                    selectedIndex = idx
+                } label: {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.gray.opacity(0.08))
+                            // Preview shape maintaining aspect ratio
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(isSelected ? color : Color.gray.opacity(0.5), lineWidth: isSelected ? 2 : 1) // Use color parameter
+                                .aspectRatio(option.width / option.height, contentMode: .fit)
+                                .frame(height: 36)
+                                .padding(8)
+                        }
+                        .frame(height: 60)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 6) {
+                                Text(option.label)
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                                if isSelected {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.caption2)
+                                        .foregroundColor(color) // Use color parameter
+                                }
+                            }
+                            .padding(.horizontal, 5)
+
+                            // Platform recommendations (first 1 shown)
+                            if !option.platforms.isEmpty {
+                                HStack(spacing: 4) {
+                                    ForEach(option.platforms.prefix(1), id: \.self) { platform in
+                                        Text(platform)
+                                            .font(.caption2)
+                                            .foregroundColor(color) // Use color parameter
+                                            .padding(.horizontal, 5)
+                                            .padding(.vertical, 2)
+                                            .background(color.opacity(0.12)) // Use color parameter
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 4)
+                        .padding(.bottom, 6)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isSelected ? color : Color.gray.opacity(0.2), lineWidth: isSelected ? 2 : 1) // Use color parameter
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+}
+
+// MARK: - Size Selector                        
+struct SizeSelector: View {
+    let options: [SizeOption]
+    @Binding var selectedIndex: Int
+
+    private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+
+    private func aspectRatio(for option: SizeOption) -> CGFloat {
+        guard option.heightPx != 0 else { return 1 }
+        return CGFloat(option.widthPx) / CGFloat(option.heightPx)
+    }
+
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 12) {
+            ForEach(options.indices, id: \.self) { idx in
+                let option = options[idx]
+                let isSelected = idx == selectedIndex
+                Button {
+                    selectedIndex = idx
+                } label: {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.gray.opacity(0.08))
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(isSelected ? Color.blue : Color.gray.opacity(0.5), lineWidth: isSelected ? 2 : 1)
+                                .aspectRatio(aspectRatio(for: option), contentMode: .fit)
+                                .frame(height: 56)
+                                .padding(12)
+                        }
+                        .frame(height: 86)
+
+                        HStack(spacing: 6) {
+                            Text(option.label)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+                            if isSelected {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.bottom, 8)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isSelected ? Color.blue : Color.gray.opacity(0.2), lineWidth: isSelected ? 2 : 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
     }
 }
