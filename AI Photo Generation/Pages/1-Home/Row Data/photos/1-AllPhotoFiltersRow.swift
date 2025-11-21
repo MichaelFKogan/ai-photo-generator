@@ -39,7 +39,7 @@ let allPhotoFilters = [
             fashion,
             mensfashion,
             linkedInHeadshots,
-            relationshipItems
+//            relationshipItems
         ],
         
         aspectRatio: "",
@@ -92,7 +92,7 @@ let allPhotoFilters = [
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Nano Banana",
+        modelName: "Google Gemini Flash 2.5 (Nano Banana)",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
         exampleImages: [],  // Add example images here when available

@@ -11,7 +11,7 @@ let imageModelsRow = [
     // MARK: - Google Nano Banana (Gemini Flash 2.5)
     // ---------------------------------------------------------
     InfoPacket(
-        title: "Google Nano Banana",
+        title: "Google Gemini Flash 2.5 (Nano Banana)",
         cost: 0.05,
 
         imageName: "geminiflashimage25",
@@ -22,7 +22,7 @@ let imageModelsRow = [
         type: "Image Model",
 
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Google Gemini Flash 2.5 / Nano Banana",
+        modelName: "Google Gemini Flash 2.5 (Nano Banana)",
         modelDescription:
             "A fast, lightweight model built for clean enhancements, realistic textures, and quick image edits. Ideal for portraits, product shots, and everyday transformations.",
         modelImageName: "geminiflashimage25",
@@ -31,7 +31,9 @@ let imageModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Image", "Image to Image"]
     ),
 
     // ---------------------------------------------------------
@@ -58,7 +60,9 @@ let imageModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Image", "Image to Image"]
     ),
 
     // ---------------------------------------------------------
@@ -85,7 +89,9 @@ let imageModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Image", "Image to Image"]
     ),
 
     // ---------------------------------------------------------
@@ -112,7 +118,9 @@ let imageModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Image", "Image to Image"]
     ),
 
     // ---------------------------------------------------------
@@ -139,7 +147,9 @@ let imageModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Image", "Image to Image"]
     ),
 
     // ---------------------------------------------------------
@@ -166,6 +176,8 @@ let imageModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Image", "Image to Image"]
     ),
 ]

@@ -78,7 +78,10 @@ struct VideoConfirmationView: View {
                     
                     ZStack(alignment: .center) {
                         // Right side - Video (example result) - drawn first so it's behind
-                        if let url = Bundle.main.url(forResource: item.imageName, withExtension: "mp4") {
+                        // Look for video in "Video Files" folder
+                        if let url = Bundle.main.url(forResource: item.imageName,
+                                                     withExtension: "mp4",
+                                                     subdirectory: "Video Files") {
                             VideoThumbnail(url: url)
                                 .frame(width: imageWidth, height: imageHeight)
                                 .clipShape(RoundedRectangle(cornerRadius: 16))

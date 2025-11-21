@@ -31,7 +31,9 @@ let videoModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Video", "Audio"]
     ),
 
     // ---------------------------------------------------------
@@ -58,7 +60,9 @@ let videoModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Image to Video"]
     ),
 
     // ---------------------------------------------------------
@@ -78,14 +82,16 @@ let videoModelsRow = [
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
         modelName: "Kling AI",
         modelDescription:
-            "Kling AI specializes in hyper-realistic motion and high-speed action scenes. With sharp detail and stable, precise frame-to-frame movement, it’s a strong choice for sports, sci-fi shots, fast motion, and large sweeping environments.",
+            "Kling AI specializes in hyper-realistic motion and high-speed action scenes. With sharp detail and stable, precise frame-to-frame movement, it's a strong choice for sports, sci-fi shots, fast motion, and large sweeping environments.",
         modelImageName: "klingai",
         exampleImages: [],
 
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Video", "Image to Video"]
     ),
 
     // ---------------------------------------------------------
@@ -112,6 +118,8 @@ let videoModelsRow = [
         aspectRatio: nil,
         outputFormat: "jpeg",
         enableSyncMode: false,
-        enableBase64Output: false
+        enableBase64Output: false,
+        
+        capabilities: ["Text to Video", "Image to Video", "Audio"]
     ),
 ]

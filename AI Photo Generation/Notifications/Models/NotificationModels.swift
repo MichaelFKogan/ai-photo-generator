@@ -46,6 +46,28 @@ struct GenerationTaskInfo {
     var generatedImage: UIImage?
 }
 
+// MARK: - Placeholder Image (for Profile Grid)
+struct PlaceholderImage: Identifiable {
+    let id: UUID
+    let title: String
+    let message: String
+    let progress: Double
+    let thumbnailImage: UIImage?
+    let state: NotificationState
+    let errorMessage: String?
+    
+    init(from notification: NotificationData) {
+        self.id = notification.id
+        self.title = notification.title
+        self.message = notification.message
+        self.progress = notification.progress
+        self.thumbnailImage = notification.thumbnailImage
+        self.state = notification.state
+        self.errorMessage = notification.errorMessage
+    }
+}
+
+
 
 
 

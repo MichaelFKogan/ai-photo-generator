@@ -10,6 +10,61 @@ import Kingfisher
 import Photos
 import AVKit
 
+// MARK: - Reusable Components
+struct MetadataRow: View {
+    let icon: String
+    let label: String
+    let value: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.6))
+                Text(label)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+            
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct MetadataCard: View {
+    let icon: String
+    let label: String
+    let value: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.6))
+                Text(label)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+            }
+            
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.white)
+                .lineLimit(2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(Color.white.opacity(0.05))
+        .cornerRadius(8)
+    }
+}
+
 // MARK: - Full Screen Image View
 struct FullScreenImageView: View {
     let userImage: UserImage
@@ -148,252 +203,86 @@ struct FullScreenImageView: View {
                             
                             Spacer()
                         }
-                        .padding(.bottom, 8)
+                        .padding(.bottom, 4)
                         
-                        // Display Photo Filter specific information
+                        // Display Photo Filter or Video Filter information
                         if isPhotoFilter || isVideoFilter {
-                            // Filter Name (left) and Cost (right)
-                            HStack(alignment: .top) {
-                                if let title = userImage.title, !title.isEmpty {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "paintbrush.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Filter Name")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(title)
-                                            .font(.subheadline)
-                                            .fontWeight(.medium)
-                                            .foregroundColor(.white)
-                                    }
+                            // Title - prominent display
+                            if let title = userImage.title, !title.isEmpty {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Filter Name")
+                                        .font(.caption2)
+                                        .foregroundColor(.gray)
+                                    Text(title)
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
                                 }
-                                
-                                Spacer()
-                                
-                                if let cost = userImage.cost {
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "dollarsign.circle.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Cost")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text("$\(String(format: "%.2f", cost))")
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
-                                }
+                                .padding(.bottom, 8)
                             }
                             
-                            // Type (left) and Aspect Ratio (right)
-                            HStack(alignment: .top) {
+                            // Grid layout for metadata
+                            LazyVGrid(columns: [
+                                GridItem(.flexible()),
+                                GridItem(.flexible())
+                            ], spacing: 10) {
                                 if let type = userImage.type {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "tag.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Type")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(type)
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
+                                    MetadataCard(icon: "tag.fill", label: "Type", value: type)
                                 }
                                 
-                                Spacer()
+                                if let cost = userImage.cost {
+                                    MetadataCard(icon: "dollarsign.circle.fill", label: "Cost", value: String(format: "$%.2f", cost))
+                                }
                                 
                                 if let aspectRatio = userImage.aspect_ratio, !aspectRatio.isEmpty {
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "aspectratio")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Aspect Ratio")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(aspectRatio)
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
+                                    MetadataCard(icon: "aspectratio", label: "Aspect Ratio", value: aspectRatio)
                                 }
                             }
                         } 
                         
                         else if isImageModel || isVideoModel {
-                              // Filter Name (left) and Cost (right)
-                            HStack(alignment: .top) {
-                                if let title = userImage.title, !title.isEmpty {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "paintbrush.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Filter Name")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(title)
-                                            .font(.subheadline)
-                                            .fontWeight(.medium)
-                                            .foregroundColor(.white)
-                                    }
+                            // Title - prominent display
+                            if let title = userImage.title, !title.isEmpty {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Filter Name")
+                                        .font(.caption2)
+                                        .foregroundColor(.gray)
+                                    Text(title)
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
                                 }
-                                
-                                Spacer()
+                                .padding(.bottom, 8)
+                            }
+                            
+                            // Grid layout for metadata
+                            LazyVGrid(columns: [
+                                GridItem(.flexible()),
+                                GridItem(.flexible())
+                            ], spacing: 10) {
+                                if let type = userImage.type {
+                                    MetadataCard(icon: "tag.fill", label: "Type", value: type)
+                                }
                                 
                                 if let cost = userImage.cost {
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "dollarsign.circle.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Cost")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text("$\(String(format: "%.2f", cost))")
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
+                                    MetadataCard(icon: "dollarsign.circle.fill", label: "Cost", value: String(format: "$%.2f", cost))
                                 }
-                            }
-                            
-                            // Type (left) and Model (right)
-                            HStack(alignment: .top) {
-                                if let type = userImage.type {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "tag.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Type")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(type)
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
-                                }
-                                
-                                Spacer()
                                 
                                 if let model = userImage.model, !model.isEmpty {
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "cpu.fill")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Model")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(model)
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
+                                    MetadataCard(icon: "cpu.fill", label: "Model", value: model)
+                                }
+                                
+                                if let aspectRatio = userImage.aspect_ratio, !aspectRatio.isEmpty {
+                                    MetadataCard(icon: "aspectratio", label: "Aspect Ratio", value: aspectRatio)
                                 }
                             }
                             
-                            // Aspect Ratio (if exists) - aligned to the right
-                            if let aspectRatio = userImage.aspect_ratio, !aspectRatio.isEmpty {
-                                HStack {
-                                    Spacer()
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        HStack {
-                                            Image(systemName: "aspectratio")
-                                                .foregroundStyle(
-                                                    LinearGradient(
-                                                        colors: [.blue, .purple],
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
-                                                .font(.caption)
-                                            Text("Aspect Ratio")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                        Text(aspectRatio)
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
-                                }
-                                .padding(.top, 8)
-                            }
-                            
-                            // Prompt (if exists)
+                            // Prompt (if exists) - special prominent display
                             if let prompt = userImage.prompt, !prompt.isEmpty {
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 8) {
                                     HStack {
-                                        Image(systemName: "text.alignleft")
-                                            .foregroundStyle(
-                                                LinearGradient(
-                                                    colors: [.blue, .purple],
-                                                    startPoint: .leading,
-                                                    endPoint: .trailing
-                                                )
-                                            )
-                                            .font(.caption)
                                         Text("Prompt")
-                                            .font(.caption)
+                                            .font(.caption2)
                                             .foregroundColor(.gray)
                                         
                                         Spacer()
@@ -403,52 +292,43 @@ struct FullScreenImageView: View {
                                         }) {
                                             HStack(spacing: 4) {
                                                 Image(systemName: showCopySuccess ? "checkmark.circle.fill" : "doc.on.doc")
-                                                    .foregroundColor(showCopySuccess ? .green : .gray)
+                                                    .foregroundColor(showCopySuccess ? .green : .white.opacity(0.6))
                                                     .font(.caption)
                                                 if showCopySuccess {
                                                     Text("Copied")
-                                                        .font(.caption)
+                                                        .font(.caption2)
                                                         .foregroundColor(.green)
                                                 }
                                             }
                                         }
                                     }
+                                    
                                     Text(prompt)
-                                        .font(.subheadline)
-                                        .foregroundColor(.white)
+                                        .font(.body)
+                                        .foregroundColor(.white.opacity(0.9))
                                         .fixedSize(horizontal: false, vertical: true)
+                                        .padding(12)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .background(Color.white.opacity(0.05))
+                                        .cornerRadius(8)
                                 }
                                 .padding(.top, 8)
                             }
                         } 
 
                         else {
-                            // For non-Photo Filter types, show generic info
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
+                            // For other types, show generic info
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack(spacing: 4) {
                                     Image(systemName: "sparkles")
-                                        .foregroundStyle(
-                                            LinearGradient(
-                                                colors: [.blue, .purple],
-                                                startPoint: .leading,
-                                                endPoint: .trailing
-                                            )
-                                        )
-                                        .font(.caption)
+                                        .foregroundColor(.white.opacity(0.6))
                                     Text("AI Generated")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
                                 }
                                 
                                 if let model = userImage.model, !model.isEmpty {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Model")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                        Text(model)
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                    }
+                                    MetadataCard(icon: "cpu.fill", label: "Model", value: model)
                                 }
                             }
                         }

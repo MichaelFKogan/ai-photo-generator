@@ -30,7 +30,7 @@ let Caricature = [
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Nano Banana",
+        modelName: "Google Gemini Flash 2.5 (Nano Banana)",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
         exampleImages: ["caricature1", "caricature2", "caricature3", "caricature4",],
@@ -64,7 +64,7 @@ let Caricature = [
         type: "Photo Filter",
         
         endpoint: "https://api.wavespeed.ai/api/v3/google/nano-banana/edit",
-        modelName: "Nano Banana",
+        modelName: "Google Gemini Flash 2.5 (Nano Banana)",
         modelDescription: "Google's Gemini Flash Image 2.5 model for advanced image transformations",
         modelImageName: "",
         exampleImages: ["3dcaricature", "caricature2", "caricature3", "caricature4",],

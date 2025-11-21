@@ -1,22 +1,22 @@
+////
+////  RelationshipsVideosRow.swift
+////  AI Photo Generation
+////
+////  Created by Mike K on 10/15/25.
+////
 //
-//  RelationshipsVideosRow.swift
-//  AI Photo Generation
+//let relationshipVideosItems = [
+//    InfoPacket(
+//        title: "Couple Portrait",
+//        cost: 0.04,
+//        
+//        imageName: "relationship1",
 //
-//  Created by Mike K on 10/15/25.
-//
-
-let relationshipVideosItems = [
-    InfoPacket(
-        title: "Couple Portrait",
-        cost: 0.04,
-        
-        imageName: "relationship1",
-
-        description: "",
-        prompt: "Romantic couple portrait, soft lighting, intimate moment, professional photography, warm tones, emotional connection",
-        modelName: "DALL-E 3",
-        modelDescription: "",
-        modelImageName: "dalle3",
-        exampleImages: ["rel1_1", "rel1_2", "rel1_3", "rel1_4", "rel1_5", "rel1_6"]
-    ),
-]
+//        description: "",
+//        prompt: "Romantic couple portrait, soft lighting, intimate moment, professional photography, warm tones, emotional connection",
+//        modelName: "DALL-E 3",
+//        modelDescription: "",
+//        modelImageName: "dalle3",
+//        exampleImages: ["rel1_1", "rel1_2", "rel1_3", "rel1_4", "rel1_5", "rel1_6"]
+//    ),
+//]

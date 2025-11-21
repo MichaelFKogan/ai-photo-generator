@@ -40,6 +40,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2758A7752ED0243100AB05C9 /* Video Files */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Video Files";
+			sourceTree = "<group>";
+		};
 		27E2BC762E981FE700269FE9 /* AI Photo Generation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "AI Photo Generation";
@@ -97,6 +102,7 @@
 		27E2BC6B2E981FE700269FE9 = {
 			isa = PBXGroup;
 			children = (
+				2758A7752ED0243100AB05C9 /* Video Files */,
 				27E2BC762E981FE700269FE9 /* AI Photo Generation */,
 				27E2BC872E981FEB00269FE9 /* AI Photo GenerationTests */,
 				27E2BC912E981FEB00269FE9 /* AI Photo GenerationUITests */,
@@ -132,6 +138,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				2758A7752ED0243100AB05C9 /* Video Files */,
 				27E2BC762E981FE700269FE9 /* AI Photo Generation */,
 			);
 			name = "AI Photo Generation";

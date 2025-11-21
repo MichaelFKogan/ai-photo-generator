@@ -41,6 +41,7 @@ struct ProfileView: View {
 struct ProfileViewContent: View {
     @ObservedObject var viewModel: ProfileViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var notificationManager = NotificationManager.shared
     @State private var selectedUserImage: UserImage? = nil
     
     var body: some View {
@@ -72,7 +73,7 @@ struct ProfileViewContent: View {
                         if viewModel.isLoading {
                             ProgressView("Loading images…")
                                 .padding()
-                        } else if viewModel.images.isEmpty {
+                        } else if viewModel.images.isEmpty && notificationManager.activePlaceholders.isEmpty {
                             
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 3), spacing: 4) {
                                 ForEach(0..<9, id: \.self) { _ in
@@ -89,7 +90,10 @@ struct ProfileViewContent: View {
                             .padding(.horizontal)
 
                         } else {
-                            ImageGridView(userImages: viewModel.userImages) { userImage in
+                            ImageGridView(
+                                userImages: viewModel.userImages,
+                                placeholders: notificationManager.activePlaceholders
+                            ) { userImage in
                                 selectedUserImage = userImage
                             }
                         }
@@ -123,6 +127,14 @@ struct ProfileViewContent: View {
             }
             .refreshable {
                 await viewModel.fetchUserImages(forceRefresh: true)
+            }
+            .onChange(of: notificationManager.notifications.count) { oldCount, newCount in
+                // When notification count decreases (notification dismissed), refresh images
+                if newCount < oldCount {
+                    Task {
+                        await viewModel.fetchUserImages(forceRefresh: true)
+                    }
+                }
             }
             .sheet(item: $selectedUserImage) { userImage in
                 FullScreenImageView(
@@ -214,6 +226,7 @@ struct ProfileViewContent: View {
 // MARK: - Image Grid (3×3 Portrait)
 struct ImageGridView: View {
     let userImages: [UserImage]
+    let placeholders: [PlaceholderImage]
     let spacing: CGFloat = 2
     var onSelect: (UserImage) -> Void
     
@@ -229,6 +242,16 @@ struct ImageGridView: View {
             let itemHeight = itemWidth * 1.4
             
             LazyVGrid(columns: gridColumns, spacing: spacing) {
+                // Show placeholders first (in-progress generations)
+                ForEach(placeholders) { placeholder in
+                    PlaceholderImageCard(
+                        placeholder: placeholder,
+                        itemWidth: itemWidth,
+                        itemHeight: itemHeight
+                    )
+                }
+                
+                // Then show completed images
                 ForEach(userImages) { userImage in
                     if let displayUrl = userImage.isVideo ? userImage.thumbnail_url : userImage.image_url,
                        let url = URL(string: displayUrl) {
@@ -302,13 +325,177 @@ struct ImageGridView: View {
             }
             .padding(.horizontal, 4)
         }
-        .frame(height: calculateHeight(for: userImages.count))
+        .frame(height: calculateHeight(for: placeholders.count + userImages.count))
     }
     
     private func calculateHeight(for count: Int) -> CGFloat {
         let rows = ceil(Double(count) / 3.0)
         let itemWidth = (UIScreen.main.bounds.width - 16) / 3
         return CGFloat(rows) * (itemWidth * 1.8 + spacing)
+    }
+}
+
+// MARK: - Placeholder Image Card (for in-progress generations)
+struct PlaceholderImageCard: View {
+    let placeholder: PlaceholderImage
+    let itemWidth: CGFloat
+    let itemHeight: CGFloat
+    
+    @State private var shimmer = false
+    @State private var pulseAnimation = false
+    
+    var body: some View {
+        ZStack {
+            // Background
+            RoundedRectangle(cornerRadius: 6)
+                .fill(backgroundGradient)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(borderColor, lineWidth: 2)
+                )
+            
+            VStack(spacing: 8) {
+                // Thumbnail or Icon
+                if let thumbnail = placeholder.thumbnailImage {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                        .scaleEffect(pulseAnimation ? 1.05 : 1.0)
+                } else {
+                    ZStack {
+                        Circle()
+                            .fill(LinearGradient(
+                                colors: [.blue.opacity(0.3), .purple.opacity(0.3)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ))
+                            .frame(width: 50, height: 50)
+                        
+                        Image(systemName: "photo.on.rectangle.angled")
+                            .font(.system(size: 22))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                    }
+                    .scaleEffect(pulseAnimation ? 1.05 : 1.0)
+                }
+                
+                // Title and Message
+                VStack(spacing: 4) {
+                    Text(placeholder.title)
+                        .font(.custom("Nunito-Bold", size: 11))
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .multilineTextAlignment(.center)
+                    
+                    Text(placeholder.message)
+                        .font(.custom("Nunito-Regular", size: 9))
+                        .foregroundColor(placeholder.state == .failed ? .red : .secondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 8)
+                
+                // Progress Bar or Error Message
+                if placeholder.state == .failed {
+                    if let errorMsg = placeholder.errorMessage {
+                        Text(errorMsg)
+                            .font(.custom("Nunito-Regular", size: 8))
+                            .foregroundColor(.red.opacity(0.8))
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 8)
+                    }
+                } else {
+                    VStack(spacing: 4) {
+                        // Progress Bar
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(height: 4)
+                                
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [.blue, .purple],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: geometry.size.width * placeholder.progress, height: 4)
+                                    .overlay(
+                                        LinearGradient(
+                                            colors: [
+                                                Color.white.opacity(0),
+                                                Color.white.opacity(0.6),
+                                                Color.white.opacity(0)
+                                            ],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                        .rotationEffect(.degrees(20))
+                                        .offset(x: shimmer ? 100 : -100)
+                                        .mask(RoundedRectangle(cornerRadius: 2))
+                                    )
+                            }
+                        }
+                        .frame(height: 4)
+                        .padding(.horizontal, 8)
+                        
+                        Text("\(Int(placeholder.progress * 100))%")
+                            .font(.custom("Nunito-Regular", size: 9))
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .padding(.vertical, 12)
+        }
+        .frame(width: itemWidth, height: itemHeight)
+        .onAppear {
+            pulseAnimation = true
+            withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: false)) {
+                shimmer = true
+            }
+        }
+        .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: pulseAnimation)
+    }
+    
+    private var backgroundGradient: LinearGradient {
+        switch placeholder.state {
+        case .failed:
+            return LinearGradient(
+                colors: [Color.red.opacity(0.1), Color.red.opacity(0.15)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .completed:
+            return LinearGradient(
+                colors: [Color.green.opacity(0.1), Color.green.opacity(0.15)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        default:
+            return LinearGradient(
+                colors: [Color.blue.opacity(0.08), Color.purple.opacity(0.08)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        }
+    }
+    
+    private var borderColor: Color {
+        switch placeholder.state {
+        case .failed: return Color.red.opacity(0.4)
+        case .completed: return Color.green.opacity(0.4)
+        default: return Color.gray.opacity(0.3)
+        }
     }
 }
 

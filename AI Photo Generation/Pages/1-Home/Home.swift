@@ -33,6 +33,9 @@ struct InfoPacket: Identifiable {
     var outputFormat: String = "jpeg"
     var enableSyncMode: Bool = true
     var enableBase64Output: Bool = false
+    
+    // Model capabilities
+    var capabilities: [String] = []
 }
 
 
@@ -114,8 +117,8 @@ struct Home: View {
                     
                     HomeRowSingle(title: "👔 Professional Headshots", items: linkedInHeadshots)
                     
-                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
-                    HomeRowVideo(title: "❤️ Relationships", items: relationshipVideosItems)
+//                    HomeRowSplit(title: "❤️ Relationships", items: relationshipItems, diffAnimation: .flipCard)
+//                    HomeRowVideo(title: "❤️ Relationships", items: relationshipVideosItems)
                     
                     
        
