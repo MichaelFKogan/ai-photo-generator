@@ -5,7 +5,6 @@ struct AIModelsView: View {
     @State private var sortOrder = 0 // 0 = Default, 1 = Low->High, 2 = High->Low
     @State private var videoFilterIndex: Int = 0 // 0 = All, 1 = Text to Video, 2 = Image to Video, 3 = Audio
     @State private var imageFilterIndex: Int = 0 // 0 = All, 1 = Text to Image, 2 = Image to Image
-    @State private var searchText: String = ""
     
     // MARK: - Computed Properties
     private var filteredAndSortedVideoModels: [InfoPacket] {
@@ -17,11 +16,6 @@ struct AIModelsView: View {
         case 2: models = models.filter { videoCapabilities(for: $0).contains("Image to Video") }
         case 3: models = models.filter { videoCapabilities(for: $0).contains("Audio") }
         default: break
-        }
-        
-        // Apply search filter
-        if !searchText.isEmpty {
-            models = models.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.modelName.localizedCaseInsensitiveContains(searchText) }
         }
         
         // Apply sort
@@ -42,11 +36,6 @@ struct AIModelsView: View {
         default: break
         }
         
-        // Apply search filter
-        if !searchText.isEmpty {
-            models = models.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.modelName.localizedCaseInsensitiveContains(searchText) }
-        }
-        
         // Apply sort
         switch sortOrder {
         case 1: return models.sorted { $0.cost < $1.cost }
@@ -55,118 +44,93 @@ struct AIModelsView: View {
         }
     }
     
-    // Capability detection functions (similar to ModelPickerView)
+    // Capability detection functions - now using real data
     private func videoCapabilities(for model: InfoPacket) -> [String] {
-        // You'll need to add capability metadata to your InfoPacket model
-        // For now, using a similar hash-based approach
-        let sum = model.modelName.unicodeScalars.map { Int($0.value) }.reduce(0, +)
-        var caps: [String] = []
-        if sum % 2 == 0 { caps.append("Text to Video") }
-        if sum % 3 == 0 { caps.append("Image to Video") }
-        if sum % 5 == 0 { caps.append("Audio") }
-        if caps.isEmpty { caps = ["Text to Video"] }
-        return caps
+        return model.capabilities
     }
     
     private func imageCapabilities(for model: InfoPacket) -> [String] {
-        let sum = model.modelName.unicodeScalars.map { Int($0.value) }.reduce(0, +)
-        var caps: [String] = []
-        if sum % 2 == 0 { caps.append("Text to Image") }
-        if sum % 3 == 0 { caps.append("Image to Image") }
-        if caps.isEmpty { caps = ["Text to Image"] }
-        return caps
+        return model.capabilities
+    }
+    
+    // Check if any filters are active
+    private var hasActiveFilters: Bool {
+        return videoFilterIndex != 0 || imageFilterIndex != 0 || sortOrder != 0
+    }
+    
+    // Clear all filters
+    private func clearAllFilters() {
+        withAnimation {
+            videoFilterIndex = 0
+            imageFilterIndex = 0
+            sortOrder = 0
+        }
     }
     
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 16) {
-                    // MARK: - Search Bar
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.secondary)
-                        TextField("Search models...", text: $searchText)
-                            .textFieldStyle(.plain)
-                        if !searchText.isEmpty {
-                            Button(action: { searchText = "" }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
-                    .padding(12)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-                    
+                VStack(spacing: 12) {
                     // MARK: - Filter Pills Section
-                    VStack(spacing: 12) {
+                    VStack(spacing: 10) {
                         // Video Filters
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Video Filters")
+                        HStack(spacing: 8) {
+                            Text("Video:")
                                 .font(.caption)
+                                .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    FilterPillButton(title: "All", count: videoModelsRow.count, isSelected: videoFilterIndex == 0) {
+                                HStack(spacing: 6) {
+                                    CompactFilterPill(title: "All", isSelected: videoFilterIndex == 0, color: .purple) {
                                         withAnimation { videoFilterIndex = 0 }
                                     }
-                                    FilterPillButton(title: "Text to Video", isSelected: videoFilterIndex == 1) {
+                                    CompactFilterPill(title: "Text to Video", isSelected: videoFilterIndex == 1, color: .purple) {
                                         withAnimation { videoFilterIndex = 1 }
                                     }
-                                    FilterPillButton(title: "Image to Video", isSelected: videoFilterIndex == 2) {
+                                    CompactFilterPill(title: "Image to Video", isSelected: videoFilterIndex == 2, color: .purple) {
                                         withAnimation { videoFilterIndex = 2 }
                                     }
-                                    FilterPillButton(title: "Audio", isSelected: videoFilterIndex == 3) {
+                                    CompactFilterPill(title: "Audio", isSelected: videoFilterIndex == 3, color: .purple) {
                                         withAnimation { videoFilterIndex = 3 }
                                     }
                                 }
-                                .padding(.horizontal)
+                                .padding(.vertical, 2)
+                            }
+                            
+                            // Clear Filters Button
+                            if hasActiveFilters {
+                                Button(action: clearAllFilters) {
+                                    Text("Clear")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.blue)
+                                }
                             }
                         }
                         
                         // Image Filters
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Image Filters")
+                        HStack(spacing: 8) {
+                            Text("Image:")
                                 .font(.caption)
+                                .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    FilterPillButton(title: "All", count: imageModelsRow.count, isSelected: imageFilterIndex == 0) {
+                                HStack(spacing: 6) {
+                                    CompactFilterPill(title: "All", isSelected: imageFilterIndex == 0, color: .blue) {
                                         withAnimation { imageFilterIndex = 0 }
                                     }
-                                    FilterPillButton(title: "Text to Image", isSelected: imageFilterIndex == 1) {
+                                    CompactFilterPill(title: "Text to Image", isSelected: imageFilterIndex == 1, color: .blue) {
                                         withAnimation { imageFilterIndex = 1 }
                                     }
-                                    FilterPillButton(title: "Image to Image", isSelected: imageFilterIndex == 2) {
+                                    CompactFilterPill(title: "Image to Image", isSelected: imageFilterIndex == 2, color: .blue) {
                                         withAnimation { imageFilterIndex = 2 }
                                     }
+                                    .padding(.vertical, 2)
                                 }
-                                .padding(.horizontal)
                             }
                         }
-                    }
-                    .padding(.vertical, 8)
-                    
-                    // MARK: - Stats Row
-                    HStack(spacing: 16) {
-                        StatCard(
-                            icon: "video.fill",
-                            title: "\(filteredAndSortedVideoModels.count)",
-                            subtitle: "Video Models",
-                            color: .purple
-                        )
-                        
-                        StatCard(
-                            icon: "photo.fill",
-                            title: "\(filteredAndSortedImageModels.count)",
-                            subtitle: "Image Models",
-                            color: .blue
-                        )
                     }
                     .padding(.horizontal)
                     
@@ -248,7 +212,7 @@ struct AIModelsView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 12) {
-                        // Sort Menu
+                        // Sort Menu (styled like ModelPickerView)
                         Menu {
                             Button {
                                 withAnimation { sortOrder = 0 }
@@ -268,45 +232,49 @@ struct AIModelsView: View {
                                 Label("Price High to Low", systemImage: sortOrder == 2 ? "checkmark" : "")
                             }
                         } label: {
-                            Image(systemName: "arrow.up.arrow.down.circle")
-                                .foregroundColor(.primary)
+                            HStack {
+                                Text("Sort by price")
+                                    .font(.caption)
+                                Image(systemName: "line.3.horizontal.decrease")
+                                    .accessibilityLabel("Sort")
+                            }
                         }
                         
-                        // Credits Display
-                        HStack(spacing: 6) {
-                            Image(systemName: "diamond.fill")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .font(.system(size: 8))
+                        // // Credits Display
+                        // HStack(spacing: 6) {
+                        //     Image(systemName: "diamond.fill")
+                        //         .foregroundStyle(
+                        //             LinearGradient(
+                        //                 colors: [.blue, .purple],
+                        //                 startPoint: .topLeading,
+                        //                 endPoint: .bottomTrailing
+                        //             )
+                        //         )
+                        //         .font(.system(size: 8))
                             
-                            Text("$5.00")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.primary)
-                            Text("credits left")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.secondary.opacity(0.1))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                        )
+                        //     Text("$5.00")
+                        //         .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        //         .foregroundColor(.primary)
+                        //     Text("credits left")
+                        //         .font(.caption2)
+                        //         .foregroundColor(.secondary)
+                        // }
+                        // .padding(.horizontal, 12)
+                        // .padding(.vertical, 6)
+                        // .background(
+                        //     RoundedRectangle(cornerRadius: 20)
+                        //         .fill(Color.secondary.opacity(0.1))
+                        // )
+                        // .overlay(
+                        //     RoundedRectangle(cornerRadius: 20)
+                        //         .strokeBorder(
+                        //             LinearGradient(
+                        //                 colors: [.blue, .purple],
+                        //                 startPoint: .leading,
+                        //                 endPoint: .trailing
+                        //             )
+                        //         )
+                        // )
                     }
                 }
             }
@@ -524,5 +492,30 @@ struct EmptyStateView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 40)
+    }
+}
+
+struct CompactFilterPill: View {
+    let title: String
+    let isSelected: Bool
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.caption)
+                .font(.system(size: 11))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .foregroundColor(isSelected ? .white : color)
+                .background(isSelected ? color : color.opacity(0.12))
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(isSelected ? Color.clear : color.opacity(0.6), lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
     }
 }
