@@ -9,7 +9,7 @@ import PhotosUI
 import SwiftUI
 
 struct ImageModelDetail: View {
-    let item: InfoPacket
+    @State var item: InfoPacket
 
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var notificationManager: NotificationManager
@@ -25,8 +25,12 @@ struct ImageModelDetail: View {
     @State private var steps: Int = 30
     @State private var isAdvancedOptionsExpanded: Bool = false
     @State private var isExamplePromptsExpanded: Bool = false
+    @State private var isModelSelectorPresented: Bool = false
+    @State private var lastScrollOffset: CGFloat = 0
     @FocusState private var isPromptFocused: Bool
     @Environment(\.dismiss) private var dismiss
+
+    private let feedback = UISelectionFeedbackGenerator()
 
     private let imageAspects: [String] = ["1:1", "3:4", "4:3", "9:16", "16:9"]
     private let imageAspectOptions: [AspectRatioOption] = [
@@ -48,6 +52,26 @@ struct ImageModelDetail: View {
         "A magical forest with glowing mushrooms and fireflies, fantasy illustration",
         "A modern minimalist living room with large windows, interior design photography",
         "A colorful abstract painting with geometric shapes and vibrant colors",
+        "A medieval castle on a cliff overlooking the ocean, dramatic lighting",
+        "A cyberpunk street market with holographic signs, neon colors, ultra detailed",
+        "A peaceful zen garden with cherry blossoms and koi pond, soft focus",
+        "A powerful lion portrait with intense eyes, wildlife photography, 8k",
+        "A steampunk airship in the clouds, brass and copper details, concept art",
+        "A tropical beach at sunrise with palm trees, paradise scenery, HDR",
+        "An enchanted library with floating books and magical lights, fantasy art",
+        "A modern luxury yacht on crystal clear water, professional photography",
+        "A mysterious alien landscape with purple sky and twin moons, sci-fi art",
+        "A rustic farmhouse in autumn with falling leaves, warm colors, cozy atmosphere",
+        "A sleek modern kitchen with marble countertops, architectural digest style",
+        "A samurai warrior in traditional armor, dramatic pose, cinematic composition",
+        "A vibrant coral reef with tropical fish, underwater photography, vivid colors",
+        "A gothic cathedral interior with stained glass windows, divine lighting",
+        "A bustling Tokyo street at night with neon signs, street photography",
+        "A serene mountain lake reflection at dawn, mirror-like water, pristine nature",
+        "A futuristic robot with intricate mechanical details, sci-fi concept art",
+        "A cozy reading nook by a window on a rainy day, warm lighting",
+        "A majestic phoenix rising from flames, mythical creature, vibrant colors",
+        "A Victorian mansion in foggy weather, gothic atmosphere, haunting beauty",
     ]
 
     var body: some View {
@@ -178,42 +202,51 @@ struct ImageModelDetail: View {
                             }
                         }
 
-                        // Cost Summary Card
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Generation Cost")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                HStack(spacing: 4) {
-                                    Text("1 image")
-                                        .font(.subheadline)
-                                        .foregroundColor(.primary)
-                                    Text("×")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    Text(String(format: "$%.2f", item.cost))
+                        // MARK: - Model Selector
+
+                        // Model Selector Button
+                        Button(action: {
+                            isModelSelectorPresented = true
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(item.modelImageName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                    )
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(item.modelName)
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(.primary)
+                                        .lineLimit(1)
+
+                                    Text(String(format: "$%.2f per image", item.cost))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
-
-                            Spacer()
-
-                            Text(String(format: "$%.2f", item.cost))
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(.blue)
+                            .padding()
+                            .background(Color.gray.opacity(0.06))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                            )
                         }
-                        .padding()
-                        .background(Color.blue.opacity(0.08))
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.blue.opacity(0.2), lineWidth: 1)
-                        )
+                        .buttonStyle(PlainButtonStyle())
                         .padding(.horizontal)
-                        // .padding(.bottom, 12)
 
                         // MARK: - Prompt
 
@@ -252,8 +285,7 @@ struct ImageModelDetail: View {
                                 .focused($isPromptFocused)
                                 .accessibilityLabel("Image generation prompt")
                                 .accessibilityHint("Enter a description of the image you want to create")
-                            
-                           
+
                             // MARK: - Example Prompts
 
                             // Example Prompts (dropdown)
@@ -290,6 +322,9 @@ struct ImageModelDetail: View {
                                             .buttonStyle(PlainButtonStyle())
                                         }
                                     }
+                                    .background(ScrollOffsetReader { newOffset in
+                                        handleScrollFeedback(newOffset: newOffset)
+                                    })
                                 }
                                 .frame(maxHeight: 150)
                                 .padding(.top, 8)
@@ -304,11 +339,8 @@ struct ImageModelDetail: View {
                                         .foregroundColor(.secondary)
                                 }
                             }
-                            
                         }
                         .padding(.horizontal)
-
-
 
                         //                // Negative Prompt
                         //                VStack(alignment: .leading, spacing: 8) {
@@ -416,44 +448,6 @@ struct ImageModelDetail: View {
 //                        }
 //                        .padding(.horizontal)
 
-                        // MARK: - Generate Button
-
-                        // Generate button
-                        Button(action: generate) {
-                            HStack {
-                                if isGenerating {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                        .scaleEffect(0.8)
-                                } else {
-                                    Image(systemName: "photo.on.rectangle")
-                                }
-                                Text(isGenerating ? "Generating..." : "Generate Image")
-                                    .fontWeight(.semibold)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                (isGenerating || prompt.isEmpty) ?
-                                    AnyShapeStyle(Color.gray) :
-                                    AnyShapeStyle(LinearGradient(
-                                        colors: [Color.blue.opacity(0.8), Color.blue],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    ))
-                            )
-                            .foregroundColor(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .shadow(color: (isGenerating || prompt.isEmpty) ? Color.clear : Color.blue.opacity(0.4), radius: 8, x: 0, y: 4)
-                        }
-                        .scaleEffect(isGenerating ? 0.98 : 1.0)
-                        .animation(.easeInOut(duration: 0.2), value: isGenerating)
-                        .disabled(isGenerating || prompt.isEmpty)
-                        .accessibilityLabel(prompt.isEmpty ? "Enter a prompt to generate image" : "Generate image with prompt: \(prompt)")
-                        .accessibilityHint(prompt.isEmpty ? "" : "Double tap to start generation")
-                        .padding(.horizontal)
-//                        .padding(.bottom, 40)
-
                         // MARK: - Cost Summary Card
 
                         // Cost Summary Card
@@ -491,7 +485,45 @@ struct ImageModelDetail: View {
                                 .stroke(Color.blue.opacity(0.2), lineWidth: 1)
                         )
                         .padding(.horizontal)
-                        .padding(.bottom, 12)
+                        // .padding(.bottom, 12)
+
+                        // MARK: - Generate Button
+
+                        // Generate button
+                        Button(action: generate) {
+                            HStack {
+                                if isGenerating {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .scaleEffect(0.8)
+                                } else {
+                                    Image(systemName: "photo.on.rectangle")
+                                }
+                                Text(isGenerating ? "Generating..." : "Generate Image")
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                (isGenerating || prompt.isEmpty) ?
+                                    AnyShapeStyle(Color.gray) :
+                                    AnyShapeStyle(LinearGradient(
+                                        colors: [Color.blue.opacity(0.8), Color.blue],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ))
+                            )
+                            .foregroundColor(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: (isGenerating || prompt.isEmpty) ? Color.clear : Color.blue.opacity(0.4), radius: 8, x: 0, y: 4)
+                        }
+                        .scaleEffect(isGenerating ? 0.98 : 1.0)
+                        .animation(.easeInOut(duration: 0.2), value: isGenerating)
+                        .disabled(isGenerating || prompt.isEmpty)
+                        .accessibilityLabel(prompt.isEmpty ? "Enter a prompt to generate image" : "Generate image with prompt: \(prompt)")
+                        .accessibilityHint(prompt.isEmpty ? "" : "Double tap to start generation")
+                        .padding(.horizontal)
+                        .padding(.bottom, 40)
                     }
                     .padding(.bottom, 80)
                 }
@@ -501,6 +533,12 @@ struct ImageModelDetail: View {
         .contentShape(Rectangle())
         .onTapGesture {
             isPromptFocused = false
+        }
+        .sheet(isPresented: $isModelSelectorPresented) {
+            ModelSelectorSheet(
+                selectedModel: $item,
+                isPresented: $isModelSelectorPresented
+            )
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
@@ -608,5 +646,127 @@ struct ImageModelDetail: View {
         // Create a transparent 1x1 pixel image
         let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
         return image
+    }
+
+    private func handleScrollFeedback(newOffset: CGFloat) {
+        let delta = abs(newOffset - lastScrollOffset)
+        if delta > 40 {
+            feedback.selectionChanged()
+            lastScrollOffset = newOffset
+        }
+    }
+}
+
+// MARK: - Helper View to detect vertical scroll offset
+
+private struct ScrollOffsetReader: View {
+    var onChange: (CGFloat) -> Void
+
+    var body: some View {
+        GeometryReader { geo in
+            Color.clear
+                .preference(key: ScrollOffsetKey.self, value: geo.frame(in: .global).minY)
+        }
+        .onPreferenceChange(ScrollOffsetKey.self, perform: onChange)
+    }
+}
+
+private struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+// MARK: - Model Selector Sheet
+
+struct ModelSelectorSheet: View {
+    @Binding var selectedModel: InfoPacket
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(imageModelsRow, id: \.modelName) { model in
+                        Button(action: {
+                            selectedModel = model
+                            isPresented = false
+                        }) {
+                            HStack(spacing: 12) {
+                                // Model Image
+                                Image(model.modelImageName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                    )
+
+                                // Model Info
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(model.modelName)
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                        .lineLimit(2)
+                                        .multilineTextAlignment(.leading)
+
+                                    Text(model.modelDescription)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(2)
+                                        .multilineTextAlignment(.leading)
+
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "dollarsign.circle.fill")
+                                            .font(.caption2)
+                                            .foregroundColor(.blue)
+                                        Text(String(format: "$%.2f", model.cost))
+                                            .font(.caption)
+                                            .fontWeight(.medium)
+                                            .foregroundColor(.blue)
+                                        Text("per image")
+                                            .font(.caption2)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+
+                                Spacer()
+
+                                // Selection indicator
+                                if model.modelName == selectedModel.modelName {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.title3)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(model.modelName == selectedModel.modelName ? Color.blue.opacity(0.08) : Color.gray.opacity(0.06))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(model.modelName == selectedModel.modelName ? Color.blue.opacity(0.4) : Color.gray.opacity(0.2), lineWidth: model.modelName == selectedModel.modelName ? 2 : 1)
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Select Model")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        isPresented = false
+                    }
+                }
+            }
+        }
     }
 }
