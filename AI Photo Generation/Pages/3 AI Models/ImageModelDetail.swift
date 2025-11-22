@@ -24,13 +24,10 @@ struct ImageModelDetail: View {
     @State private var guidance: Double = 7.5
     @State private var steps: Int = 30
     @State private var isAdvancedOptionsExpanded: Bool = false
-    @State private var isExamplePromptsExpanded: Bool = false
+    @State private var isExamplePromptsPresented: Bool = false
     @State private var isModelSelectorPresented: Bool = false
-    @State private var lastScrollOffset: CGFloat = 0
     @FocusState private var isPromptFocused: Bool
     @Environment(\.dismiss) private var dismiss
-
-    private let feedback = UISelectionFeedbackGenerator()
 
     private let imageAspects: [String] = ["1:1", "3:4", "4:3", "9:16", "16:9"]
     private let imageAspectOptions: [AspectRatioOption] = [
@@ -288,47 +285,10 @@ struct ImageModelDetail: View {
 
                             // MARK: - Example Prompts
 
-                            // Example Prompts (dropdown)
-                            DisclosureGroup(isExpanded: $isExamplePromptsExpanded) {
-                                ScrollView(.vertical, showsIndicators: true) {
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        ForEach(examplePrompts, id: \.self) { examplePrompt in
-                                            Button(action: {
-                                                prompt = examplePrompt
-                                                isPromptFocused = false
-                                                isExamplePromptsExpanded = false
-                                            }) {
-                                                HStack {
-                                                    Text(examplePrompt)
-                                                        .font(.system(size: 11))
-                                                        .foregroundColor(.primary)
-                                                        .multilineTextAlignment(.leading)
-                                                        .lineLimit(2)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                                                    Image(systemName: "arrow.up.left")
-                                                        .font(.system(size: 9))
-                                                        .foregroundColor(.blue.opacity(0.6))
-                                                }
-                                                .padding(.horizontal, 10)
-                                                .padding(.vertical, 8)
-                                                .background(Color.gray.opacity(0.06))
-                                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                                .overlay(
-                                                    RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(Color.gray.opacity(0.15), lineWidth: 0.5)
-                                                )
-                                            }
-                                            .buttonStyle(PlainButtonStyle())
-                                        }
-                                    }
-                                    .background(ScrollOffsetReader { newOffset in
-                                        handleScrollFeedback(newOffset: newOffset)
-                                    })
-                                }
-                                .frame(maxHeight: 150)
-                                .padding(.top, 8)
-                            } label: {
+                            // Example Prompts Button
+                            Button(action: {
+                                isExamplePromptsPresented = true
+                            }) {
                                 HStack(spacing: 6) {
                                     Image(systemName: "lightbulb.fill")
                                         .foregroundColor(.blue)
@@ -337,8 +297,23 @@ struct ImageModelDetail: View {
                                         .font(.caption)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.secondary)
+
+                                    Spacer()
+
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 8)
+                                .background(Color.gray.opacity(0.06))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                                )
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
                         .padding(.horizontal)
 
@@ -540,6 +515,13 @@ struct ImageModelDetail: View {
                 isPresented: $isModelSelectorPresented
             )
         }
+        .sheet(isPresented: $isExamplePromptsPresented) {
+            ExamplePromptsSheet(
+                examplePrompts: examplePrompts,
+                selectedPrompt: $prompt,
+                isPresented: $isExamplePromptsPresented
+            )
+        }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color.black, for: .navigationBar)
@@ -647,35 +629,6 @@ struct ImageModelDetail: View {
         let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
         return image
     }
-
-    private func handleScrollFeedback(newOffset: CGFloat) {
-        let delta = abs(newOffset - lastScrollOffset)
-        if delta > 40 {
-            feedback.selectionChanged()
-            lastScrollOffset = newOffset
-        }
-    }
-}
-
-// MARK: - Helper View to detect vertical scroll offset
-
-private struct ScrollOffsetReader: View {
-    var onChange: (CGFloat) -> Void
-
-    var body: some View {
-        GeometryReader { geo in
-            Color.clear
-                .preference(key: ScrollOffsetKey.self, value: geo.frame(in: .global).minY)
-        }
-        .onPreferenceChange(ScrollOffsetKey.self, perform: onChange)
-    }
-}
-
-private struct ScrollOffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
 }
 
 // MARK: - Model Selector Sheet
@@ -759,6 +712,64 @@ struct ModelSelectorSheet: View {
                 .padding()
             }
             .navigationTitle("Select Model")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        isPresented = false
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Example Prompts Sheet
+
+struct ExamplePromptsSheet: View {
+    let examplePrompts: [String]
+    @Binding var selectedPrompt: String
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(examplePrompts, id: \.self) { examplePrompt in
+                        Button(action: {
+                            selectedPrompt = examplePrompt
+                            isPresented = false
+                        }) {
+                            HStack(spacing: 12) {
+                                // Prompt text
+                                Text(examplePrompt)
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.primary)
+                                    .multilineTextAlignment(.leading)
+                                    .lineLimit(3)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                                // Arrow icon
+                                Image(systemName: "arrow.up.left")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.blue.opacity(0.6))
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.06))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Example Prompts")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
