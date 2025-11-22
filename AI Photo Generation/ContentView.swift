@@ -41,40 +41,40 @@ struct ContentView: View {
                 //                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
                 //                        ))
                 case 2:
-//                    ImageModels(sortOrder: $sortOrder)
-//                        .transition(
-//                            .asymmetric(
-//                                insertion: .opacity.combined(
-//                                    with: .move(edge: currentTransitionEdge)),
-//                                removal: .opacity.combined(
-//                                    with: .move(
-//                                        edge: currentTransitionEdge == .leading
-//                                            ? .trailing : .leading))
-//                            ))
+                    ImageModels()
+                        .transition(
+                            .asymmetric(
+                                insertion: .opacity.combined(
+                                    with: .move(edge: currentTransitionEdge)),
+                                removal: .opacity.combined(
+                                    with: .move(
+                                        edge: currentTransitionEdge == .leading
+                                            ? .trailing : .leading))
+                            ))
                 //                    ModelsView()
                 //                    PlaygroundView()
-                 AIModelsView()
-                     .transition(.asymmetric(
-                         insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
-                         removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
-                     ))
+//                    AIModelsView()
+//                        .transition(.asymmetric(
+//                            insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+//                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+//                        ))
                 case 3:
-//                    VideoModels()
-//                        .transition(
-//                            .asymmetric(
-//                                insertion: .opacity.combined(
-//                                    with: .move(edge: currentTransitionEdge)),
-//                                removal: .opacity.combined(
-//                                    with: .move(
-//                                        edge: currentTransitionEdge == .leading
-//                                            ? .trailing : .leading))
-//                            ))
+                    VideoModels()
+                        .transition(
+                            .asymmetric(
+                                insertion: .opacity.combined(
+                                    with: .move(edge: currentTransitionEdge)),
+                                removal: .opacity.combined(
+                                    with: .move(
+                                        edge: currentTransitionEdge == .leading
+                                            ? .trailing : .leading))
+                            ))
 //                    ModelsView()
-                 PlaygroundView()
-                     .transition(.asymmetric(
-                         insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
-                         removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
-                     ))
+//                  PlaygroundView()
+//                      .transition(.asymmetric(
+//                          insertion: .opacity.combined(with: .move(edge: currentTransitionEdge)),
+//                          removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
+//                      ))
                 case 4:
                     ProfileView()
                         .environmentObject(authViewModel)
@@ -113,18 +113,15 @@ struct ContentView: View {
                 HStack(spacing: 0) {
                     tabButton(icon: "house.fill", title: "Home", index: 0)
                     //                    tabButton(icon: "magnifyingglass", title: "Explore", index: 1)
-                    tabButton(
-                        icon: "photo.on.rectangle.angled",
-                        title: "Photo Filters", index: 1
-                    )
+                    tabButton(icon: "photo.on.rectangle.angled", title: "Photo Filters", index: 1)
 
                     //                    tabButton(icon: "plus.circle.fill", title: "Create", index: 2)
                     tabButton(
-                        icon: "wrench.and.screwdriver", title: "Playground",
+                        icon: "photo.on.rectangle", title: "Image",
                         index: 2
                     )
                     tabButton(
-                        icon: "wrench.and.screwdriver", title: "Playground",
+                        icon: "video.fill", title: "Video",
                         index: 3
                     )
 

@@ -1,5 +1,5 @@
-import SwiftUI
 import AVKit
+import SwiftUI
 
 struct HomeRowVideo: View {
     let title: String
@@ -21,18 +21,18 @@ struct HomeRowVideo: View {
                 HStack(spacing: hSpacing) {
                     ForEach(Array(mosaicBlocks(from: items).enumerated()), id: \.offset) { _, block in
                         switch block {
-                        case .large(let item):
+                        case let .large(item):
                             NavigationLink(destination: VideoDetailView(item: item)) {
                                 VideoTile(item: item, width: tileWidth, height: tileHeight)
                             }
 
-                        case .grid(let group):
+                        case let .grid(group):
                             let cellWidth = (tileWidth - gridSpacing) / 2
                             let cellHeight = (tileHeight - gridSpacing) / 2
 
                             VStack(spacing: gridSpacing) {
                                 HStack(spacing: gridSpacing) {
-                                    ForEach(0..<2) { col in
+                                    ForEach(0 ..< 2) { col in
                                         let index = col
                                         if index < group.count {
                                             let subItem = group[index]
@@ -45,7 +45,7 @@ struct HomeRowVideo: View {
                                     }
                                 }
                                 HStack(spacing: gridSpacing) {
-                                    ForEach(0..<2) { col in
+                                    ForEach(0 ..< 2) { col in
                                         let index = col + 2
                                         if index < group.count {
                                             let subItem = group[index]
@@ -69,6 +69,7 @@ struct HomeRowVideo: View {
 }
 
 // MARK: - Mosaic building
+
 extension HomeRowVideo {
     private enum MosaicBlock {
         case large(InfoPacket)
@@ -87,7 +88,7 @@ extension HomeRowVideo {
             // Grid of up to 4
             if index < items.count {
                 let end = min(index + 4, items.count)
-                let gridItems = Array(items[index..<end])
+                let gridItems = Array(items[index ..< end])
                 result.append(.grid(gridItems))
                 index = end
             }
@@ -97,6 +98,7 @@ extension HomeRowVideo {
 }
 
 // MARK: - Reusable video tile
+
 struct VideoTile: View {
     let item: InfoPacket
     let width: CGFloat
@@ -118,30 +120,30 @@ struct VideoTile: View {
 //                            .lineLimit(2)
 //                            .multilineTextAlignment(.leading)
 //                            .foregroundColor(.white)
-////                            .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
+                ////                            .shadow(color: .black.opacity(1), radius: 1, x: 0, y: 1)
 //                            .shadow(color: .black, radius: 2, x: 1, y: 1)
 //                            .frame(maxWidth: .infinity, alignment: .leading)
 //                            .padding(6)
-////                            .background(
-////                                LinearGradient(
-////                                    gradient: Gradient(colors: [
-////                                        Color.black.opacity(0.6),
-////                                        Color.black.opacity(0)
-////                                    ]),
-////                                    startPoint: .bottom,
-////                                    endPoint: .top
-////                                )
-////                            )
+                ////                            .background(
+                ////                                LinearGradient(
+                ////                                    gradient: Gradient(colors: [
+                ////                                        Color.black.opacity(0.6),
+                ////                                        Color.black.opacity(0)
+                ////                                    ]),
+                ////                                    startPoint: .bottom,
+                ////                                    endPoint: .top
+                ////                                )
+                ////                            )
 //                    }
 //                    .overlay(alignment: .topTrailing) {
 //                        Text("$\(item.cost, specifier: "%.2f")")
 //                            .font(.custom("Nunito-Bold", size: 11))
 //                            .foregroundColor(.white)
 //                            .shadow(color: .black, radius: 2, x: 1, y: 1)
-////                            .padding(.horizontal, 4)
-////                            .padding(.vertical, 2)
-////                            .background(Color.black.opacity(0.3))
-////                            .clipShape(Capsule())
+                ////                            .padding(.horizontal, 4)
+                ////                            .padding(.vertical, 2)
+                ////                            .background(Color.black.opacity(0.3))
+                ////                            .clipShape(Capsule())
 //                            .padding(6)
 //                    }
             } else {
@@ -158,6 +160,7 @@ struct VideoTile: View {
 }
 
 // MARK: - AVPlayerLayer-based VideoThumbnail with placeholder
+
 struct VideoThumbnail: View {
     let url: URL
     @State private var isReady = false
@@ -182,19 +185,18 @@ struct VideoThumbnail: View {
     }
 }
 
-
-
 // MARK: - UIViewRepresentable wrapper for AVPlayerLayer
+
 struct VideoPlayerContainer: UIViewRepresentable {
     let url: URL
-    
-    func makeUIView(context: Context) -> VideoPlayerUIView {
+
+    func makeUIView(context _: Context) -> VideoPlayerUIView {
         let view = VideoPlayerUIView()
         view.configure(url: url)
         return view
     }
-    
-    func updateUIView(_ uiView: VideoPlayerUIView, context: Context) { }
+
+    func updateUIView(_: VideoPlayerUIView, context _: Context) {}
 }
 
 class VideoPlayerUIView: UIView {
@@ -204,10 +206,10 @@ class VideoPlayerUIView: UIView {
 
     func configure(url: URL) {
         player = VideoPlayerManager.shared.player(for: url)
-        
+
         // Remove old layer
         playerLayer?.removeFromSuperlayer()
-        
+
         // Add new layer
         let layer = AVPlayerLayer(player: player)
         layer.videoGravity = .resizeAspectFill
@@ -215,14 +217,23 @@ class VideoPlayerUIView: UIView {
         self.layer.addSublayer(layer)
         playerLayer = layer
 
-        // ADD THIS: Wait for player to be ready
+        // Wait for player to be ready and THEN play
         if let currentItem = player?.currentItem {
-            statusObserver = currentItem.observe(\.status, options: [.new]) { [weak self] item, _ in
+            statusObserver = currentItem.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in
                 if item.status == .readyToPlay {
                     DispatchQueue.main.async {
                         self?.player?.play()
+                        // Force a small seek to kickstart rendering
+                        self?.player?.seek(to: .zero)
                     }
+                } else if item.status == .failed {
+                    print("❌ Player item failed:", item.error?.localizedDescription ?? "unknown error")
                 }
+            }
+        } else {
+            // If no current item yet, try playing anyway
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                self?.player?.play()
             }
         }
 
@@ -232,46 +243,51 @@ class VideoPlayerUIView: UIView {
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
     }
-    
+
     @objc private func appWillEnterForeground() {
-        // ADD THIS: Check if ready before playing
         if player?.currentItem?.status == .readyToPlay {
             player?.play()
         }
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer?.frame = bounds
     }
-    
+
     deinit {
         statusObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
 }
 
-
-
 class VideoPlayerManager {
     static let shared = VideoPlayerManager()
     private var players: [URL: (player: AVQueuePlayer, looper: AVPlayerLooper)] = [:]
-    
+
     func player(for url: URL) -> AVQueuePlayer {
         if let existing = players[url] {
+            // Make sure it's playing
+            existing.player.play()
             return existing.player
         }
+
         let item = AVPlayerItem(url: url)
         let queue = AVQueuePlayer()
+
+        // IMPORTANT: Wait for item to be ready before creating looper
         let looper = AVPlayerLooper(player: queue, templateItem: item)
         queue.isMuted = true
-        queue.play()
+
+        // Store before playing
         players[url] = (queue, looper)
+
+        // Don't play here - let the VideoPlayerUIView handle it when ready
+        // queue.play()  // REMOVE THIS LINE
+
         return queue
     }
 }
-
-
 
 struct VideoPlaceholder: View {
     @Environment(\.colorScheme) var colorScheme
@@ -296,7 +312,7 @@ struct VideoPlaceholder: View {
                             gradient: Gradient(colors: [
                                 Color.white.opacity(0.0),
                                 Color.white.opacity(colorScheme == .dark ? 0.25 : 0.7),
-                                Color.white.opacity(0.0)
+                                Color.white.opacity(0.0),
                             ]),
                             startPoint: .leading,
                             endPoint: .trailing
