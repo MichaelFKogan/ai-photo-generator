@@ -5,7 +5,7 @@ Objective: Identify pragmatic enhancements a senior iOS/backend engineer would p
 
 1. User Experience & State Handling
    • Decouple UI state from the background task by persisting `taskId` and `isGenerating` flags in a lightweight store (e.g., `AppStorage` or `Observation` in `AuthViewModel`). This prevents duplicate submissions when the view is recreated.
-   • Surface richer inline feedback (remaining credits, ETA, retry CTA) inside `AIImageDetailView` instead of fully relying on transient notifications.
+   • Surface richer inline feedback (remaining credits, ETA, retry CTA) inside `ImageModelDetail` instead of fully relying on transient notifications.
    • Record the prompt/aspect selection in a draft model so users can tweak and resubmit quickly if generation fails.
 
 2. Task Management & Queueing
@@ -46,7 +46,7 @@ Objective: Identify pragmatic enhancements a senior iOS/backend engineer would p
 
 Implementation Notes
 --------------------
-• Start by extracting `GenerationService` protocol that owns `startGeneration`, `cancel`, `observe(taskId)`. Inject it into both `AIImageDetailView` and `NotificationManager`.
+• Start by extracting `GenerationService` protocol that owns `startGeneration`, `cancel`, `observe(taskId)`. Inject it into both `ImageModelDetail` and `NotificationManager`.
 • Replace global singletons with dependency injection for easier testing.
 • Add a lightweight `GenerationRecord` persisted locally so the Profile tab can optimistic-insert while Supabase writes complete, reconciling after the backend confirms.
 • Iterate incrementally: first secure secrets + improve error surfacing, then tackle queue persistence, then add analytics/testing.

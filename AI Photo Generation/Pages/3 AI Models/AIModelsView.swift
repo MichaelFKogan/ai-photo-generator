@@ -156,7 +156,7 @@
 //                                 )
 //                             } else {
 //                                 ForEach(filteredAndSortedVideoModels) { item in
-//                                     NavigationLink(destination: AIVideoDetailView(item: item)) {
+//                                     NavigationLink(destination: VideoModelDetail(item: item)) {
 //                                         EnhancedModelCard(
 //                                             item: item,
 //                                             capabilities: videoCapabilities(for: item),
@@ -185,7 +185,7 @@
 //                                 )
 //                             } else {
 //                                 ForEach(filteredAndSortedImageModels) { item in
-//                                     NavigationLink(destination: AIImageDetailView(item: item)) {
+//                                     NavigationLink(destination: ImageModelDetail(item: item)) {
 //                                         EnhancedModelCard(
 //                                             item: item,
 //                                             capabilities: imageCapabilities(for: item),

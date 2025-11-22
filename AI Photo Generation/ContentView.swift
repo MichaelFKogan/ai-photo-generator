@@ -41,7 +41,7 @@ struct ContentView: View {
                 //                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
                 //                        ))
                 case 2:
-                    ImageModels()
+                    ImageModelsView()
                         .transition(
                             .asymmetric(
                                 insertion: .opacity.combined(
@@ -59,7 +59,7 @@ struct ContentView: View {
 //                            removal: .opacity.combined(with: .move(edge: currentTransitionEdge == .leading ? .trailing : .leading))
 //                        ))
                 case 3:
-                    VideoModels()
+                    VideoModelsView()
                         .transition(
                             .asymmetric(
                                 insertion: .opacity.combined(
@@ -113,11 +113,11 @@ struct ContentView: View {
                 HStack(spacing: 0) {
                     tabButton(icon: "house.fill", title: "Home", index: 0)
                     //                    tabButton(icon: "magnifyingglass", title: "Explore", index: 1)
-                    tabButton(icon: "photo.on.rectangle.angled", title: "Photo Filters", index: 1)
+                    tabButton(icon: "camera.filters", title: "Photo Filters", index: 1)
 
                     //                    tabButton(icon: "plus.circle.fill", title: "Create", index: 2)
                     tabButton(
-                        icon: "photo.on.rectangle", title: "Image",
+                        icon: "camera.fill", title: "Image",
                         index: 2
                     )
                     tabButton(
@@ -126,7 +126,7 @@ struct ContentView: View {
                     )
 
                     // tabButton(icon: "cpu", title: "AI Models", index: 3)
-                    tabButton(icon: "person.fill", title: "My Photos", index: 4)
+                    tabButton(icon: "photo.on.rectangle.angled", title: "My Photos", index: 4)
                     //                     tabButton(icon: "gearshape.fill", title: "Settings", index: 4)
                 }
                 .padding(.horizontal)

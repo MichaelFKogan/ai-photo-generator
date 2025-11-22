@@ -1,7 +1,7 @@
 import PhotosUI
 import SwiftUI
 
-struct VideoModels: View {
+struct VideoModelsView: View {
     // MARK: - State
 
     @State private var sortOrder = 0 // 0 = Default, 1 = Low->High, 2 = High->Low
@@ -110,7 +110,7 @@ struct VideoModels: View {
                         } else {
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                                 ForEach(filteredAndSortedVideoModels) { item in
-                                    NavigationLink(destination: AIVideoDetailView(item: item)) {
+                                    NavigationLink(destination: VideoModelDetail(item: item)) {
                                         EnhancedModelCard(
                                             item: item,
                                             capabilities: videoCapabilities(for: item),

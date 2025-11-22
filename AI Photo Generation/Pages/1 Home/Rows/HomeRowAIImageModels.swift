@@ -20,7 +20,7 @@ struct HomeRowAIImageModels: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(items) { item in
-                        NavigationLink(destination: AIImageDetailView(item: item)) {
+                        NavigationLink(destination: ImageModelDetail(item: item)) {
                             VStack(spacing: 8) {
                                 Image(item.imageName)
                                     .resizable()
@@ -32,7 +32,7 @@ struct HomeRowAIImageModels: View {
                                         RoundedRectangle(cornerRadius: 12)
                                             .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                     )
-                                    // ✅ Top-right overlay (Price)
+                                // ✅ Top-right overlay (Price)
 //                                    .overlay(alignment: .topTrailing) {
 //    //                                        if let price = item.price {
 //    //                                            Text("$\(price, specifier: "%.2f")")
@@ -41,8 +41,8 @@ struct HomeRowAIImageModels: View {
 //                                                .foregroundColor(.white)
 //                                                .padding(.horizontal, 6)
 //                                                .padding(.vertical, 3)
-////                                                .background(Color.black.opacity(0.8))
-////                                                .clipShape(Capsule())
+                                ////                                                .background(Color.black.opacity(0.8))
+                                ////                                                .clipShape(Capsule())
 //                                                .shadow(color: .black, radius: 2, x: 1, y: 1)
 //                                                .padding(6)
 //    //                                        }

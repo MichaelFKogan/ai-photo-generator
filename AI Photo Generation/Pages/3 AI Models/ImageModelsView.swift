@@ -1,7 +1,7 @@
 import PhotosUI
 import SwiftUI
 
-struct ImageModels: View {
+struct ImageModelsView: View {
     // MARK: - State
 
     @State private var sortOrder = 0 // 0 = Default, 1 = Low->High, 2 = High->Low
@@ -106,7 +106,7 @@ struct ImageModels: View {
                         } else {
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                                 ForEach(filteredAndSortedImageModels) { item in
-                                    NavigationLink(destination: AIImageDetailView(item: item)) {
+                                    NavigationLink(destination: ImageModelDetail(item: item)) {
                                         EnhancedModelCard(
                                             item: item,
                                             capabilities: imageCapabilities(for: item),
@@ -221,61 +221,66 @@ struct EnhancedModelCard: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
                 // Capability pills at bottom
-                HStack(spacing: 4) {
-                    ForEach(capabilities.prefix(2), id: \.self) { cap in
-                        Text(cap)
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 3)
-                            .background(mediaType.color.opacity(0.9))
-                            .clipShape(Capsule())
-                    }
-                    if capabilities.count > 2 {
-                        Text("+\(capabilities.count - 2)")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 3)
-                            .background(Color.secondary.opacity(0.9))
-                            .clipShape(Capsule())
-                    }
-                    Spacer()
-                }
-                .padding(8)
+                // HStack(spacing: 4) {
+                //     ForEach(capabilities.prefix(2), id: \.self) { cap in
+                //         Text(cap)
+                //             .font(.system(size: 9, weight: .medium))
+                //             .foregroundColor(.white)
+                //             .padding(.horizontal, 6)
+                //             .padding(.vertical, 3)
+                //             .background(mediaType.color.opacity(0.9))
+                //             .clipShape(Capsule())
+                //     }
+                //     if capabilities.count > 2 {
+                //         Text("+\(capabilities.count - 2)")
+                //             .font(.system(size: 9, weight: .medium))
+                //             .foregroundColor(.white)
+                //             .padding(.horizontal, 6)
+                //             .padding(.vertical, 3)
+                //             .background(Color.secondary.opacity(0.9))
+                //             .clipShape(Capsule())
+                //     }
+                //     Spacer()
+                // }
+                // .padding(8)
             }
-            .overlay(alignment: .topLeading) {
-                HStack(spacing: 4) {
-                    Image(systemName: mediaType.icon)
-                        .font(.caption)
-                }
-                .foregroundColor(.white).opacity(0.8)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Capsule().fill(mediaType.color.opacity(0.8)))
-                .padding(6)
-            }
-            .overlay(alignment: .topTrailing) {
-                Text("$\(item.cost, specifier: "%.2f")")
-                    .font(.custom("Nunito-Bold", size: 11))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 3)
-                    .background(Color.black.opacity(0.7))
-                    .clipShape(Capsule())
-                    .padding(6)
-            }
+            // .overlay(alignment: .topLeading) {
+            //     HStack(spacing: 4) {
+            //         Image(systemName: mediaType.icon)
+            //             .font(.caption)
+            //     }
+            //     .foregroundColor(.white).opacity(0.8)
+            //     .padding(.horizontal, 8)
+            //     .padding(.vertical, 4)
+            //     .background(Capsule().fill(mediaType.color.opacity(0.8)))
+            //     .padding(6)
+            // }
+//            .overlay(alignment: .bottomTrailing) {
+//                Text("$\(item.cost, specifier: "%.2f")")
+//                    .font(.custom("Nunito-Bold", size: 11))
+//                    .foregroundColor(mediaType.color)
+//                    .padding(.horizontal, 6)
+//                    .padding(.vertical, 3)
+//                    .background(Color.black.opacity(0.7))
+//                    .clipShape(Capsule())
+//                    .padding(6)
+//            }
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
             )
 
-            // Title
-            Text(item.title)
-                .font(.custom("Nunito-ExtraBold", size: 13))
-                .foregroundColor(.primary)
-                .lineLimit(2)
-                .multilineTextAlignment(.leading)
+            // Title and Cost section
+            HStack(alignment: .top) {
+                Text(item.title)
+                    .font(.custom("Nunito-ExtraBold", size: 13))
+                    .foregroundColor(.primary)
+                    .lineLimit(2)
+                Spacer()
+                Text("$\(item.cost, specifier: "%.2f")")
+                    .font(.custom("Nunito-Bold", size: 11))
+                    .foregroundColor(mediaType.color)
+            }
         }
     }
 }

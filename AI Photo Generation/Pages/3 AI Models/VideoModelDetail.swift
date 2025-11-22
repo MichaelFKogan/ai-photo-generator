@@ -1,16 +1,16 @@
 //
-//  AIVideoDetailView.swift
+//  VideoModelDetail.swift
 //  AI Photo Generation
 //
 //  Created by Mike K on 11/8/25.
 //
 
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
-struct AIVideoDetailView: View {
+struct VideoModelDetail: View {
     let item: InfoPacket
-    
+
     @State private var prompt: String = ""
     @State private var isGenerating: Bool = false
     @State private var referenceImages: [UIImage] = []
@@ -19,21 +19,21 @@ struct AIVideoDetailView: View {
     @State private var videoAspectIndex: Int = 0 // default to 9:16
     @FocusState private var isPromptFocused: Bool
     @Environment(\.dismiss) private var dismiss
-    
+
     private let videoDurations: [String] = ["5s", "8s", "12s"]
     private let videoAspects: [String] = ["9:16", "16:9", "1:1"]
     private let videoAspectOptions: [AspectRatioOption] = [
         AspectRatioOption(id: "9:16", label: "9:16", width: 9, height: 16, platforms: ["TikTok", "Shorts", "Reels"]),
         AspectRatioOption(id: "16:9", label: "16:9", width: 16, height: 9, platforms: ["YouTube"]),
-        AspectRatioOption(id: "1:1", label: "1:1", width: 1, height: 1, platforms: ["Instagram"])
+        AspectRatioOption(id: "1:1", label: "1:1", width: 1, height: 1, platforms: ["Instagram"]),
     ]
-    
+
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { _ in
             ScrollView {
                 VStack(spacing: 0) {
+                    // MARK: - Banner Image Section
 
-// MARK: - Banner Image Section                        
                     // Banner Image at top - extends behind navigation bar
                     ZStack(alignment: .bottom) {
                         Image(item.modelImageName)
@@ -41,11 +41,11 @@ struct AIVideoDetailView: View {
                             .aspectRatio(contentMode: .fill)
                             .frame(height: 320)
                             .clipped()
-                        
+
                         // Only gradient behind the text section
                         VStack {
                             Spacer()
-                            
+
                             VStack {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 6) {
@@ -53,7 +53,7 @@ struct AIVideoDetailView: View {
                                             .font(.title2)
                                             .fontWeight(.bold)
                                             .foregroundColor(.white)
-                                        
+
                                         HStack(spacing: 6) {
                                             Image(systemName: "video.fill")
                                                 .font(.caption)
@@ -68,9 +68,9 @@ struct AIVideoDetailView: View {
                                                 .fill(Color.purple.opacity(0.8))
                                         )
                                     }
-                                    
+
                                     Spacer()
-                                    
+
                                     VStack(alignment: .trailing, spacing: 2) {
                                         Text(String(format: "$%.2f", item.cost))
                                             .font(.caption)
@@ -79,7 +79,7 @@ struct AIVideoDetailView: View {
                                             .padding(.vertical, 4)
                                             .background(Color.black.opacity(0.7))
                                             .cornerRadius(6)
-                                        
+
                                         Text("per 8s video")
                                             .font(.caption2)
                                             .foregroundColor(.white.opacity(0.9))
@@ -87,7 +87,7 @@ struct AIVideoDetailView: View {
                                 }
                                 .padding(.horizontal)
                                 .padding(.bottom, 8)
-                                
+
                                 // Model Details Card (without image now)
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text(item.modelDescription)
@@ -113,14 +113,14 @@ struct AIVideoDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal)
                     .padding(.bottom, 16)
-                    
+
                     VStack(spacing: 24) {
-                        
 //                        Divider()
 //                            .padding(.horizontal)
 //                            .padding(.top, 8)
-                        
-// MARK: - Example Images Section                        
+
+                        // MARK: - Example Images Section
+
                         // Example Images Section
                         if !item.exampleImages.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
@@ -132,7 +132,7 @@ struct AIVideoDetailView: View {
                                         .foregroundColor(.secondary)
                                 }
                                 .padding(.horizontal)
-                                
+
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 12) {
                                         ForEach(item.exampleImages, id: \.self) { imageName in
@@ -152,8 +152,9 @@ struct AIVideoDetailView: View {
                                 }
                             }
                         }
-                        
-// MARK: - Prompt                        
+
+                        // MARK: - Prompt
+
                         // Video Prompt
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 6) {
@@ -163,7 +164,7 @@ struct AIVideoDetailView: View {
                                     .font(.headline)
                                     .foregroundColor(.secondary)
                             }
-                            
+
                             TextEditor(text: $prompt)
                                 .font(.system(size: 14)).opacity(0.8)
                                 .frame(minHeight: 120)
@@ -187,13 +188,15 @@ struct AIVideoDetailView: View {
                                 .focused($isPromptFocused)
                         }
                         .padding(.horizontal)
-                        
-// MARK: - Reference Images                        
+
+                        // MARK: - Reference Images
+
                         // Reference Images (Optional) - multi-image picker and grid
                         ReferenceImagesSection(referenceImages: $referenceImages, selectedPhotoItems: $selectedPhotoItems, color: .purple)
                             .padding(.horizontal)
-                        
-// MARK: - Video Options                        
+
+                        // MARK: - Video Options
+
                         // Simple Video Options
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 6) {
@@ -203,20 +206,21 @@ struct AIVideoDetailView: View {
                                     .font(.headline)
                                     .foregroundColor(.secondary)
                             }
-                            
+
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Duration")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Picker("Duration", selection: $videoDurationIndex) {
-                                    ForEach(0..<videoDurations.count, id: \.self) { idx in
+                                    ForEach(0 ..< videoDurations.count, id: \.self) { idx in
                                         Text(videoDurations[idx])
                                     }
                                 }
                                 .pickerStyle(.segmented)
                             }
-                            
-// MARK: - Aspect Ratio                        
+
+                            // MARK: - Aspect Ratio
+
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Aspect Ratio")
                                     .font(.caption)
@@ -225,8 +229,9 @@ struct AIVideoDetailView: View {
                             }
                         }
                         .padding(.horizontal)
-                        
-// MARK: - Cost Summary Card                        
+
+                        // MARK: - Cost Summary Card
+
                         // Cost Summary Card
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -246,9 +251,9 @@ struct AIVideoDetailView: View {
                                         .foregroundColor(.purple)
                                 }
                             }
-                            
+
                             Spacer()
-                            
+
                             Text(String(format: "$%.2f", item.cost))
                                 .font(.title3)
                                 .fontWeight(.bold)
@@ -263,8 +268,9 @@ struct AIVideoDetailView: View {
                         )
                         .padding(.horizontal)
                         .padding(.bottom, 12)
-                        
-// MARK: - Generate Button                        
+
+                        // MARK: - Generate Button
+
                         // Generate Video button
                         Button(action: generate) {
                             HStack {
@@ -281,13 +287,13 @@ struct AIVideoDetailView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(
-                                (isGenerating || prompt.isEmpty) ? 
-                                AnyShapeStyle(Color.gray) : 
-                                AnyShapeStyle(LinearGradient(
-                                    colors: [Color.purple.opacity(0.8), Color.purple],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ))
+                                (isGenerating || prompt.isEmpty) ?
+                                    AnyShapeStyle(Color.gray) :
+                                    AnyShapeStyle(LinearGradient(
+                                        colors: [Color.purple.opacity(0.8), Color.purple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ))
                             )
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -302,7 +308,9 @@ struct AIVideoDetailView: View {
             }
             .scrollDismissesKeyboard(.interactively)
         }
-// MARK: - Navigation Bar
+
+        // MARK: - Navigation Bar
+
         .contentShape(Rectangle())
         .onTapGesture {
             isPromptFocused = false
@@ -355,7 +363,7 @@ struct AIVideoDetailView: View {
             }
         }
     }
-    
+
     private func generate() {
         isGenerating = true
         // Simulate video generation

@@ -1,9 +1,9 @@
 Generate Image Flow
 ====================
 
-Scope: Describes the full path a request follows from tapping `Generate Image` inside `AIImageDetailView` to seeing the finished media inside the Profile tab.
+Scope: Describes the full path a request follows from tapping `Generate Image` inside `ImageModelDetail` to seeing the finished media inside the Profile tab.
 
-1. User action (`AIImageDetailView.swift`)
+1. User action (`ImageModelDetail.swift`)
    - The `generate()` method (lines ~370–406) is wired to the “Generate Image” button.
    - It guards against concurrent work via the `isGenerating` state, builds a placeholder `UIImage` (WaveSpeed always expects an `image` parameter), derives the selected aspect ratio, and injects the user’s free-form prompt into a mutable `InfoPacket`.
    - The method requests the authenticated user id from `AuthViewModel` and hands everything to `NotificationManager.startBackgroundGeneration(...)`. All subsequent progress happens outside of the view lifecycle while SwiftUI shows the async notification overlay.
@@ -32,14 +32,14 @@ Scope: Describes the full path a request follows from tapping `Generate Image` i
    - The resulting `[UserImage]` drives `ImageGridView`, which renders each `image_url` or `thumbnail_url` via `Kingfisher` and opens `FullScreenImageView` on tap. That means the moment `NotificationManager` writes a new record to Supabase, a subsequent fetch (manual refresh or automatic on the next visit) pulls it into the grid.
 
 6. End-to-end timeline
-   - `AIImageDetailView.generate()` → packages prompt + aspect ratio + placeholder image → `NotificationManager.startBackgroundGeneration`.
+   - `ImageModelDetail.generate()` → packages prompt + aspect ratio + placeholder image → `NotificationManager.startBackgroundGeneration`.
    - Notification pipeline issues API call (`sendImageToWaveSpeed`), polls until completion, downloads and uploads final media, writes metadata to Supabase.
    - Profile view model fetches the Supabase `user_media` rows; grid displays them with remote image loading.
    - Users therefore see the generated asset in `ProfileView` after either staying on the tab long enough for the next refresh or by pulling to refresh manually; no manual wiring is needed because both the storage upload and database insert happen inside the background task as part of the core flow.
 
 Key Files & Functions
 ---------------------
-- `Pages/4-Playground/AIImageDetailView.swift`: UI entry point; `generate()` prepares request data.
+- `Pages/4-Playground/ImageModelDetail.swift`: UI entry point; `generate()` prepares request data.
 - `Notifications/Managers/NotificationManager.swift`: Orchestrates async generation, progress UI, storage upload, metadata persistence.
 - `Notifications/Helpers/TimeoutHelper.swift`: `withTimeout` utility protecting long-running work.
 - `API/WaveSpeed/WaveSpeedAPI.swift`: Low-level HTTP integration & polling logic.
